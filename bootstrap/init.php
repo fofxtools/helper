@@ -43,10 +43,13 @@ function initialize_tracker(?string $configFile = 'config' . DIRECTORY_SEPARATOR
 {
     $config_file_resolved = resolve_config_file_path($configFile);
 
-    try {
-        $config_data = load_config($config_file_resolved);
-    } catch (\RuntimeException $e) {
-        $config_data = [];
+    $config_data = [];
+    if ($config_file_resolved !== null) {
+        try {
+            $config_data = load_config($config_file_resolved);
+        } catch (\RuntimeException $e) {
+            // Configuration file not found or invalid, using default settings
+        }
     }
 
     // Convert the string to a boolean
