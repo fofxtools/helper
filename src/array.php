@@ -605,7 +605,7 @@ function transpose_associative_array(array $array): array
  * @param   string                     $class        Optional class attribute for the table.
  * @param   string                     $style        Optional style attribute for the table.
  * @return  string                     $tableString  The generated HTML table as a string.
- * 
+ *
  * @throws  \InvalidArgumentException                If the array is not balanced.
  * @see     has_only_similar_array_values
  * @see     sanitize_css_id_name
@@ -654,39 +654,47 @@ function array_to_table(array $array, string $table_id = "", string $class = "",
 }
 
 /**
- * Take a 2 dimensional array and turn it into a readable padded TSV
- * Expects an indexed array, with associative sub-arrays
+ * Take a 2-dimensional array and turn it into a readable padded TSV.
+ * Expects an indexed array, with associative sub-arrays.
  * 
- * Example:
- *      $array = array(0 => array('Keyword' => 'apple', 'KD' => '20', 'Volume' => 100), 1 => array('Keyword' => 'do it yourself', 'KD' => '0', 'Volume' => 1000));
- *      $content = array_nested_to_tsv($array, true, true);
- *      echo $content;
+ * @param    array                      $array                   The 2D array to convert to TSV
+ * @param    bool                       $include_headers         Whether the output should include headers
+ * @param    bool                       $right_pad_first_column  Whether the first output column should be padded right instead of left
+ * @return   string                                              The TSV-formatted string
+ * @throws   \InvalidArgumentException                           If the array items do not have the same keys.
+ * @see      array_same_keys
+ * @see      transpose_indexed_array
+ * @see      mb_str_pad
+ * 
+ * @example  
+ * $array = array(
+ *     0 => array('Keyword' => 'apple', 'KD' => '20', 'Volume' => 100),
+ *     1 => array('Keyword' => 'do it yourself', 'KD' => '0', 'Volume' => 1000)
+ * );
+ * $content = Helper\array_nested_to_tsv($array, true, true);
+ * echo $content;
  * 
  * Output:
  * Keyword         KD      Volume
  * apple           20         100
  * do it yourself   0        1000
  * 
- *      $content = array_nested_to_tsv($array, true, false);
- *      echo $content;
+ * @example  
+ * $content = Helper\array_nested_to_tsv($array, true, false);
+ * echo $content;
+ * 
  * Output:
  *        Keyword  KD      Volume
  *          apple  20         100
  * do it yourself   0        1000
  * 
- *      $content = array_nested_to_tsv($array, false, true);
- *      echo $content;
+ * @example  
+ * $content = Helper\array_nested_to_tsv($array, false, true);
+ * echo $content;
+ * 
  * Output:
  * apple           20       100
  * do it yourself   0      1000
- * 
- * @param   array                      $array
- * @param   bool                       $include_headers         Whether the output should include headers
- * @param   bool                       $right_pad_first_column  Whether the first output column should be padded right instead of left
- * @return  string                     $content
- * @throws  \InvalidArgumentException                           If the array items do not have the same keys.
- * @see     array_same_keys
- * @see     transpose_indexed_array
  */
 function array_nested_to_tsv(array $array, bool $include_headers = true, bool $right_pad_first_column = true): string
 {
