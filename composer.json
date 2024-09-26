@@ -2,6 +2,20 @@
     "name": "fofx/helper",
     "description": "Helper functions.",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "fofx",
+            "email": "177870764+fofxtools@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "phpstan/phpstan": "^1.11",
+        "fakerphp/faker": "^1.23"
+    },
     "autoload": {
         "psr-4": {
             "FOfX\\Helper\\": "src/"
@@ -32,18 +46,7 @@
             ]
         }
     },
-    "authors": [
-        {
-            "name": "fofx",
-            "email": "177870764+fofxtools@users.noreply.github.com"
-        }
-    ],
-    "require": {
-        "php": "^8.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^10.5",
-        "phpstan/phpstan": "^1.11",
-        "fakerphp/faker": "^1.23"
+    "scripts": {
+        "test": "phpunit --colors=always"
     }
 }

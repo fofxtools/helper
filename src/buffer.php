@@ -16,7 +16,7 @@
  * - Capturing output from function calls
  * - Capturing output from evaluated PHP code
  *
- * @package FOfX\Helper
+ * @package  FOfX\Helper
  */
 
 namespace FOfX\Helper;
@@ -26,22 +26,23 @@ namespace FOfX\Helper;
  * 
  * This function can either capture just the output of the function or both the output and its return value.
  * 
- * Example:
- *      $output = Helper\capture_buffer('print_r', false, [1, 2, 3], true);
+ * @param    string                     $functionName   The name of the function to capture output from.
+ * @param    bool                       $captureRetVal  Whether to capture and append the return value (default: false).
+ * @param    mixed                      ...$args        The arguments to pass to the function.
+ * @return   string                                     The captured output and optionally the return value if it's a string.
+ *
+ * @throws   \InvalidArgumentException
+ * @throws   \Exception
+ *
+ * @example  
+ * $output = Helper\capture_buffer('print_r', false, [1, 2, 3], true);
+ * echo $output . PHP_EOL;
+ * // The output will be blank, since the return value is not captured.
  * 
- * The output will be blank, since the return value is not captured.
- * 
- * Example:
- *      $output_retval = Helper\capture_buffer('print_r', true, [1, 2, 3], true);
- * 
- * The output will be print_r([1, 2, 3], true), since the return value is captured.
- * 
- * @param  string  $functionName     The name of the function to capture output from.
- * @param  bool    $captureRetVal    Whether to capture and append the return value (default: false).
- * @param  mixed   ...$args          The arguments to pass to the function.
- * @return string                    The captured output and optionally the return value if it's a string.
- * @throws \InvalidArgumentException
- * @throws \Exception
+ * @example  
+ * $output_retval = Helper\capture_buffer('print_r', true, [1, 2, 3], true);
+ * echo $output_retval . PHP_EOL;
+ * // The output will be print_r([1, 2, 3], true), since the return value is captured.
  */
 function capture_buffer(string $functionName, bool $captureRetVal = false, ...$args): string
 {
@@ -78,16 +79,23 @@ function capture_buffer(string $functionName, bool $captureRetVal = false, ...$a
  * 
  * Should be combined with get_defined_vars() since eval() can't access variables outside of its scope.
  * 
- * Example:
- *      $array = ['Apples' => 10, 'Oranges' => 20, 'Pears' => 30];
- *      $code = "FOfX\Helper\print_h2(\$array);";
- *      echo Helper\capture_eval($code, get_defined_vars());
- * 
- * @param  string  $code           The string to be evaluated.
- * @param  array   $variables      The variables to be passed to the eval() function via extract().
- * @param  bool    $captureRetVal  If true, the return value will also be captured.
- * @return string                  The captured output and optionally the return value.
- * @throws \Exception
+ * @param    string      $code           The string to be evaluated.
+ * @param    array       $variables      The variables to be passed to the eval() function via extract().
+ * @param    bool        $captureRetVal  If true, the return value will also be captured.
+ * @return   string                      The captured output and optionally the return value.
+ * @throws   \Exception
+ *
+ * @example  
+ * $array = ['Apples' => 10, 'Oranges' => 20, 'Pears' => 30];
+ * $code = "FOfX\Helper\print_h2(\$array);";
+ * echo Helper\capture_eval($code, get_defined_vars());
+ * // The above will output:
+ * // <h2>Apples</h2>
+ * // 10
+ * // <h2>Oranges</h2>
+ * // 20
+ * // <h2>Pears</h2>
+ * // 30
  */
 function capture_eval(string $code, array $variables = [], bool $captureRetVal = false): string
 {

@@ -7,4 +7,9 @@
          displayDetailsOnTestsThatTriggerWarnings="true"
 		 colors="true"
          >
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

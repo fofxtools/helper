@@ -27,13 +27,13 @@ namespace FOfX\Helper;
 /**
  * Class to help capture the outputs of commands.
  * 
- * Example:
- *      $ini = include __DIR__ . '/../config/config.php';
- *      $c = new Helper\Capture();
- *      $c->captureEval('FOfX\Helper\get_diag();');
- *      $c->captureEval('echo FOfX\Helper\get_remote_addr();');
- *      $c->captureEval('print_r($ini);', get_defined_vars());
- *      $c->print();
+ * @example  
+ * $ini = include __DIR__ . '/../config/config.php';
+ * $c = new Helper\Capture();
+ * $c->captureEval('FOfX\Helper\get_diagnostics();');
+ * $c->captureEval('echo FOfX\Helper\get_remote_addr();');
+ * $c->captureEval('print_r($ini);', get_defined_vars());
+ * $c->print();
  */
 class Capture
 {

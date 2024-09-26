@@ -1833,24 +1833,90 @@ function assoc_array_merge(string $index_field, array ...$arrays): array
  * 
  * Based on code in comments by martyniuk dot vasyl and mark dot roduner.
  * 
- * Example:
- *      $options1 = ['headers' => ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64)', 'Accept-Language' => 'en-US,en;q=1.0'], 'connect_timeout' => 10, 'timeout' => 10];
- *      $options2 = ['headers' => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']], 'connect_timeout' => 20, 'timeout' => 20];
- *      $merged = array_merge_recursive_distinct($options1, $options2);
- *      print_r($merged);
+ * @link     https://stackoverflow.com/questions/1747507/merge-multiple-arrays-recursively
+ * 
+ * @param    array  ...$arrays  The set of arrays that will be merged. Later arrays take precedence.
+ * @return   array              The merged array with distinct values.
  *
- * Or:
- *      $options1 = ['headers' => ['User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64)', 'Accept-Language' => 'en-US,en;q=1.0'], 'connect_timeout' => 10, 'timeout' => 10];
- *      $options2 = ['headers' => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']], 'connect_timeout' => 20, 'timeout' => 20];
- *      $options3 = $options4 = $options5 = $options6 = [];
- *      $arrays = [$options4, $options2, $options3, $options1, $options5, $options6];
- *      $merged = array_merge_recursive_distinct(...$arrays);
- *      print_r($merged);
+ * @example  
+ * $options1 = [
+ *     'headers' => [
+ *         'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64)',
+ *         'Accept-Language' => 'en-US,en;q=1.0'
+ *     ],
+ *     'connect_timeout' => 10,
+ *     'timeout' => 10
+ * ];
  * 
- * @link    https://stackoverflow.com/questions/1747507/merge-multiple-arrays-recursively
+ * $options2 = [
+ *     'headers' => [
+ *         'User-Agent' => 'Guzzle',
+ *         'X-Foo' => ['Bar', 'Baz']
+ *     ],
+ *     'connect_timeout' => 20,
+ *     'timeout' => 20
+ * ];
  * 
- * @param   array  ...$arrays  The set of arrays that will be merged. Later arrays take precedence.
- * @return  array              The merged array with distinct values.
+ * $merged = Helper\array_merge_recursive_distinct($options1, $options2);
+ * print_r($merged);
+ * 
+ * // Output:
+ * Array
+ * (
+ *     [headers] => Array
+ *         (
+ *             [User-Agent] => Guzzle
+ *             [Accept-Language] => en-US,en;q=1.0
+ *             [X-Foo] => Array
+ *                 (
+ *                     [0] => Bar
+ *                     [1] => Baz
+ *                 )
+ *         )
+ *     [connect_timeout] => 20
+ *     [timeout] => 20
+ * )
+ * 
+ * @example  
+ * $options1 = [
+ *     'headers' => [
+ *         'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64)',
+ *         'Accept-Language' => 'en-US,en;q=1.0'
+ *     ],
+ *     'connect_timeout' => 10,
+ *     'timeout' => 10
+ * ];
+ * 
+ * $options2 = [
+ *     'headers' => [
+ *         'User-Agent' => 'Guzzle',
+ *         'X-Foo' => ['Bar', 'Baz']
+ *     ],
+ *     'connect_timeout' => 20,
+ *     'timeout' => 20
+ * ];
+ * 
+ * $options3 = $options4 = $options5 = $options6 = [];
+ * $arrays = [$options4, $options2, $options3, $options1, $options5, $options6];
+ * $merged = Helper\array_merge_recursive_distinct(...$arrays);
+ * print_r($merged);
+ * 
+ * // Output:
+ * Array
+ * (
+ *     [headers] => Array
+ *         (
+ *             [User-Agent] => Mozilla/5.0 (X11; Linux x86_64)
+ *             [X-Foo] => Array
+ *                 (
+ *                     [0] => Bar
+ *                     [1] => Baz
+ *                 )
+ *             [Accept-Language] => en-US,en;q=1.0
+ *         )
+ *     [connect_timeout] => 10
+ *     [timeout] => 10
+ * )
  */
 function array_merge_recursive_distinct(array ...$arrays): array
 {
