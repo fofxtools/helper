@@ -1,0 +1,9 @@
+parameters:
+    level: 5
+    paths:
+        - bootstrap
+        - config
+        - public
+        - src
+    excludePaths:
+        - vendor

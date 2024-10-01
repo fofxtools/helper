@@ -128,7 +128,7 @@ function get_memory_info(bool $format = false): array
 function get_windows_memory_info(): array
 {
     // Execute wmic command and get output
-    $output = shell_exec('wmic OS get TotalVirtualMemorySize,TotalVisibleMemorySize,FreeVirtualMemory,FreePhysicalMemory /format:list');
+    $output = shell_exec('wmic OS get TotalVirtualMemorySize,TotalVisibleMemorySize,FreeVirtualMemory,FreePhysicalMemory,SizeStoredInPagingFiles,FreeSpaceInPagingFiles /format:list');
 
     // Handle error
     if ($output === false || $output === null) {
@@ -152,6 +152,8 @@ function parse_windows_memory_output(string $output): array
         'TotalVisibleMemorySize' => 0,
         'FreeVirtualMemory' => 0,
         'FreePhysicalMemory' => 0,
+        'SizeStoredInPagingFiles' => 0,
+        'FreeSpaceInPagingFiles' => 0,
     ];
 
     // Parse wmic output
@@ -174,13 +176,28 @@ function parse_windows_memory_output(string $output): array
  */
 function calculate_windows_memory_info(array $memory_info): array
 {
+    // Calculate swap information
+    $swapTotal = $memory_info['SizeStoredInPagingFiles'];
+    $swapFree = $memory_info['FreeSpaceInPagingFiles'];
+    $swapUsed = $swapTotal - $swapFree;
+
+    // Ensure non-negative values
+    $swapTotal = max(0, $swapTotal);
+    $swapFree = max(0, $swapFree);
+    $swapUsed = max(0, $swapUsed);
+
+    // Ensure SwapFree and SwapUsed don't exceed SwapTotal
+    $swapFree = min($swapFree, $swapTotal);
+    $swapUsed = min($swapUsed, $swapTotal);
+
     // Calculate memory and swap information
     return [
         'MemTotal' => $memory_info['TotalVisibleMemorySize'],
         'MemFree' => $memory_info['FreePhysicalMemory'],
         'MemAvailable' => $memory_info['FreePhysicalMemory'],
-        'SwapTotal' => $memory_info['TotalVirtualMemorySize'] - $memory_info['TotalVisibleMemorySize'],
-        'SwapFree' => $memory_info['FreeVirtualMemory'] - $memory_info['FreePhysicalMemory'],
+        'SwapTotal' => $swapTotal,
+        'SwapFree' => $swapFree,
+        'SwapUsed' => $swapUsed,
     ];
 }
 

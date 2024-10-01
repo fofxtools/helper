@@ -171,10 +171,10 @@ function limit_sleep(float $limit, float $period = 60): void
  * 
  * @link     https://www.php.net/manual/en/dateinterval.format.php
  * 
- * @param    DateTime  $start_date       The start DateTime object.
- * @param    DateTime  $end_date         The end DateTime object.
- * @param    bool      $return_absolute  If true, returns the absolute value of the difference. Defaults to false.
- * @return   float                       The difference between the two DateTime objects in seconds.
+ * @param    \DateTime  $start_date         The start DateTime object.
+ * @param    \DateTime  $end_date           The end DateTime object.
+ * @param    bool       $return_absolute    If true, returns the absolute value of the difference. Defaults to false.
+ * @return   float                          The difference between the two DateTime objects in seconds.
  *
  * @example  
  * $start_date = new DateTime('2010-01-01');

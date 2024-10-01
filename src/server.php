@@ -123,7 +123,6 @@ function get_http_host(bool $use_forwarded_host = false): string
  *
  * @param   string|null       $osFamily  The OS family to use (for testing purposes).
  * @return  string                       The home directory of the current user.
- * @throws  RuntimeException             If unable to determine the home directory.
  */
 function get_user_home_directory(?string $osFamily = null): string
 {

@@ -343,7 +343,9 @@ class MemoryTest extends TestCase
         $input = "TotalVirtualMemorySize=8388608" . PHP_EOL .
             "TotalVisibleMemorySize=4194304" . PHP_EOL .
             "FreeVirtualMemory=6291456" . PHP_EOL .
-            "FreePhysicalMemory=2097152" . PHP_EOL;
+            "FreePhysicalMemory=2097152" . PHP_EOL .
+            "SizeStoredInPagingFiles=4194304" . PHP_EOL .
+            "FreeSpaceInPagingFiles=3145728" . PHP_EOL;
         $result = parse_windows_memory_output($input);
 
         $this->assertEquals([
@@ -351,6 +353,8 @@ class MemoryTest extends TestCase
             'TotalVisibleMemorySize' => 4194304,
             'FreeVirtualMemory' => 6291456,
             'FreePhysicalMemory' => 2097152,
+            'SizeStoredInPagingFiles' => 4194304,
+            'FreeSpaceInPagingFiles' => 3145728,
         ], $result);
     }
 
@@ -367,6 +371,8 @@ class MemoryTest extends TestCase
             'TotalVisibleMemorySize' => 0,
             'FreeVirtualMemory' => 0,
             'FreePhysicalMemory' => 0,
+            'SizeStoredInPagingFiles' => 0,
+            'FreeSpaceInPagingFiles' => 0,
         ], $result);
     }
 
@@ -380,6 +386,8 @@ class MemoryTest extends TestCase
             'TotalVisibleMemorySize' => 4194304,
             'FreeVirtualMemory' => 6291456,
             'FreePhysicalMemory' => 2097152,
+            'SizeStoredInPagingFiles' => 4194304,
+            'FreeSpaceInPagingFiles' => 3145728,
         ];
         $result = calculate_windows_memory_info($input);
 
@@ -388,7 +396,8 @@ class MemoryTest extends TestCase
             'MemFree' => 2097152,
             'MemAvailable' => 2097152,
             'SwapTotal' => 4194304,
-            'SwapFree' => 4194304,
+            'SwapFree' => 3145728,
+            'SwapUsed' => 1048576,
         ], $result);
     }
 

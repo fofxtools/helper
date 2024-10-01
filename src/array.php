@@ -1625,7 +1625,7 @@ function binary_in_array(
  *      ini_set("memory_limit","512M");
  * 
  * Example: 
- *      $filename = 'files/3d_related_us_2023-01-07.csv';
+ *      $filename = 'local/3d_related_us_2023-01-07.csv';
  *      $file_contents = file_get_contents($filename);
  *      $parsed = str_csv_to_array($file_contents);
  *      print_r(assoc_array_truncate(csv_array_to_assoc($parsed), 0, 10));
