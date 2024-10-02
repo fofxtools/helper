@@ -477,11 +477,14 @@ function get_mem_free_total(bool $get_available = false, bool $format = false): 
     $memory_info = get_memory_info(false);
 
     $mem_free_key = $get_available ? 'MemAvailable' : 'MemFree';
-    $total_free   = ($memory_info[$mem_free_key] ?? null) + ($memory_info['SwapFree'] ?? null);
 
-    if ($total_free === null) {
+    // Ensure both values are present before summing
+    if (!isset($memory_info[$mem_free_key]) || !isset($memory_info['SwapFree'])) {
         return null;
     }
+
+    // Now that both are set, sum them
+    $total_free = $memory_info[$mem_free_key] + $memory_info['SwapFree'];
 
     if ($format) {
         $total_free = format_bytes($total_free);

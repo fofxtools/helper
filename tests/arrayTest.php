@@ -2350,6 +2350,7 @@ class ArrayTest extends TestCase
     {
         $this->expectException(\TypeError::class);
 
+        // @phpstan-ignore-next-line
         array_zip([1, 2, 3], 'not an array');
     }
 

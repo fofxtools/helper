@@ -319,11 +319,6 @@ function curl_multi_get_contents(array $urls, bool $use_proxy = false, bool $use
  */
 function configure_curl_handle(\CurlHandle $ch, string $url, bool $use_headers, bool $use_proxy, array &$used_proxies, array $options, int $id, array $post_data = [])
 {
-    // Initialize the cURL handle if needed
-    if ($ch === false) {
-        $ch = curl_init();
-    }
-
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -367,20 +362,15 @@ function configure_curl_handle(\CurlHandle $ch, string $url, bool $use_headers, 
 /**
  * Executes the multi-cURL requests and processes the responses.
  *
- * @param  resource  $mh            The multi-cURL handle.
+ * @param  \CurlMultiHandle  $mh            The multi-cURL handle.
  * @param  array     &$result       Reference to store the results.
  * @param  array     $curl_handles  Array of cURL handles.
  * @param  array     $urls          Array of URLs.
  * @param  bool      $use_proxy     Whether to include proxy in the response.
  * @param  array     $used_proxies  List of used proxies.
  */
-function execute_multi_curl($mh, array &$result, array $curl_handles, array $urls, bool $use_proxy, array $used_proxies)
+function execute_multi_curl(\CurlMultiHandle $mh, array &$result, array $curl_handles, array $urls, bool $use_proxy, array $used_proxies)
 {
-    // Initialize the multi-cURL handle if needed
-    if ($mh === false) {
-        $mh = curl_multi_init();
-    }
-
     $running = null;
     $info_array = [];
 

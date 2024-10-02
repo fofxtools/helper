@@ -436,8 +436,11 @@ function print_php_constants(): void
     echo "__FILE__ : " . __FILE__ . PHP_EOL;
     echo "__DIR__ : " . __DIR__ . PHP_EOL;
     echo "__FUNCTION__ : " . __FUNCTION__ . PHP_EOL;
-    echo "__CLASS__ : " . (__CLASS__ ?: 'N/A') . PHP_EOL;
-    echo "__TRAIT__ : " . (__TRAIT__ ?: 'N/A') . PHP_EOL;
+
+    // Check if within a class or trait context
+    echo "__CLASS__ : " . (defined('__CLASS__') ? __CLASS__ : 'N/A') . PHP_EOL;
+    echo "__TRAIT__ : " . (defined('__TRAIT__') ? __TRAIT__ : 'N/A') . PHP_EOL;
+
     echo "__METHOD__ : " . __METHOD__ . PHP_EOL;
     echo "__NAMESPACE__ : " . __NAMESPACE__ . PHP_EOL;
 }

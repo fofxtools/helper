@@ -43,7 +43,7 @@ class Capture
     /**
      * Captures the output of a function into a string and saves it in $this->outputArray.
      *
-     * @param   string  $string         The function call string to capture.
+     * @param   string  $functionName   The function to capture.
      * @param   bool    $captureRetVal  Whether to capture and append the return value (default: false).
      * @param   mixed   ...$args        The arguments to pass to the function.
      * @return  void

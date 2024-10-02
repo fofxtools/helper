@@ -48,6 +48,7 @@ class ScrapingTest extends TestCase
         $proxy = get_random_proxy();
 
         $this->assertTrue(
+             // @phpstan-ignore-next-line
             is_null($proxy) || is_string($proxy),
             "Expected value to be either null or string, but got " . gettype($proxy)
         );

@@ -30,9 +30,9 @@ namespace FOfX\Helper;
  * @link    https://stackoverflow.com/questions/9624284/current-timestamp-in-milliseconds
  * @link    https://www.php.net/manual/en/datetime.format.php
  * 
- * @param   boolean      $microseconds  Whether to append microseconds
- * @param   boolean|int  $precision     If microseconds, how many digits of microseconds precision to round to. Default precision is 6.
- * @param   string       $format
+ * @param   boolean      $includeMicroseconds   Whether to append microseconds
+ * @param   boolean|int  $precision             If microseconds, how many digits of microseconds precision to round to. Default precision is 6.
+ * @param   string       $format                The format of the date and time to return.
  * @return  string
  */
 function now(bool $includeMicroseconds = false, bool|int $precision = false, string $format = "Y-m-d H:i:s"): string
@@ -51,7 +51,7 @@ function now(bool $includeMicroseconds = false, bool|int $precision = false, str
     }
 
     // Extract the microseconds part
-    $microseconds = substr($formattedDateTime, -6);
+    $microseconds = (int)substr($formattedDateTime, -6);
 
     // Round the microseconds to the specified precision
     // Use number_format() to re-add 0's deleted by round()
@@ -78,7 +78,7 @@ function today(): string
  * If $microseconds_only is true, it returns only the microseconds portion.
  * Otherwise, it returns the full timestamp with microseconds.
  * 
- * @param   boolean  $microsecondsOnly  If true, returns only the microseconds decimal portion of the timestamp.
+ * @param   boolean  $microseconds_only If true, returns only the microseconds decimal portion of the timestamp.
  *                                      Else returns the full timestamp.
  * @return  string                      The timestamp with or without microseconds.
  */
@@ -109,7 +109,7 @@ function rand_sleep(float $seconds): void
         throw new \InvalidArgumentException('The $seconds parameter must be non-negative.');
     }
 
-    $microseconds = $seconds * 1000000;
+    $microseconds = (int)($seconds * 1000000);
     $random_microseconds = mt_rand(0, $microseconds);
     usleep($random_microseconds);
 }
@@ -130,7 +130,7 @@ function float_sleep(float $seconds): void
         throw new \InvalidArgumentException('The $seconds parameter must be non-negative.');
     }
 
-    $microseconds = ceil($seconds * 1000000);
+    $microseconds = (int)ceil($seconds * 1000000);
     usleep($microseconds);
 }
 

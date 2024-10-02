@@ -1017,7 +1017,7 @@ function array_zip(array ...$arrays): array
  * Using the passing in of an array of arrays rather than the splat operator, due to $precision argument
  * 
  * @param   array                      $arrays
- * @param   ?int                                precision
+ * @param   ?int                                $precision
  * @return  array
  * @throws  \InvalidArgumentException           If the input arrays do not have the same keys.
  * @see     array_same_keys
@@ -1260,7 +1260,7 @@ function shuffle_secure(array $array, int|bool $length = false): array
  * 
  * @param   array  $array  The array to pick from.
  * @param   int    $num    The number of elements to pick.
- * @return  mixed
+ * @return  array
  */
 function array_rand_to_array(array $array, int $num = 1): array
 {
@@ -1346,7 +1346,7 @@ function array_multisort_by_array(
     array &$array1,
     array $array2,
     int $sort_order = SORT_ASC,
-    int $sort_flag = SORT_REGULAR
+    int $sort_flags = SORT_REGULAR
 ): void {
     // Ensure that the array counts match.
     if (count($array1) != count($array2)) {
@@ -1362,8 +1362,9 @@ function array_multisort_by_array(
     foreach ($keys as $i => $key) {
         $tempArray[] = ['sort_value' => $array2[$i], 'original_key' => $key, 'original_value' => $array1[$key]];
     }
+    $sort_column = array_column($tempArray, 'sort_value');
     // Sort the temporary array by 'sort_value'.
-    array_multisort(array_column($tempArray, 'sort_value'), $sort_order, $sort_flag, $tempArray);
+    array_multisort($sort_column, $sort_order, $sort_flags, $tempArray);
 
     // Rebuild $array1 based on the sorted order.
     $sortedArray = [];
@@ -1654,6 +1655,7 @@ function str_csv_to_array(
     // Split the string into lines
     $lines = split_lines($string);
     $array = [];
+    $headers = [];
 
     if ($first_line_headers) {
         // Extract headers

@@ -25,6 +25,7 @@ error_log
 /.zed
 
 # Cache Files
+/.php-cs-fixer.cache
 /.phpunit.result.cache
 /.phpunit.cache
 /.phpstan/cache/

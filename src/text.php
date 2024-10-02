@@ -18,7 +18,7 @@ namespace FOfX\Helper;
 /**
  * Separates a string into non-overlapping chunks, of lengths 1 to $max_length.
  *
- * @param    string                     $string      The string to be separated into chunks.
+ * @param    string                     $input       The input string to be separated into chunks.
  * @param    int                        $max_length  The maximum length of each chunk.
  * @return   array                                   An array of chunks with varying lengths.
  *

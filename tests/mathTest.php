@@ -1147,7 +1147,7 @@ class MathTest extends TestCase
         $expected = (1.5 * 2) + (2.7 * 3) + (0.5 * 4);
 
         // Assert the correct result
-        $this->assertEquals($expected, $result, '', 0.0001);
+        $this->assertEqualsWithDelta($expected, $result, 0.0001, 'The result is not within the expected delta.');
     }
 
     /**

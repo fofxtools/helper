@@ -302,7 +302,7 @@ function replace_vars_scope(string $inputString, string $scope = 'GLOBALS'): str
  */
 function print_array_with_headings(
     array $array,
-    bool $use_html_special_chars = true,
+    bool $use_htmlspecialchars = true,
     bool $return_as_string = false,
     string $heading_tag = 'h2',
     int $start_depth = 1
@@ -315,19 +315,19 @@ function print_array_with_headings(
     $output = '';
 
     foreach ($array as $key => $value) {
-        $formatted_key = $use_html_special_chars ? htmlspecialchars($key, ENT_QUOTES, 'UTF-8') : $key;
+        $formatted_key = $use_htmlspecialchars ? htmlspecialchars($key, ENT_QUOTES, 'UTF-8') : $key;
 
         if (is_array($value)) {
             $formatted_value = print_array_with_headings(
                 $value,
-                $use_html_special_chars,
+                $use_htmlspecialchars,
                 true,
                 $heading_tag,
                 $heading_tag === 'auto' ? $start_depth + 1 : $start_depth
             );
         } else {
             $formatted_value = $value ?? '';
-            if ($use_html_special_chars) {
+            if ($use_htmlspecialchars) {
                 $formatted_value = htmlspecialchars($formatted_value, ENT_QUOTES, 'UTF-8');
             }
         }
@@ -652,8 +652,8 @@ function mb_str_pad($input, $length, $pad_string = ' ', $pad_type = STR_PAD_RIGH
                     mb_substr(str_repeat($pad_string, $pad_stringRequired), 0, $pad_stringRequired, $encoding);
                 break;
             case STR_PAD_BOTH:
-                $leftPaddingLength = floor($pad_stringRequired / 2);
-                $rightPaddingLength = $pad_stringRequired - $leftPaddingLength;
+                $leftPaddingLength = (int)floor($pad_stringRequired / 2);
+                $rightPaddingLength = (int)($pad_stringRequired - $leftPaddingLength);
                 $result =
                     mb_substr(str_repeat($pad_string, $leftPaddingLength), 0, $leftPaddingLength, $encoding) .
                     $input .
@@ -986,6 +986,7 @@ function get_stop_words(): array
 function remove_stop_words(string $words): string
 {
     $stop_words = get_stop_words();
+    $stop_words_patterns = [];
 
     // Convert stop words to regex patterns
     foreach ($stop_words as $key => $word) {

@@ -921,6 +921,7 @@ class ServerTest extends TestCase
             $this->expectException(\TypeError::class);
 
             // Call get_network_stats with an invalid PID
+             // @phpstan-ignore-next-line
             get_network_stats('invalid_pid');
         } else {
             $this->markTestSkipped('This test is only applicable to Linux.');
@@ -1107,6 +1108,7 @@ class ServerTest extends TestCase
         $this->expectException(\TypeError::class);
 
         // Call get_linux_network_stats with an invalid PID
+         // @phpstan-ignore-next-line
         get_linux_network_stats('invalid_pid');
     }
 
