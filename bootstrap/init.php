@@ -10,8 +10,6 @@
  * - Checks for PHPUnit testing environment
  * - Loads configuration file
  * - Initializes Tracker singleton based on configuration
- *
- * @package  FOfX\Helper
  */
 
 namespace FOfX\Helper;
@@ -28,12 +26,13 @@ if (!is_phpunit_environment()) {
  * 'autoStartTracker' setting, and initializes the Tracker singleton if
  * the setting is true.
  *
- * @param   string|null        $configFile  The path to the configuration file.
- *                                          Defaults to 'config/config.php'.
- * @return  void
+ * @param string|null $configFile The path to the configuration file.
+ *                                Defaults to 'config/config.php'.
  *
- * @throws  \RuntimeException               If the configuration file cannot be loaded.
- *                                          This exception is caught and ignored within the function.
+ * @throws \RuntimeException If the configuration file cannot be loaded.
+ *                           This exception is caught and ignored within the function.
+ *
+ * @return void
  *
  * @see     Tracker::getInstance()
  * @see     resolve_config_file_path()

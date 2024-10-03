@@ -11,7 +11,7 @@ class ArrayTest extends TestCase
      */
     public function test_super_unique_with_simple_array()
     {
-        $array = [1, 2, 2, 3, 4, 4, 5];
+        $array    = [1, 2, 2, 3, 4, 4, 5];
         $expected = [1, 2, 3, 4, 5];
         $this->assertEquals($expected, array_values(super_unique($array)));
     }
@@ -26,12 +26,12 @@ class ArrayTest extends TestCase
             [1, 2, 3],
             [4, 5, 6],
             [7, 8, 9],
-            [4, 5, 6]
+            [4, 5, 6],
         ];
         $expected = [
             [1, 2, 3],
             [4, 5, 6],
-            [7, 8, 9]
+            [7, 8, 9],
         ];
         $this->assertEquals($expected, array_values(super_unique($array)));
     }
@@ -41,7 +41,7 @@ class ArrayTest extends TestCase
      */
     public function test_super_unique_with_empty_array()
     {
-        $array = [];
+        $array    = [];
         $expected = [];
         $this->assertEquals($expected, array_values(super_unique($array)));
     }
@@ -51,7 +51,7 @@ class ArrayTest extends TestCase
      */
     public function test_super_unique_with_mixed_types_array()
     {
-        $array = [1, '1', 2, '2', 3, '3'];
+        $array    = [1, '1', 2, '2', 3, '3'];
         $expected = [1, '1', 2, '2', 3, '3'];
         $this->assertEquals($expected, array_values(super_unique($array)));
     }
@@ -65,11 +65,11 @@ class ArrayTest extends TestCase
             [1, 2, [3, 4]],
             [1, 2, [3, 4]],
             [5, 6, [7, 8]],
-            [5, 6, [7, 8]]
+            [5, 6, [7, 8]],
         ];
         $expected = [
             [1, 2, [3, 4]],
-            [5, 6, [7, 8]]
+            [5, 6, [7, 8]],
         ];
         $this->assertEquals($expected, array_values(super_unique($array)));
     }
@@ -81,7 +81,7 @@ class ArrayTest extends TestCase
      */
     public function test_recursive_implode_with_simple_array()
     {
-        $array = [1, 2, 3];
+        $array    = [1, 2, 3];
         $expected = '1,2,3';
         $this->assertEquals($expected, recursive_implode($array));
     }
@@ -93,7 +93,7 @@ class ArrayTest extends TestCase
      */
     public function test_recursive_implode_with_multidimensional_array()
     {
-        $array = [1, [2, 3], 4];
+        $array    = [1, [2, 3], 4];
         $expected = '1,2,3,4';
         $this->assertEquals($expected, recursive_implode($array));
     }
@@ -105,7 +105,7 @@ class ArrayTest extends TestCase
      */
     public function test_recursive_implode_include_keys()
     {
-        $array = ['a' => 1, 'b' => 2, 'c' => 3];
+        $array    = ['a' => 1, 'b' => 2, 'c' => 3];
         $expected = 'a,1,b,2,c,3';
         $this->assertEquals($expected, recursive_implode($array, ',', true));
     }
@@ -117,7 +117,7 @@ class ArrayTest extends TestCase
      */
     public function test_recursive_implode_trim_all_whitespace()
     {
-        $array = [' a ', ' b ', ' c '];
+        $array    = [' a ', ' b ', ' c '];
         $expected = 'a,b,c';
         $this->assertEquals($expected, recursive_implode($array, ',', false, true));
     }
@@ -129,10 +129,10 @@ class ArrayTest extends TestCase
      */
     public function test_recursive_implode_with_objects()
     {
-        $object = new \stdClass();
+        $object           = new \stdClass();
         $object->property = 'value';
-        $array = [1, $object, 3];
-        $expected = '1;' . serialize($object) . ';3';
+        $array            = [1, $object, 3];
+        $expected         = '1;' . serialize($object) . ';3';
         $this->assertEquals($expected, recursive_implode($array, ';'));
     }
 
@@ -143,7 +143,7 @@ class ArrayTest extends TestCase
      */
     public function test_recursive_implode_with_empty_array()
     {
-        $array = [];
+        $array    = [];
         $expected = '';
         $this->assertEquals($expected, recursive_implode($array));
     }
@@ -153,7 +153,7 @@ class ArrayTest extends TestCase
      */
     public function test_pre_r_returns_formatted_string()
     {
-        $array = ['a' => 1, 'b' => 2];
+        $array    = ['a' => 1, 'b' => 2];
         $expected = "<pre>\nArray\n(\n    [a] => 1\n    [b] => 2\n)\n</pre>\n";
 
         $result = pre_r($array, true);
@@ -166,7 +166,7 @@ class ArrayTest extends TestCase
      */
     public function test_pre_r_prints_formatted_output()
     {
-        $array = ['x' => 'foo', 'y' => 'bar'];
+        $array          = ['x' => 'foo', 'y' => 'bar'];
         $expectedOutput = "<pre>\nArray\n(\n    [x] => foo\n    [y] => bar\n)\n</pre>\n";
 
         $this->expectOutputString($expectedOutput);
@@ -215,7 +215,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_numeric_with_all_numeric_elements()
     {
-        $array = [1, 2, 3, 4.5, '6'];
+        $array  = [1, 2, 3, 4.5, '6'];
         $result = array_is_numeric($array);
         $this->assertTrue($result);
     }
@@ -226,7 +226,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_numeric_with_non_numeric_elements()
     {
-        $array = [1, 2, 'abc', 4.5];
+        $array  = [1, 2, 'abc', 4.5];
         $result = array_is_numeric($array);
         $this->assertFalse($result);
     }
@@ -238,8 +238,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_numeric_with_empty_array_and_check_empty_true()
     {
-        $array = [];
-        $result = array_is_numeric($array, TRUE);
+        $array  = [];
+        $result = array_is_numeric($array, true);
         $this->assertFalse($result);
     }
 
@@ -250,8 +250,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_numeric_with_empty_array_and_check_empty_false()
     {
-        $array = [];
-        $result = array_is_numeric($array, FALSE);
+        $array  = [];
+        $result = array_is_numeric($array, false);
         $this->assertTrue($result);
     }
 
@@ -261,7 +261,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_numeric_with_mixed_elements_including_zero()
     {
-        $array = [0, '0', 0.0, 0.5];
+        $array  = [0, '0', 0.0, 0.5];
         $result = array_is_numeric($array);
         $this->assertTrue($result);
     }
@@ -273,7 +273,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_numeric_with_only_non_numeric_elements()
     {
-        $array = ['abc', null, [], new \stdClass()];
+        $array  = ['abc', null, [], new \stdClass()];
         $result = array_is_numeric($array);
         $this->assertFalse($result);
     }
@@ -284,7 +284,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_positive_numeric_with_all_positive_numbers()
     {
-        $array = [1, 2, 3, 4.5, 6];
+        $array  = [1, 2, 3, 4.5, 6];
         $result = array_is_positive_numeric($array);
         $this->assertTrue($result);
     }
@@ -295,7 +295,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_positive_numeric_with_negative_number()
     {
-        $array = [1, -2, 3];
+        $array  = [1, -2, 3];
         $result = array_is_positive_numeric($array);
         $this->assertFalse($result);
     }
@@ -306,7 +306,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_positive_numeric_with_non_numeric_value()
     {
-        $array = [1, 2, 'abc'];
+        $array  = [1, 2, 'abc'];
         $result = array_is_positive_numeric($array);
         $this->assertFalse($result);
     }
@@ -317,8 +317,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_positive_numeric_with_empty_array_and_check_empty_true()
     {
-        $array = [];
-        $result = array_is_positive_numeric($array, TRUE);
+        $array  = [];
+        $result = array_is_positive_numeric($array, true);
         $this->assertFalse($result);
     }
 
@@ -328,8 +328,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_positive_numeric_with_empty_array_and_check_empty_false()
     {
-        $array = [];
-        $result = array_is_positive_numeric($array, FALSE);
+        $array  = [];
+        $result = array_is_positive_numeric($array, false);
         $this->assertTrue($result);
     }
 
@@ -339,7 +339,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_positive_numeric_with_zero()
     {
-        $array = [0, 1, 2];
+        $array  = [0, 1, 2];
         $result = array_is_positive_numeric($array);
         $this->assertTrue($result);
     }
@@ -350,7 +350,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_positive_numeric_with_all_negative_numbers()
     {
-        $array = [-1, -2, -3];
+        $array  = [-1, -2, -3];
         $result = array_is_positive_numeric($array);
         $this->assertFalse($result);
     }
@@ -361,7 +361,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_int_indexes_with_valid_integer_indexes()
     {
-        $array = [0, 1, 2, 3];
+        $array  = [0, 1, 2, 3];
         $result = array_is_int_indexes($array);
         $this->assertTrue($result);
     }
@@ -372,7 +372,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_int_indexes_with_non_integer_value()
     {
-        $array = [0, 1, '2', 3];
+        $array  = [0, 1, '2', 3];
         $result = array_is_int_indexes($array);
         $this->assertFalse($result);
     }
@@ -383,7 +383,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_int_indexes_with_negative_integer()
     {
-        $array = [0, -1, 2, 3];
+        $array  = [0, -1, 2, 3];
         $result = array_is_int_indexes($array);
         $this->assertFalse($result);
     }
@@ -394,8 +394,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_int_indexes_with_empty_array_and_check_empty_true()
     {
-        $array = [];
-        $result = array_is_int_indexes($array, TRUE);
+        $array  = [];
+        $result = array_is_int_indexes($array, true);
         $this->assertFalse($result);
     }
 
@@ -405,8 +405,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_int_indexes_with_empty_array_and_check_empty_false()
     {
-        $array = [];
-        $result = array_is_int_indexes($array, FALSE);
+        $array  = [];
+        $result = array_is_int_indexes($array, false);
         $this->assertTrue($result);
     }
 
@@ -416,7 +416,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_is_int_indexes_with_mixed_non_integer_values()
     {
-        $array = [0, 'string', 2.5, 3];
+        $array  = [0, 'string', 2.5, 3];
         $result = array_is_int_indexes($array);
         $this->assertFalse($result);
     }
@@ -427,7 +427,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_string_keys_with_numeric_keys()
     {
-        $array = [1, 2, 3];
+        $array  = [1, 2, 3];
         $result = has_string_keys($array);
         $this->assertFalse($result);
     }
@@ -438,7 +438,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_string_keys_with_string_keys()
     {
-        $array = ['a' => 1, 'b' => 2, 'c' => 3];
+        $array  = ['a' => 1, 'b' => 2, 'c' => 3];
         $result = has_string_keys($array);
         $this->assertTrue($result);
     }
@@ -449,7 +449,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_string_keys_with_mixed_keys()
     {
-        $array = [1, 'b' => 2, 3];
+        $array  = [1, 'b' => 2, 3];
         $result = has_string_keys($array);
         $this->assertTrue($result);
     }
@@ -460,7 +460,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_string_keys_with_empty_array()
     {
-        $array = [];
+        $array  = [];
         $result = has_string_keys($array);
         $this->assertFalse($result);
     }
@@ -471,7 +471,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_array_values_with_no_array_values()
     {
-        $array = [1, 2, 3, 'string', null];
+        $array  = [1, 2, 3, 'string', null];
         $result = has_array_values($array);
         $this->assertFalse($result);
     }
@@ -482,7 +482,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_array_values_with_array_value()
     {
-        $array = [1, 2, [3, 4], 'string'];
+        $array  = [1, 2, [3, 4], 'string'];
         $result = has_array_values($array);
         $this->assertTrue($result);
     }
@@ -493,7 +493,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_array_values_with_empty_array()
     {
-        $array = [];
+        $array  = [];
         $result = has_array_values($array);
         $this->assertFalse($result);
     }
@@ -504,7 +504,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_array_values_with_only_array_values()
     {
-        $array = [[1, 2], ['a', 'b'], [3.14, true]];
+        $array  = [[1, 2], ['a', 'b'], [3.14, true]];
         $result = has_array_values($array);
         $this->assertTrue($result);
     }
@@ -515,7 +515,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_array_values_with_mixed_values()
     {
-        $array = [1, [2, 3], 'string', 4.5, null, [5, 6]];
+        $array  = [1, [2, 3], 'string', 4.5, null, [5, 6]];
         $result = has_array_values($array);
         $this->assertTrue($result);
     }
@@ -526,7 +526,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_array_values_with_only_array_values()
     {
-        $array = [[1, 2], ['a', 'b'], [3.14, true]];
+        $array  = [[1, 2], ['a', 'b'], [3.14, true]];
         $result = has_only_array_values($array);
         $this->assertTrue($result);
     }
@@ -537,7 +537,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_array_values_with_mixed_values()
     {
-        $array = [[1, 2], 'string', [3.14, true]];
+        $array  = [[1, 2], 'string', [3.14, true]];
         $result = has_only_array_values($array);
         $this->assertFalse($result);
     }
@@ -548,7 +548,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_array_values_with_no_array_values()
     {
-        $array = [1, 2, 'string', null];
+        $array  = [1, 2, 'string', null];
         $result = has_only_array_values($array);
         $this->assertFalse($result);
     }
@@ -559,7 +559,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_array_values_with_empty_array()
     {
-        $array = [];
+        $array  = [];
         $result = has_only_array_values($array);
         $this->assertTrue($result);
     }
@@ -570,7 +570,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_array_values_with_nested_arrays()
     {
-        $array = [[[1, 2]], [['a', 'b']], [[3.14, true]]];
+        $array  = [[[1, 2]], [['a', 'b']], [[3.14, true]]];
         $result = has_only_array_values($array);
         $this->assertTrue($result);
     }
@@ -581,7 +581,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_similar_array_values_with_same_size_arrays()
     {
-        $array = [[1, 2], ['a', 'b'], [true, false]];
+        $array  = [[1, 2], ['a', 'b'], [true, false]];
         $result = has_only_similar_array_values($array);
         $this->assertTrue($result);
     }
@@ -592,7 +592,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_similar_array_values_with_different_size_arrays()
     {
-        $array = [[1, 2], ['a', 'b', 'c'], [true, false]];
+        $array  = [[1, 2], ['a', 'b', 'c'], [true, false]];
         $result = has_only_similar_array_values($array);
         $this->assertFalse($result);
     }
@@ -603,7 +603,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_similar_array_values_with_mixed_values()
     {
-        $array = [[1, 2], 'string', [true, false]];
+        $array  = [[1, 2], 'string', [true, false]];
         $result = has_only_similar_array_values($array);
         $this->assertFalse($result);
     }
@@ -614,7 +614,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_similar_array_values_with_empty_array()
     {
-        $array = [];
+        $array  = [];
         $result = has_only_similar_array_values($array);
         $this->assertTrue($result);
     }
@@ -625,7 +625,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_similar_array_values_with_empty_and_non_empty_arrays()
     {
-        $array = [[], [], []];
+        $array  = [[], [], []];
         $result = has_only_similar_array_values($array);
         $this->assertTrue($result);
     }
@@ -636,7 +636,7 @@ class ArrayTest extends TestCase
      */
     public function test_has_only_similar_array_values_with_single_array_value()
     {
-        $array = [[1, 2, 3]];
+        $array  = [[1, 2, 3]];
         $result = has_only_similar_array_values($array);
         $this->assertTrue($result);
     }
@@ -650,7 +650,7 @@ class ArrayTest extends TestCase
         $arrays = [
             ['a' => 1, 'b' => 2, 'c' => 3],
             ['a' => 'A', 'b' => 'B', 'c' => 'C'],
-            ['a' => 'X', 'b' => 'Y', 'c' => 'Z']
+            ['a' => 'X', 'b' => 'Y', 'c' => 'Z'],
         ];
         $result = array_same_keys(...$arrays);
         $this->assertTrue($result);
@@ -665,7 +665,7 @@ class ArrayTest extends TestCase
         $arrays = [
             [1, 2, 3],
             ['a' => 'A', 'b' => 'B', 'c' => 'C'],
-            [0 => 'X', 1 => 'Y', 2 => 'Z']
+            [0   => 'X', 1 => 'Y', 2 => 'Z'],
         ];
         $result = array_same_keys(...$arrays);
         $this->assertFalse($result);
@@ -679,7 +679,7 @@ class ArrayTest extends TestCase
     {
         $arrays = [
             ['a' => 'A', 'b' => 'B', 'c' => 'C'],
-            ['c' => 'C', 'b' => 'B', 'a' => 'A']
+            ['c' => 'C', 'b' => 'B', 'a' => 'A'],
         ];
         $result = array_same_keys(...$arrays);
         $this->assertFalse($result);
@@ -693,7 +693,7 @@ class ArrayTest extends TestCase
     {
         $arrays = [
             [1, 2, 3],
-            []
+            [],
         ];
         $result = array_same_keys(...$arrays);
         $this->assertFalse($result);
@@ -707,7 +707,7 @@ class ArrayTest extends TestCase
     {
         $arrays = [
             [],
-            []
+            [],
         ];
         $result = array_same_keys(...$arrays);
         $this->assertTrue($result);
@@ -720,7 +720,7 @@ class ArrayTest extends TestCase
     public function test_array_same_keys_with_single_array()
     {
         $arrays = [
-            [1, 2, 3]
+            [1, 2, 3],
         ];
         $result = array_same_keys(...$arrays);
         $this->assertTrue($result);
@@ -735,7 +735,7 @@ class ArrayTest extends TestCase
         $arrays = [
             [1, 2, 3],
             ['a' => 'A', 'b' => 'B', 'c' => 'C'],
-            [100, 200, 300]
+            [100, 200, 300],
         ];
         $result = array_same_counts(...$arrays);
         $this->assertTrue($result);
@@ -750,7 +750,7 @@ class ArrayTest extends TestCase
         $arrays = [
             [1, 2, 3],
             ['a' => 'A', 'b' => 'B'],
-            [100, 200, 300]
+            [100, 200, 300],
         ];
         $result = array_same_counts(...$arrays);
         $this->assertFalse($result);
@@ -765,7 +765,7 @@ class ArrayTest extends TestCase
         $arrays = [
             [1, 2, 3],
             'not an array',
-            [100, 200, 300]
+            [100, 200, 300],
         ];
         $result = array_same_counts(...$arrays);
         $this->assertFalse($result);
@@ -778,7 +778,7 @@ class ArrayTest extends TestCase
     public function test_array_same_counts_with_single_array()
     {
         $arrays = [
-            [1, 2, 3]
+            [1, 2, 3],
         ];
         $result = array_same_counts(...$arrays);
         $this->assertTrue($result);
@@ -793,7 +793,7 @@ class ArrayTest extends TestCase
         $arrays = [
             [],
             [],
-            []
+            [],
         ];
         $result = array_same_counts(...$arrays);
         $this->assertTrue($result);
@@ -808,7 +808,7 @@ class ArrayTest extends TestCase
         $arrays = [
             [1, 2, 3],
             [],
-            [100, 200, 300]
+            [100, 200, 300],
         ];
         $result = array_same_counts(...$arrays);
         $this->assertFalse($result);
@@ -820,7 +820,7 @@ class ArrayTest extends TestCase
      */
     public function test_max_int_key_with_multiple_integer_keys()
     {
-        $array = [10 => 'a', 20 => 'b', 5 => 'c'];
+        $array  = [10 => 'a', 20 => 'b', 5 => 'c'];
         $result = max_int_key($array);
         $this->assertEquals(20, $result);
     }
@@ -831,7 +831,7 @@ class ArrayTest extends TestCase
      */
     public function test_max_int_key_with_mixed_keys()
     {
-        $array = [1 => 'a', 'b' => 'b', 3 => 'c', 'd' => 'd'];
+        $array  = [1 => 'a', 'b' => 'b', 3 => 'c', 'd' => 'd'];
         $result = max_int_key($array);
         $this->assertEquals(3, $result);
     }
@@ -842,7 +842,7 @@ class ArrayTest extends TestCase
      */
     public function test_max_int_key_with_string_keys_only()
     {
-        $array = ['a' => 'a', 'b' => 'b', 'c' => 'c'];
+        $array  = ['a' => 'a', 'b' => 'b', 'c' => 'c'];
         $result = max_int_key($array);
         $this->assertFalse($result);
     }
@@ -853,7 +853,7 @@ class ArrayTest extends TestCase
      */
     public function test_max_int_key_with_empty_array()
     {
-        $array = [];
+        $array  = [];
         $result = max_int_key($array);
         $this->assertFalse($result);
     }
@@ -864,7 +864,7 @@ class ArrayTest extends TestCase
      */
     public function test_max_int_key_with_one_integer_key()
     {
-        $array = [5 => 'a'];
+        $array  = [5 => 'a'];
         $result = max_int_key($array);
         $this->assertEquals(5, $result);
     }
@@ -875,7 +875,7 @@ class ArrayTest extends TestCase
      */
     public function test_max_int_key_with_negative_integer_keys()
     {
-        $array = [-10 => 'a', -20 => 'b', -5 => 'c'];
+        $array  = [-10 => 'a', -20 => 'b', -5 => 'c'];
         $result = max_int_key($array);
         $this->assertEquals(-5, $result);
     }
@@ -886,7 +886,7 @@ class ArrayTest extends TestCase
      */
     public function test_max_int_key_with_positive_and_negative_integer_keys()
     {
-        $array = [-10 => 'a', 0 => 'b', 15 => 'c'];
+        $array  = [-10 => 'a', 0 => 'b', 15 => 'c'];
         $result = max_int_key($array);
         $this->assertEquals(15, $result);
     }
@@ -897,7 +897,7 @@ class ArrayTest extends TestCase
      */
     public function test_next_int_key_with_empty_array()
     {
-        $array = [];
+        $array  = [];
         $result = next_int_key($array);
         $this->assertEquals(0, $result);
     }
@@ -908,7 +908,7 @@ class ArrayTest extends TestCase
      */
     public function test_next_int_key_with_integer_keys()
     {
-        $array = [10 => 'a', 20 => 'b', 5 => 'c'];
+        $array  = [10 => 'a', 20 => 'b', 5 => 'c'];
         $result = next_int_key($array);
         $this->assertEquals(21, $result);
     }
@@ -919,7 +919,7 @@ class ArrayTest extends TestCase
      */
     public function test_next_int_key_with_mixed_keys()
     {
-        $array = [1 => 'a', 'b' => 'b', 3 => 'c', 'd' => 'd'];
+        $array  = [1 => 'a', 'b' => 'b', 3 => 'c', 'd' => 'd'];
         $result = next_int_key($array);
         $this->assertEquals(4, $result);
     }
@@ -930,7 +930,7 @@ class ArrayTest extends TestCase
      */
     public function test_next_int_key_with_string_keys_only()
     {
-        $array = ['a' => 'a', 'b' => 'b', 'c' => 'c'];
+        $array  = ['a' => 'a', 'b' => 'b', 'c' => 'c'];
         $result = next_int_key($array);
         $this->assertEquals(0, $result);
     }
@@ -941,7 +941,7 @@ class ArrayTest extends TestCase
      */
     public function test_next_int_key_with_negative_integer_keys()
     {
-        $array = [-10 => 'a', -20 => 'b', -5 => 'c'];
+        $array  = [-10 => 'a', -20 => 'b', -5 => 'c'];
         $result = next_int_key($array);
         $this->assertEquals(-4, $result);
     }
@@ -952,7 +952,7 @@ class ArrayTest extends TestCase
      */
     public function test_next_int_key_with_positive_and_negative_integer_keys()
     {
-        $array = [-10 => 'a', 0 => 'b', 15 => 'c'];
+        $array  = [-10 => 'a', 0 => 'b', 15 => 'c'];
         $result = next_int_key($array);
         $this->assertEquals(16, $result);
     }
@@ -963,8 +963,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_default_parameters_on_numeric_array()
     {
-        $array = range(1, 100);
-        $result = slice($array);
+        $array    = range(1, 100);
+        $result   = slice($array);
         $expected = range(1, 50);
         $this->assertEquals($expected, $result);
     }
@@ -975,8 +975,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_offset_on_numeric_array()
     {
-        $array = range(1, 100);
-        $result = slice($array, 10);
+        $array    = range(1, 100);
+        $result   = slice($array, 10);
         $expected = range(11, 60);
         $this->assertEquals($expected, $result);
     }
@@ -987,8 +987,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_length_on_numeric_array()
     {
-        $array = range(1, 100);
-        $result = slice($array, 0, 10);
+        $array    = range(1, 100);
+        $result   = slice($array, 0, 10);
         $expected = range(1, 10);
         $this->assertEquals($expected, $result);
     }
@@ -999,8 +999,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_offset_and_length_on_numeric_array()
     {
-        $array = range(1, 100);
-        $result = slice($array, 10, 20);
+        $array    = range(1, 100);
+        $result   = slice($array, 10, 20);
         $expected = range(11, 30);
         $this->assertEquals($expected, $result);
     }
@@ -1011,8 +1011,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_string_keyed_associative_array()
     {
-        $array = ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5];
-        $result = slice($array, 1, 2);
+        $array    = ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5];
+        $result   = slice($array, 1, 2);
         $expected = ['b' => 2, 'c' => 3];
         $this->assertEquals($expected, $result);
     }
@@ -1023,8 +1023,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_integer_keyed_associative_array()
     {
-        $array = [10 => 'a', 20 => 'b', 30 => 'c', 40 => 'd', 50 => 'e'];
-        $result = slice($array, 1, 3);
+        $array    = [10 => 'a', 20 => 'b', 30 => 'c', 40 => 'd', 50 => 'e'];
+        $result   = slice($array, 1, 3);
         $expected = [0 => 'b', 1 => 'c', 2 => 'd'];
         $this->assertEquals($expected, $result);
     }
@@ -1035,8 +1035,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_negative_offset_on_numeric_array()
     {
-        $array = range(1, 100);
-        $result = slice($array, -10);
+        $array    = range(1, 100);
+        $result   = slice($array, -10);
         $expected = range(91, 100);
         $this->assertEquals($expected, $result);
     }
@@ -1047,8 +1047,8 @@ class ArrayTest extends TestCase
      */
     public function test_slice_with_negative_length_on_numeric_array()
     {
-        $array = range(1, 100);
-        $result = slice($array, 10, -10);
+        $array    = range(1, 100);
+        $result   = slice($array, 10, -10);
         $expected = range(11, 90);
         $this->assertEquals($expected, $result);
     }
@@ -1080,8 +1080,8 @@ class ArrayTest extends TestCase
      */
     public function test_rslice_with_returning_string()
     {
-        $array = range(1, 100);
-        $result = rSlice($array, 10, 20, true);
+        $array    = range(1, 100);
+        $result   = rSlice($array, 10, 20, true);
         $expected = print_r(slice($array, 10, 20), true);
         $this->assertEquals($expected, $result);
     }
@@ -1110,8 +1110,8 @@ class ArrayTest extends TestCase
      */
     public function test_rslice_with_associative_array_returning_string()
     {
-        $array = ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5];
-        $result = rSlice($array, 1, 2, true);
+        $array    = ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5];
+        $result   = rSlice($array, 1, 2, true);
         $expected = print_r(slice($array, 1, 2), true);
         $this->assertEquals($expected, $result);
     }
@@ -1140,8 +1140,8 @@ class ArrayTest extends TestCase
      */
     public function test_rslice_with_offset_and_length_returning_string()
     {
-        $array = range(1, 100);
-        $result = rSlice($array, 10, 20, true);
+        $array    = range(1, 100);
+        $result   = rSlice($array, 10, 20, true);
         $expected = print_r(slice($array, 10, 20), true);
         $this->assertEquals($expected, $result);
     }
@@ -1153,19 +1153,19 @@ class ArrayTest extends TestCase
     public function test_assoc_array_truncate_with_default_parameters()
     {
         $array = [
-            'first' => [10, 'twenty', 30, 'forty', 50, 60, 70],
+            'first'  => [10, 'twenty', 30, 'forty', 50, 60, 70],
             'second' => [10, 20, 30, 40, 50],
-            'third' => [1, 2, 3, 4, 5],
+            'third'  => [1, 2, 3, 4, 5],
             'fourth' => [5, 4, 3, 2, 1],
-            'fifth' => 'Hello',
+            'fifth'  => 'Hello',
         ];
-        $result = assoc_array_truncate($array);
+        $result   = assoc_array_truncate($array);
         $expected = [
-            'first' => [10],
+            'first'  => [10],
             'second' => [10],
-            'third' => [1],
+            'third'  => [1],
             'fourth' => [5],
-            'fifth' => 'Hello',
+            'fifth'  => 'Hello',
         ];
         $this->assertEquals($expected, $result);
     }
@@ -1177,16 +1177,16 @@ class ArrayTest extends TestCase
     public function test_assoc_array_truncate_with_custom_offset_and_length_preserving_keys()
     {
         $array = [
-            'first' => [10, 'twenty', 30, 'forty', 50, 60, 70],
+            'first'  => [10, 'twenty', 30, 'forty', 50, 60, 70],
             'second' => [10, 20, 30, 40, 50],
-            'third' => [1, 2, 3, 4, 5],
+            'third'  => [1, 2, 3, 4, 5],
             'fourth' => [5, 4, 3, 2, 1],
         ];
-        $result = assoc_array_truncate($array, 2, 2);
+        $result   = assoc_array_truncate($array, 2, 2);
         $expected = [
-            'first' => [2 => 30, 3 => 'forty'],
+            'first'  => [2 => 30, 3 => 'forty'],
             'second' => [2 => 30, 3 => 40],
-            'third' => [2 => 3, 3 => 4],
+            'third'  => [2 => 3, 3 => 4],
             'fourth' => [2 => 3, 3 => 2],
         ];
         $this->assertEquals($expected, $result);
@@ -1199,16 +1199,16 @@ class ArrayTest extends TestCase
     public function test_assoc_array_truncate_with_custom_offset_and_length_reordering_keys()
     {
         $array = [
-            'first' => [10, 'twenty', 30, 'forty', 50, 60, 70],
+            'first'  => [10, 'twenty', 30, 'forty', 50, 60, 70],
             'second' => [10, 20, 30, 40, 50],
-            'third' => [1, 2, 3, 4, 5],
+            'third'  => [1, 2, 3, 4, 5],
             'fourth' => [5, 4, 3, 2, 1],
         ];
-        $result = assoc_array_truncate($array, 2, 2, FALSE);
+        $result   = assoc_array_truncate($array, 2, 2, false);
         $expected = [
-            'first' => [30, 'forty'],
+            'first'  => [30, 'forty'],
             'second' => [30, 40],
-            'third' => [3, 4],
+            'third'  => [3, 4],
             'fourth' => [3, 2],
         ];
         $this->assertEquals($expected, $result);
@@ -1221,11 +1221,11 @@ class ArrayTest extends TestCase
     public function test_assoc_array_truncate_with_offset_greater_than_array_length()
     {
         $array = [
-            'first' => [10, 'twenty', 30],
+            'first'  => [10, 'twenty', 30],
             'second' => [10, 20],
-            'third' => [1, 2, 3],
+            'third'  => [1, 2, 3],
         ];
-        $result = assoc_array_truncate($array, 5, 2);
+        $result   = assoc_array_truncate($array, 5, 2);
         $expected = [];
         $this->assertEquals($expected, $result);
     }
@@ -1237,16 +1237,16 @@ class ArrayTest extends TestCase
     public function test_assoc_array_truncate_with_non_array_elements()
     {
         $array = [
-            'first' => [10, 'twenty', 30],
+            'first'  => [10, 'twenty', 30],
             'second' => 'Hello',
-            'third' => [1, 2, 3],
+            'third'  => [1, 2, 3],
             'fourth' => 123,
         ];
-        $result = assoc_array_truncate($array, 0, 2);
+        $result   = assoc_array_truncate($array, 0, 2);
         $expected = [
-            'first' => [10, 'twenty'],
+            'first'  => [10, 'twenty'],
             'second' => 'Hello',
-            'third' => [1, 2],
+            'third'  => [1, 2],
             'fourth' => 123,
         ];
         $this->assertEquals($expected, $result);
@@ -1269,19 +1269,19 @@ class ArrayTest extends TestCase
     public function test_slice_assoc_with_default_parameters()
     {
         $array = [
-            'first' => [10, 'twenty', 30, 'forty', 50, 60, 70],
+            'first'  => [10, 'twenty', 30, 'forty', 50, 60, 70],
             'second' => [10, 20, 30, 40, 50],
-            'third' => [1, 2, 3, 4, 5],
+            'third'  => [1, 2, 3, 4, 5],
             'fourth' => [5, 4, 3, 2, 1],
-            'fifth' => 'Hello',
+            'fifth'  => 'Hello',
         ];
-        $result = slice_assoc($array);
+        $result   = slice_assoc($array);
         $expected = [
-            'first' => [10, 'twenty', 30, 'forty', 50, 60, 70],
+            'first'  => [10, 'twenty', 30, 'forty', 50, 60, 70],
             'second' => [10, 20, 30, 40, 50],
-            'third' => [1, 2, 3, 4, 5],
+            'third'  => [1, 2, 3, 4, 5],
             'fourth' => [5, 4, 3, 2, 1],
-            'fifth' => 'Hello',
+            'fifth'  => 'Hello',
         ];
         $this->assertEquals($expected, $result);
     }
@@ -1293,16 +1293,16 @@ class ArrayTest extends TestCase
     public function test_slice_assoc_with_custom_offset_and_length_preserving_keys()
     {
         $array = [
-            'first' => [10, 'twenty', 30, 'forty', 50, 60, 70],
+            'first'  => [10, 'twenty', 30, 'forty', 50, 60, 70],
             'second' => [10, 20, 30, 40, 50],
-            'third' => [1, 2, 3, 4, 5],
+            'third'  => [1, 2, 3, 4, 5],
             'fourth' => [5, 4, 3, 2, 1],
         ];
-        $result = slice_assoc($array, 2, 2);
+        $result   = slice_assoc($array, 2, 2);
         $expected = [
-            'first' => [2 => 30, 3 => 'forty'],
+            'first'  => [2 => 30, 3 => 'forty'],
             'second' => [2 => 30, 3 => 40],
-            'third' => [2 => 3, 3 => 4],
+            'third'  => [2 => 3, 3 => 4],
             'fourth' => [2 => 3, 3 => 2],
         ];
         $this->assertEquals($expected, $result);
@@ -1315,16 +1315,16 @@ class ArrayTest extends TestCase
     public function test_slice_assoc_with_custom_offset_and_length_reordering_keys()
     {
         $array = [
-            'first' => [10, 'twenty', 30, 'forty', 50, 60, 70],
+            'first'  => [10, 'twenty', 30, 'forty', 50, 60, 70],
             'second' => [10, 20, 30, 40, 50],
-            'third' => [1, 2, 3, 4, 5],
+            'third'  => [1, 2, 3, 4, 5],
             'fourth' => [5, 4, 3, 2, 1],
         ];
-        $result = slice_assoc($array, 2, 2, FALSE);
+        $result   = slice_assoc($array, 2, 2, false);
         $expected = [
-            'first' => [30, 'forty'],
+            'first'  => [30, 'forty'],
             'second' => [30, 40],
-            'third' => [3, 4],
+            'third'  => [3, 4],
             'fourth' => [3, 2],
         ];
         $this->assertEquals($expected, $result);
@@ -1337,11 +1337,11 @@ class ArrayTest extends TestCase
     public function test_slice_assoc_with_offset_greater_than_array_length()
     {
         $array = [
-            'first' => [10, 'twenty', 30],
+            'first'  => [10, 'twenty', 30],
             'second' => [10, 20],
-            'third' => [1, 2, 3],
+            'third'  => [1, 2, 3],
         ];
-        $result = slice_assoc($array, 5, 2);
+        $result   = slice_assoc($array, 5, 2);
         $expected = [];
         $this->assertEquals($expected, $result);
     }
@@ -1353,16 +1353,16 @@ class ArrayTest extends TestCase
     public function test_slice_assoc_with_non_array_elements()
     {
         $array = [
-            'first' => [10, 'twenty', 30],
+            'first'  => [10, 'twenty', 30],
             'second' => 'Hello',
-            'third' => [1, 2, 3],
+            'third'  => [1, 2, 3],
             'fourth' => 123,
         ];
-        $result = slice_assoc($array, 0, 2);
+        $result   = slice_assoc($array, 0, 2);
         $expected = [
-            'first' => [10, 'twenty'],
+            'first'  => [10, 'twenty'],
             'second' => 'Hello',
-            'third' => [1, 2],
+            'third'  => [1, 2],
             'fourth' => 123,
         ];
         $this->assertEquals($expected, $result);
@@ -1389,7 +1389,7 @@ class ArrayTest extends TestCase
             ['a' => 4, 'b' => 5, 'c' => 6],
             ['a' => 7, 'b' => 8, 'c' => 9],
         ];
-        $result = transpose_indexed_array($array);
+        $result   = transpose_indexed_array($array);
         $expected = [
             'a' => [0 => 1, 1 => 4, 2 => 7],
             'b' => [0 => 2, 1 => 5, 2 => 8],
@@ -1434,8 +1434,8 @@ class ArrayTest extends TestCase
      */
     public function test_transpose_indexed_array_with_empty_array()
     {
-        $array = [];
-        $result = transpose_indexed_array($array);
+        $array    = [];
+        $result   = transpose_indexed_array($array);
         $expected = [];
         $this->assertEquals($expected, $result);
     }
@@ -1451,10 +1451,10 @@ class ArrayTest extends TestCase
             ['name' => 'Bob', 'age' => 25],
             ['name' => 'Charlie', 'age' => 35],
         ];
-        $result = transpose_indexed_array($array);
+        $result   = transpose_indexed_array($array);
         $expected = [
             'name' => [0 => 'Alice', 1 => 'Bob', 2 => 'Charlie'],
-            'age' => [0 => 30, 1 => 25, 2 => 35],
+            'age'  => [0 => 30, 1 => 25, 2 => 35],
         ];
         $this->assertEquals($expected, $result);
     }
@@ -1470,7 +1470,7 @@ class ArrayTest extends TestCase
             'row2' => ['a' => 4, 'b' => 5, 'c' => 6],
             'row3' => ['a' => 7, 'b' => 8, 'c' => 9],
         ];
-        $result = transpose_associative_array($array);
+        $result   = transpose_associative_array($array);
         $expected = [
             'a' => ['row1' => 1, 'row2' => 4, 'row3' => 7],
             'b' => ['row1' => 2, 'row2' => 5, 'row3' => 8],
@@ -1515,8 +1515,8 @@ class ArrayTest extends TestCase
      */
     public function test_transpose_associative_array_with_empty_array()
     {
-        $array = [];
-        $result = transpose_associative_array($array);
+        $array    = [];
+        $result   = transpose_associative_array($array);
         $expected = [];
         $this->assertEquals($expected, $result);
     }
@@ -1532,7 +1532,7 @@ class ArrayTest extends TestCase
             'row2' => ['c' => 3, 'd' => 4],
             'row3' => ['e' => 5, 'f' => 6],
         ];
-        $result = transpose_associative_array($array);
+        $result   = transpose_associative_array($array);
         $expected = [
             'a' => ['row1' => 1],
             'b' => ['row1' => 2],
@@ -1551,9 +1551,9 @@ class ArrayTest extends TestCase
     public function test_array_to_table_with_balanced_array()
     {
         $array = [
-            'Name' => ['Alice', 'Bob', 'Charlie'],
-            'Age' => [25, 30, 35],
-            'Occupation' => ['Engineer', 'Designer', 'Manager']
+            'Name'       => ['Alice', 'Bob', 'Charlie'],
+            'Age'        => [25, 30, 35],
+            'Occupation' => ['Engineer', 'Designer', 'Manager'],
         ];
 
         $expected = "<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>\n\t\t\t<th>Age</th>\n\t\t\t<th>Occupation</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>Alice</td>\n\t\t\t<td>25</td>\n\t\t\t<td>Engineer</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Bob</td>\n\t\t\t<td>30</td>\n\t\t\t<td>Designer</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Charlie</td>\n\t\t\t<td>35</td>\n\t\t\t<td>Manager</td>\n\t\t</tr>\n\t</tbody>\n</table>";
@@ -1582,7 +1582,7 @@ class ArrayTest extends TestCase
     {
         $array = [
             'Name' => ['Alice', 'Bob'],
-            'Age' => [25, 30]
+            'Age'  => [25, 30],
         ];
 
         $expected = "<table id=\"table_id\" class=\"table-class\" style=\"width: 100%\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>\n\t\t\t<th>Age</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>Alice</td>\n\t\t\t<td>25</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Bob</td>\n\t\t\t<td>30</td>\n\t\t</tr>\n\t</tbody>\n</table>";
@@ -1599,9 +1599,9 @@ class ArrayTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $array = [
-            'Name' => ['Alice', 'Bob', 'Charlie'],
-            'Age' => [25, 30],
-            'Occupation' => ['Engineer', 'Designer', 'Manager']
+            'Name'       => ['Alice', 'Bob', 'Charlie'],
+            'Age'        => [25, 30],
+            'Occupation' => ['Engineer', 'Designer', 'Manager'],
         ];
 
         array_to_table($array);
@@ -1615,7 +1615,7 @@ class ArrayTest extends TestCase
     {
         $array = [
             'Name' => ['<Alice>', 'Bob & Charlie'],
-            'Age' => [25, 30]
+            'Age'  => [25, 30],
         ];
 
         $expected = "<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>\n\t\t\t<th>Age</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td>&lt;Alice&gt;</td>\n\t\t\t<td>25</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Bob &amp; Charlie</td>\n\t\t\t<td>30</td>\n\t\t</tr>\n\t</tbody>\n</table>";
@@ -1638,7 +1638,7 @@ class ArrayTest extends TestCase
             . "apple         \t20\t   100" . PHP_EOL
             . "do it yourself\t 0\t  1000" . PHP_EOL;
 
-        $this->assertEquals($expected, array_nested_to_tsv($array, TRUE, TRUE));
+        $this->assertEquals($expected, array_nested_to_tsv($array, true, true));
     }
 
     /**
@@ -1656,7 +1656,7 @@ class ArrayTest extends TestCase
             . "         apple\t20\t   100" . PHP_EOL
             . "do it yourself\t 0\t  1000" . PHP_EOL;
 
-        $this->assertEquals($expected, array_nested_to_tsv($array, TRUE, FALSE));
+        $this->assertEquals($expected, array_nested_to_tsv($array, true, false));
     }
 
     /**
@@ -1673,7 +1673,7 @@ class ArrayTest extends TestCase
         $expected = "apple         \t20\t 100" . PHP_EOL
             . "do it yourself\t 0\t1000" . PHP_EOL;
 
-        $this->assertEquals($expected, array_nested_to_tsv($array, FALSE, TRUE));
+        $this->assertEquals($expected, array_nested_to_tsv($array, false, true));
     }
 
     /**
@@ -1700,9 +1700,9 @@ class ArrayTest extends TestCase
     {
         $array = [];
 
-        $expected = "";
+        $expected = '';
 
-        $this->assertEquals($expected, array_nested_to_tsv($array, TRUE, TRUE));
+        $this->assertEquals($expected, array_nested_to_tsv($array, true, true));
     }
 
     /**
@@ -1715,7 +1715,7 @@ class ArrayTest extends TestCase
         // Blank strings are ignored, so (10 + 20 + 30 + 40) / 4 = 25.0
         $expected = 25.0;
 
-        $this->assertEquals($expected, array_average($array, FALSE));
+        $this->assertEquals($expected, array_average($array, false));
     }
 
     /**
@@ -1728,7 +1728,7 @@ class ArrayTest extends TestCase
 
         $array = [10, 20, '', 30, '40', ''];
         // Should throw an exception due to blank strings in strict mode
-        array_average($array, TRUE);
+        array_average($array, true);
     }
 
     /**
@@ -1737,10 +1737,10 @@ class ArrayTest extends TestCase
      */
     public function test_array_average_all_numeric()
     {
-        $array = [10, 20, 30, 40];
+        $array    = [10, 20, 30, 40];
         $expected = 25.0;
 
-        $this->assertEquals($expected, array_average($array, TRUE));
+        $this->assertEquals($expected, array_average($array, true));
     }
 
     /**
@@ -1750,7 +1750,7 @@ class ArrayTest extends TestCase
     public function test_array_average_empty_array()
     {
         $array = [];
-        $this->assertNull(array_average($array, TRUE));
+        $this->assertNull(array_average($array, true));
     }
 
     /**
@@ -1763,7 +1763,7 @@ class ArrayTest extends TestCase
 
         $array = [10, 20, 'abc', 30];
         // Should throw an exception due to 'abc'
-        array_average($array, TRUE);
+        array_average($array, true);
     }
 
     /**
@@ -1772,10 +1772,10 @@ class ArrayTest extends TestCase
      */
     public function test_array_average_single_element()
     {
-        $array = [42];
+        $array    = [42];
         $expected = 42.0;
 
-        $this->assertEquals($expected, array_average($array, TRUE));
+        $this->assertEquals($expected, array_average($array, true));
     }
 
     /**
@@ -1788,7 +1788,7 @@ class ArrayTest extends TestCase
         // (10 + 20 + 30.5 + 40.5) / 4 = 25.25
         $expected = 25.25;
 
-        $this->assertEquals($expected, array_average($array, TRUE));
+        $this->assertEquals($expected, array_average($array, true));
     }
 
     /**
@@ -1797,7 +1797,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_median_with_odd_number_of_elements()
     {
-        $array = [5, 2, 9];
+        $array    = [5, 2, 9];
         $expected = 5.0;
 
         $this->assertEquals($expected, array_median($array));
@@ -1809,7 +1809,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_median_with_even_number_of_elements()
     {
-        $array = [1, 2, 3, 4];
+        $array    = [1, 2, 3, 4];
         $expected = 2.5;
 
         $this->assertEquals($expected, array_median($array));
@@ -1825,7 +1825,7 @@ class ArrayTest extends TestCase
         $this->expectExceptionMessage('array_median() - The array contains non-numeric elements.');
 
         $array = [1, 2, 'a', 4];
-        array_median($array, TRUE);
+        array_median($array, true);
     }
 
     /**
@@ -1838,7 +1838,7 @@ class ArrayTest extends TestCase
         $this->expectExceptionMessage('array_median() - The array is empty.');
 
         $array = [];
-        array_median($array, TRUE);
+        array_median($array, true);
     }
 
     /**
@@ -1847,7 +1847,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_median_non_strict_validation_with_non_numeric_elements()
     {
-        $array = [1, 2, 'a', 4];
+        $array    = [1, 2, 'a', 4];
         $expected = 2.0;
 
         $this->assertEquals($expected, array_median($array));
@@ -1859,8 +1859,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_median_non_strict_validation_with_all_non_numeric_elements()
     {
-        $array = ['a', 'b', 'c'];
-        $expected = NULL;
+        $array    = ['a', 'b', 'c'];
+        $expected = null;
 
         $this->assertEquals($expected, array_median($array));
     }
@@ -1871,8 +1871,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_median_non_strict_validation_with_empty_array()
     {
-        $array = [];
-        $expected = NULL;
+        $array    = [];
+        $expected = null;
 
         $this->assertEquals($expected, array_median($array));
     }
@@ -1883,8 +1883,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_weighted_average_non_strict_validation_with_valid_numeric_values()
     {
-        $values = [1, 2, 3];
-        $weights = [0.2, 0.3, 0.5];
+        $values   = [1, 2, 3];
+        $weights  = [0.2, 0.3, 0.5];
         $expected = 2.3;
 
         $this->assertEquals($expected, array_weighted_average($values, $weights));
@@ -1896,7 +1896,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_weighted_average_non_strict_validation_with_mismatch_after_filtering()
     {
-        $values = [1, 'a', 3];
+        $values  = [1, 'a', 3];
         $weights = [0.2, 0.3, 0.5];
 
         $this->expectException(\InvalidArgumentException::class);
@@ -1911,7 +1911,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_weighted_average_non_strict_validation_with_matching_numeric_values()
     {
-        $values = [1, 'a', 3, 'b', 5];
+        $values  = [1, 'a', 3, 'b', 5];
         $weights = [0.2, 'x', 0.5, 0.1];
         // This calculates to 2.75
         $expected = (1 * 0.2 + 3 * 0.5 + 5 * 0.1) / (0.2 + 0.5 + 0.1);
@@ -1925,7 +1925,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_weighted_average_non_strict_validation_with_all_non_numeric_values()
     {
-        $values = ['a', 'b', 'c'];
+        $values  = ['a', 'b', 'c'];
         $weights = [0.2, 0.3, 0.5];
 
         $this->assertNull(array_weighted_average($values, $weights));
@@ -1937,11 +1937,11 @@ class ArrayTest extends TestCase
      */
     public function test_array_weighted_average_strict_validation_with_valid_numeric_values()
     {
-        $values = [1, 2, 3];
-        $weights = [0.2, 0.3, 0.5];
+        $values   = [1, 2, 3];
+        $weights  = [0.2, 0.3, 0.5];
         $expected = 2.3;
 
-        $this->assertEquals($expected, array_weighted_average($values, $weights, TRUE));
+        $this->assertEquals($expected, array_weighted_average($values, $weights, true));
     }
 
     /**
@@ -1953,10 +1953,10 @@ class ArrayTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('array_weighted_average() - The values array contains non-numeric elements.');
 
-        $values = [1, 'a', 3];
+        $values  = [1, 'a', 3];
         $weights = [0.2, 0.3, 0.5];
 
-        array_weighted_average($values, $weights, TRUE);
+        array_weighted_average($values, $weights, true);
     }
 
     /**
@@ -1968,10 +1968,10 @@ class ArrayTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('array_weighted_average() - The array is empty.');
 
-        $values = [];
+        $values  = [];
         $weights = [];
 
-        array_weighted_average($values, $weights, TRUE);
+        array_weighted_average($values, $weights, true);
     }
 
     /**
@@ -1983,7 +1983,7 @@ class ArrayTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('array_weighted_average() - The sum of weights must be greater than zero');
 
-        $values = [1, 2, 3];
+        $values  = [1, 2, 3];
         $weights = [0, 0, 0];
 
         array_weighted_average($values, $weights);
@@ -1998,7 +1998,7 @@ class ArrayTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('array_weighted_average() - The values and weights arrays must have the same number of elements');
 
-        $values = [1, 2, 3];
+        $values  = [1, 2, 3];
         $weights = [0.2, 0.3];
 
         array_weighted_average($values, $weights);
@@ -2010,7 +2010,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_stdev_non_strict_validation_with_numeric_elements()
     {
-        $array = [1, 2, 3, 4, 5];
+        $array    = [1, 2, 3, 4, 5];
         $expected = 1.5811388300842;
 
         $this->assertEqualsWithDelta($expected, array_stdev($array), 0.000001);
@@ -2022,7 +2022,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_stdev_non_strict_validation_with_non_numeric_elements()
     {
-        $array = [1, 2, 'a', 4, 5];
+        $array    = [1, 2, 'a', 4, 5];
         $expected = 1.8257418583506;
 
         $this->assertEqualsWithDelta($expected, array_stdev($array), 0.000001);
@@ -2045,7 +2045,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_stdev_strict_validation_with_numeric_elements()
     {
-        $array = [1, 2, 3, 4, 5];
+        $array    = [1, 2, 3, 4, 5];
         $expected = 1.5811388300842;
 
         $this->assertEqualsWithDelta($expected, array_stdev($array, true), 0.000001);
@@ -2083,7 +2083,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_stdev_non_strict_validation_with_one_numeric_element()
     {
-        $array = [1];
+        $array    = [1];
         $expected = 0;
 
         $this->assertEquals($expected, array_stdev($array));
@@ -2095,7 +2095,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_stdev_non_strict_validation_with_one_numeric_element_after_filtering()
     {
-        $array = ['a', 1];
+        $array    = ['a', 1];
         $expected = 0;
 
         $this->assertEquals($expected, array_stdev($array));
@@ -2187,8 +2187,8 @@ class ArrayTest extends TestCase
      */
     public function test_python_zip_equal_length_arrays()
     {
-        $array1 = [1, 2, 3];
-        $array2 = ['one', 'two', 'three'];
+        $array1   = [1, 2, 3];
+        $array2   = ['one', 'two', 'three'];
         $expected = [
             [1, 'one'],
             [2, 'two'],
@@ -2204,8 +2204,8 @@ class ArrayTest extends TestCase
      */
     public function test_python_zip_different_length_arrays()
     {
-        $array1 = [1, 2, 3, 4];
-        $array2 = ['one', 'two'];
+        $array1   = [1, 2, 3, 4];
+        $array2   = ['one', 'two'];
         $expected = [
             [1, 'one'],
             [2, 'two'],
@@ -2220,8 +2220,8 @@ class ArrayTest extends TestCase
      */
     public function test_python_zip_with_empty_array()
     {
-        $array1 = [];
-        $array2 = ['one', 'two', 'three'];
+        $array1   = [];
+        $array2   = ['one', 'two', 'three'];
         $expected = [];
 
         $this->assertEquals($expected, python_zip($array1, $array2));
@@ -2233,7 +2233,7 @@ class ArrayTest extends TestCase
      */
     public function test_python_zip_single_array()
     {
-        $array1 = [1, 2, 3];
+        $array1   = [1, 2, 3];
         $expected = [
             [1],
             [2],
@@ -2249,9 +2249,9 @@ class ArrayTest extends TestCase
      */
     public function test_python_zip_multiple_arrays_different_lengths()
     {
-        $array1 = [1, 2, 3];
-        $array2 = ['one', 'two'];
-        $array3 = ['I', 'II', 'III', 'IV'];
+        $array1   = [1, 2, 3];
+        $array2   = ['one', 'two'];
+        $array3   = ['I', 'II', 'III', 'IV'];
         $expected = [
             [1, 'one', 'I'],
             [2, 'two', 'II'],
@@ -2266,8 +2266,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_zip_equal_length()
     {
-        $array1 = [1, 2, 3];
-        $array2 = ['one', 'two', 'three'];
+        $array1   = [1, 2, 3];
+        $array2   = ['one', 'two', 'three'];
         $expected = [
             [1, 'one'],
             [2, 'two'],
@@ -2283,8 +2283,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_zip_different_lengths()
     {
-        $array1 = [1, 2, 3, 4];
-        $array2 = ['one', 'two'];
+        $array1   = [1, 2, 3, 4];
+        $array2   = ['one', 'two'];
         $expected = [
             [1, 'one'],
             [2, 'two'],
@@ -2301,9 +2301,9 @@ class ArrayTest extends TestCase
      */
     public function test_array_zip_multiple_arrays()
     {
-        $array1 = [1, 2, 3];
-        $array2 = ['one', 'two'];
-        $array3 = ['ONE', 'TWO', 'THREE', 'FOUR'];
+        $array1   = [1, 2, 3];
+        $array2   = ['one', 'two'];
+        $array3   = ['ONE', 'TWO', 'THREE', 'FOUR'];
         $expected = [
             [1, 'one', 'ONE'],
             [2, 'two', 'TWO'],
@@ -2320,8 +2320,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_zip_with_empty_array()
     {
-        $array1 = [];
-        $array2 = ['one', 'two', 'three'];
+        $array1   = [];
+        $array2   = ['one', 'two', 'three'];
         $expected = [
             ['one'],
             ['two'],
@@ -2445,7 +2445,7 @@ class ArrayTest extends TestCase
      */
     public function test_addslashes_recursive_single_string()
     {
-        $input = "O'Reilly";
+        $input    = "O'Reilly";
         $expected = "O\'Reilly";
 
         $this->assertEquals($expected, addslashes_recursive($input));
@@ -2457,8 +2457,8 @@ class ArrayTest extends TestCase
      */
     public function test_addslashes_recursive_array_of_strings()
     {
-        $input = ["O'Reilly", "Hello \"world\"", "It\\'s cool"];
-        $expected = ["O\'Reilly", "Hello \\\"world\\\"", "It\\\\\'s cool"];
+        $input    = ["O'Reilly", 'Hello "world"', "It\\'s cool"];
+        $expected = ["O\'Reilly", 'Hello \\"world\\"', "It\\\\\'s cool"];
 
         $this->assertEquals($expected, addslashes_recursive($input));
     }
@@ -2471,13 +2471,13 @@ class ArrayTest extends TestCase
     {
         $input = [
             "O'Reilly",
-            ["Hello \"world\"", "It\\'s cool"],
-            "Nested 'array' with \"quotes\""
+            ['Hello "world"', "It\\'s cool"],
+            "Nested 'array' with \"quotes\"",
         ];
         $expected = [
             "O\'Reilly",
-            ["Hello \\\"world\\\"", "It\\\\\'s cool"],
-            "Nested \'array\' with \\\"quotes\\\""
+            ['Hello \\"world\\"', "It\\\\\'s cool"],
+            "Nested \'array\' with \\\"quotes\\\"",
         ];
 
         $this->assertEquals($expected, addslashes_recursive($input));
@@ -2490,16 +2490,16 @@ class ArrayTest extends TestCase
     public function test_addslashes_recursive_with_multidimensional_array()
     {
         $input = [
-            "level1" => [
+            'level1' => [
                 "O'Reilly",
-                "level2" => ["It's \"great\""]
-            ]
+                'level2' => ["It's \"great\""],
+            ],
         ];
         $expected = [
-            "level1" => [
+            'level1' => [
                 "O\'Reilly",
-                "level2" => ["It\'s \\\"great\\\""]
-            ]
+                'level2' => ["It\'s \\\"great\\\""],
+            ],
         ];
 
         $this->assertEquals($expected, addslashes_recursive($input));
@@ -2511,7 +2511,7 @@ class ArrayTest extends TestCase
      */
     public function test_addslashes_recursive_non_string_input()
     {
-        $input = [123, 45.67, true, null];
+        $input    = [123, 45.67, true, null];
         $expected = [123, 45.67, true, null];
 
         $this->assertEquals($expected, addslashes_recursive($input));
@@ -2523,7 +2523,7 @@ class ArrayTest extends TestCase
      */
     public function test_addslashes_recursive_empty_array()
     {
-        $input = [];
+        $input    = [];
         $expected = [];
 
         $this->assertEquals($expected, addslashes_recursive($input));
@@ -2538,16 +2538,16 @@ class ArrayTest extends TestCase
         $input = [
             "O'Reilly",
             123,
-            ["Hello \"world\"", true],
+            ['Hello "world"', true],
             null,
-            "Nested 'array' with \"quotes\""
+            "Nested 'array' with \"quotes\"",
         ];
         $expected = [
             "O\'Reilly",
             123,
-            ["Hello \\\"world\\\"", true],
+            ['Hello \\"world\\"', true],
             null,
-            "Nested \'array\' with \\\"quotes\\\""
+            "Nested \'array\' with \\\"quotes\\\"",
         ];
 
         $this->assertEquals($expected, addslashes_recursive($input));
@@ -2559,7 +2559,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_unique_recursive_simple_array()
     {
-        $array = [1, 2, 2, 3, 4, 4];
+        $array    = [1, 2, 2, 3, 4, 4];
         $expected = [1, 2, 3, 4];
 
         $this->assertEquals($expected, array_values(array_unique_recursive($array)));
@@ -2602,7 +2602,7 @@ class ArrayTest extends TestCase
             'c' => [0 => 1, 1 => 2, 3 => 3],
         ];
 
-        $this->assertEquals($expected, array_unique_recursive($array, TRUE));
+        $this->assertEquals($expected, array_unique_recursive($array, true));
     }
 
     /**
@@ -2632,14 +2632,14 @@ class ArrayTest extends TestCase
     public function test_array_unique_recursive_reorder_keys()
     {
         $array = [
-            1 => [1, 2, 2, 3],
+            1     => [1, 2, 2, 3],
             'key' => [3, 4, 4, 5],
-            3 => [1, 2, 2, 3],
+            3     => [1, 2, 2, 3],
         ];
         $expected = [
-            0 => [1, 2, 3],
+            0     => [1, 2, 3],
             'key' => [3, 4, 5],
-            1 => [1, 2, 3],
+            1     => [1, 2, 3],
         ];
 
         $this->assertEquals($expected, array_unique_recursive($array));
@@ -2651,7 +2651,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_unique_recursive_empty_array()
     {
-        $array = [];
+        $array    = [];
         $expected = [];
 
         $this->assertEquals($expected, array_unique_recursive($array));
@@ -2663,9 +2663,9 @@ class ArrayTest extends TestCase
      */
     public function test_rand_array_with_valid_input()
     {
-        $count = 5;
-        $min = 1;
-        $max = 10;
+        $count  = 5;
+        $min    = 1;
+        $max    = 10;
         $result = rand_array($count, $min, $max);
 
         $this->assertCount($count, $result);
@@ -2682,9 +2682,9 @@ class ArrayTest extends TestCase
      */
     public function test_rand_array_with_zero_count()
     {
-        $count = 0;
-        $min = 1;
-        $max = 10;
+        $count  = 0;
+        $min    = 1;
+        $max    = 10;
         $result = rand_array($count, $min, $max);
 
         $this->assertEmpty($result);
@@ -2720,9 +2720,9 @@ class ArrayTest extends TestCase
      */
     public function test_rand_array_with_min_equal_to_max()
     {
-        $count = 5;
-        $min = 7;
-        $max = 7;
+        $count  = 5;
+        $min    = 7;
+        $max    = 7;
         $result = rand_array($count, $min, $max);
 
         $this->assertCount($count, $result);
@@ -2738,8 +2738,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_rand_duplicates_valid_input()
     {
-        $array = ["Apple", "Bananas", "Grapes", "Oranges"];
-        $len = 3;
+        $array = ['Apple', 'Bananas', 'Grapes', 'Oranges'];
+        $len   = 3;
 
         $result = array_rand_duplicates($array, $len);
 
@@ -2771,7 +2771,7 @@ class ArrayTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Length must be a non-negative integer.');
 
-        array_rand_duplicates(["Apple", "Bananas", "Grapes"], -1);
+        array_rand_duplicates(['Apple', 'Bananas', 'Grapes'], -1);
     }
 
     /**
@@ -2780,8 +2780,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_rand_duplicates_length_zero()
     {
-        $array = ["Apple", "Bananas", "Grapes"];
-        $len = 0;
+        $array = ['Apple', 'Bananas', 'Grapes'];
+        $len   = 0;
 
         $result = array_rand_duplicates($array, $len);
 
@@ -2794,8 +2794,8 @@ class ArrayTest extends TestCase
      */
     public function test_array_rand_duplicates_length_greater_than_array_size()
     {
-        $array = ["Apple", "Bananas", "Grapes"];
-        $len = 5;
+        $array = ['Apple', 'Bananas', 'Grapes'];
+        $len   = 5;
 
         $result = array_rand_duplicates($array, $len);
 
@@ -2811,7 +2811,7 @@ class ArrayTest extends TestCase
     public function test_shuffle_slice_returns_correct_length()
     {
         $array = range(1, 10);
-        $len = 5;
+        $len   = 5;
 
         $result = shuffle_slice($array, $len);
 
@@ -2824,7 +2824,7 @@ class ArrayTest extends TestCase
     public function test_shuffle_slice_returns_full_array_when_len_exceeds_length()
     {
         $array = [1, 2, 3];
-        $len = 10;
+        $len   = 10;
 
         $result = shuffle_slice($array, $len);
 
@@ -2838,7 +2838,7 @@ class ArrayTest extends TestCase
     public function test_shuffle_slice_handles_empty_array()
     {
         $array = [];
-        $len = 5;
+        $len   = 5;
 
         $result = shuffle_slice($array, $len);
 
@@ -2851,7 +2851,7 @@ class ArrayTest extends TestCase
     public function test_shuffle_slice_returns_empty_array_when_len_is_zero()
     {
         $array = [1, 2, 3, 4, 5];
-        $len = 0;
+        $len   = 0;
 
         $result = shuffle_slice($array, $len);
 
@@ -2864,7 +2864,7 @@ class ArrayTest extends TestCase
     public function test_shuffle_slice_handles_non_integer_values()
     {
         $array = ['a', 'b', 'c', 'd', 'e'];
-        $len = 3;
+        $len   = 3;
 
         $result = shuffle_slice($array, $len);
 
@@ -2957,7 +2957,7 @@ class ArrayTest extends TestCase
      */
     public function test_shuffle_secure_returns_sliced_array()
     {
-        $array = [1, 2, 3, 4, 5];
+        $array  = [1, 2, 3, 4, 5];
         $length = 3;
 
         $result = shuffle_secure($array, $length);
@@ -2982,8 +2982,8 @@ class ArrayTest extends TestCase
      */
     public function test_shuffle_secure_ignores_false_length()
     {
-        $array = [1, 2, 3, 4, 5];
-        $length = FALSE;
+        $array  = [1, 2, 3, 4, 5];
+        $length = false;
 
         $result = shuffle_secure($array, $length);
 
@@ -3193,7 +3193,7 @@ class ArrayTest extends TestCase
         $array2 = [2, 3, 1];
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("array_multisort_by_array() - count(\$array1) != count(\$array2). 2 != 3");
+        $this->expectExceptionMessage('array_multisort_by_array() - count($array1) != count($array2). 2 != 3');
 
         array_multisort_by_array($array1, $array2);
     }
@@ -3752,7 +3752,7 @@ class ArrayTest extends TestCase
     public function test_binary_in_array_sort_regular()
     {
         $haystack = ['apple', 'banana', 'cherry'];
-        $needle = 'banana';
+        $needle   = 'banana';
 
         // Sort array with SORT_REGULAR and check if the needle exists
         $result = binary_in_array($needle, $haystack, true, SORT_REGULAR);
@@ -3767,7 +3767,7 @@ class ArrayTest extends TestCase
     public function test_binary_in_array_sort_string()
     {
         $haystack = ['apple', 'banana', 'cherry', 'Apple'];
-        $needle = 'Apple';
+        $needle   = 'Apple';
 
         // Sort array with SORT_STRING and check if the needle exists
         $result = binary_in_array($needle, $haystack, true, SORT_STRING);
@@ -3782,7 +3782,7 @@ class ArrayTest extends TestCase
     public function test_binary_in_array_sort_numeric()
     {
         $haystack = [10, 2, 33, 25];
-        $needle = 25;
+        $needle   = 25;
 
         // Sort array with SORT_NUMERIC and check if the needle exists
         $result = binary_in_array($needle, $haystack, true, SORT_NUMERIC);
@@ -3797,7 +3797,7 @@ class ArrayTest extends TestCase
     public function test_binary_in_array_sort_natural()
     {
         $haystack = ['item1', 'item10', 'item2'];
-        $needle = 'item10';
+        $needle   = 'item10';
 
         // Sort array with SORT_NATURAL and check if the needle exists
         $result = binary_in_array($needle, $haystack, true, SORT_NATURAL);
@@ -3812,7 +3812,7 @@ class ArrayTest extends TestCase
     public function test_binary_in_array_needle_not_found()
     {
         $haystack = ['apple', 'banana', 'cherry'];
-        $needle = 'orange';
+        $needle   = 'orange';
 
         // Sort array with SORT_REGULAR and check if the needle exists
         $result = binary_in_array($needle, $haystack, true, SORT_REGULAR);
@@ -3827,7 +3827,7 @@ class ArrayTest extends TestCase
     public function test_binary_in_array_no_sorting()
     {
         $haystack = [10, 2, 33, 25];
-        $needle = 33;
+        $needle   = 33;
 
         // Check without sorting
         $result = binary_in_array($needle, $haystack);
@@ -3842,7 +3842,7 @@ class ArrayTest extends TestCase
     public function test_binary_search_with_sorting_sort_regular()
     {
         $haystack = ['banana', 'apple', 'cherry'];
-        $needle = 'apple';
+        $needle   = 'apple';
 
         // Test sorting with SORT_REGULAR and search for 'apple'
         $result = binary_search_with_sorting($needle, $haystack, SORT_REGULAR);
@@ -3857,7 +3857,7 @@ class ArrayTest extends TestCase
     public function test_binary_search_with_sorting_sort_natural()
     {
         $haystack = ['item1', 'item10', 'item2'];
-        $needle = 'item10';
+        $needle   = 'item10';
 
         // Test sorting with SORT_NATURAL and search for 'item10'
         $result = binary_search_with_sorting($needle, $haystack, SORT_NATURAL);
@@ -3872,7 +3872,7 @@ class ArrayTest extends TestCase
     public function test_binary_search_with_sorting_sort_numeric()
     {
         $haystack = [100, 50, 10, 1];
-        $needle = 50;
+        $needle   = 50;
 
         // Test sorting with SORT_NUMERIC and search for 50
         $result = binary_search_with_sorting($needle, $haystack, SORT_NUMERIC);
@@ -3887,7 +3887,7 @@ class ArrayTest extends TestCase
     public function test_binary_search_with_sorting_sort_string()
     {
         $haystack = ['Banana', 'apple', 'Cherry'];
-        $needle = 'Cherry';
+        $needle   = 'Cherry';
 
         // Test sorting with SORT_STRING and search for 'Cherry'
         $result = binary_search_with_sorting($needle, $haystack, SORT_STRING);
@@ -3902,7 +3902,7 @@ class ArrayTest extends TestCase
     public function test_binary_search_with_sorting_custom_callable()
     {
         $haystack = [10, 2, 33, 25];
-        $needle = 25;
+        $needle   = 25;
 
         // Custom comparison function that sorts in descending order
         $custom_compare = function ($a, $b) {
@@ -3924,7 +3924,7 @@ class ArrayTest extends TestCase
         $csvString = "Domain,URL,Page AS,Ref.Domains,Backlinks,Search Traffic,URL Keywords\n" .
             "example.com,https://example.com/page1,30,12,100,1500,50\n" .
             "testsite.com,https://testsite.com/page2,45,20,300,2000,80\n" .
-            "myblog.net,https://myblog.net/page3,25,15,200,1800,60";
+            'myblog.net,https://myblog.net/page3,25,15,200,1800,60';
 
         $expected = [
             'headers' => ['Domain', 'URL', 'Page AS', 'Ref.Domains', 'Backlinks', 'Search Traffic', 'URL Keywords'],
@@ -3963,7 +3963,7 @@ class ArrayTest extends TestCase
         $csvString = "Domain,URL,Page AS,Ref.Domains,Backlinks,Search Traffic,URL Keywords\n" .
             "example.com,https://example.com/page1,30,12,100,1500,50\n" .
             "testsite.com,https://testsite.com/page2,45,20,300,2000,80\n" .
-            "myblog.net,https://myblog.net/page3,25,15,200,1800,60";
+            'myblog.net,https://myblog.net/page3,25,15,200,1800,60';
 
         $expected = [
             ['Domain', 'URL', 'Page AS', 'Ref.Domains', 'Backlinks', 'Search Traffic', 'URL Keywords'],
@@ -3985,7 +3985,7 @@ class ArrayTest extends TestCase
             "example.com,https://example.com/page1,30,12,100,1500,50\n" .
             "testsite.com,https://testsite.com/page2,45,20,300,2000,80\n" .
             "myblog.net,https://myblog.net/page3,25,15,200,1800,60\n" .
-            "invalidrow.com,https://invalidrow.com/page";
+            'invalidrow.com,https://invalidrow.com/page';
 
         $expected = [
             'headers' => ['Domain', 'URL', 'Page AS', 'Ref.Domains', 'Backlinks', 'Search Traffic', 'URL Keywords'],
@@ -4021,7 +4021,7 @@ class ArrayTest extends TestCase
      */
     public function test_str_csv_to_array_with_empty_string()
     {
-        $csvString = "";
+        $csvString = '';
 
         $expected = [];
 
@@ -4034,7 +4034,7 @@ class ArrayTest extends TestCase
      */
     public function test_str_csv_to_array_with_only_headers()
     {
-        $csvString = "Domain,URL,Page AS,Ref.Domains,Backlinks,Search Traffic,URL Keywords";
+        $csvString = 'Domain,URL,Page AS,Ref.Domains,Backlinks,Search Traffic,URL Keywords';
 
         $expected = [
             'headers' => ['Domain', 'URL', 'Page AS', 'Ref.Domains', 'Backlinks', 'Search Traffic', 'URL Keywords'],
@@ -4070,10 +4070,10 @@ class ArrayTest extends TestCase
      */
     public function test_str_csv_to_array_with_only_headers_no_headers_option()
     {
-        $csvString = "Domain,URL,Page AS,Ref.Domains,Backlinks,Search Traffic,URL Keywords";
+        $csvString = 'Domain,URL,Page AS,Ref.Domains,Backlinks,Search Traffic,URL Keywords';
 
         $expected = [
-            ['Domain', 'URL', 'Page AS', 'Ref.Domains', 'Backlinks', 'Search Traffic', 'URL Keywords']
+            ['Domain', 'URL', 'Page AS', 'Ref.Domains', 'Backlinks', 'Search Traffic', 'URL Keywords'],
         ];
 
         $result = str_csv_to_array($csvString, false);
@@ -4095,13 +4095,13 @@ class ArrayTest extends TestCase
             ],
             [
                 'Page AS' => [30, 45, 25],
-            ]
+            ],
         ];
 
         $expected = [
-            'Domain' => ['example.com', 'testsite.com', 'myblog.net'],
-            'URL' => ['https://example.com', 'https://testsite.com', 'https://myblog.net'],
-            'Page AS' => [30, 45, 25]
+            'Domain'  => ['example.com', 'testsite.com', 'myblog.net'],
+            'URL'     => ['https://example.com', 'https://testsite.com', 'https://myblog.net'],
+            'Page AS' => [30, 45, 25],
         ];
 
         $result = csv_array_to_assoc($csv_data);
@@ -4123,13 +4123,13 @@ class ArrayTest extends TestCase
             ],
             [
                 'Page AS' => [],
-            ]
+            ],
         ];
 
         $expected = [
-            'Domain' => [],
-            'URL' => [],
-            'Page AS' => []
+            'Domain'  => [],
+            'URL'     => [],
+            'Page AS' => [],
         ];
 
         $result = csv_array_to_assoc($csv_data);
@@ -4147,17 +4147,17 @@ class ArrayTest extends TestCase
                 'Domain' => ['example.com', 'testsite.com', 'myblog.net'],
             ],
             [
-                'Active' => [TRUE, FALSE, TRUE],
+                'Active' => [true, false, true],
             ],
             [
                 'Page Views' => [1000, 2500, 1800],
-            ]
+            ],
         ];
 
         $expected = [
-            'Domain' => ['example.com', 'testsite.com', 'myblog.net'],
-            'Active' => [TRUE, FALSE, TRUE],
-            'Page Views' => [1000, 2500, 1800]
+            'Domain'     => ['example.com', 'testsite.com', 'myblog.net'],
+            'Active'     => [true, false, true],
+            'Page Views' => [1000, 2500, 1800],
         ];
 
         $result = csv_array_to_assoc($csv_data);
@@ -4179,13 +4179,13 @@ class ArrayTest extends TestCase
             ],
             [
                 'Page AS' => [],
-            ]
+            ],
         ];
 
         $expected = [
-            'Domain' => [],
-            'URL' => [],
-            'Page AS' => []
+            'Domain'  => [],
+            'URL'     => [],
+            'Page AS' => [],
         ];
 
         $result = csv_array_to_assoc($csv_data);
@@ -4207,13 +4207,13 @@ class ArrayTest extends TestCase
             ],
             [
                 'Header3' => [10, 20, 30],
-            ]
+            ],
         ];
 
         $expected = [
             'Header1' => ['Value1', 'Value2', 'Value3'],
             'Header2' => ['A', 'B', 'C'],
-            'Header3' => [10, 20, 30]
+            'Header3' => [10, 20, 30],
         ];
 
         $result = csv_array_to_assoc($csv_data);
@@ -4227,16 +4227,16 @@ class ArrayTest extends TestCase
     {
         $array = [
             'Keyword' => ['Apples', 'Bananas', 'Oranges', 'Pears'],
-            'Color' => ['Red', 'Yellow'],
-            'Size' => [],
-            'Age' => [1, 2, 3, 4]
+            'Color'   => ['Red', 'Yellow'],
+            'Size'    => [],
+            'Age'     => [1, 2, 3, 4],
         ];
 
         $expected = [
             'Keyword' => ['Apples', 'Bananas', 'Oranges', 'Pears'],
-            'Color' => ['Red', 'Yellow', '', ''],
-            'Size' => ['', '', '', ''],
-            'Age' => [1, 2, 3, 4]
+            'Color'   => ['Red', 'Yellow', '', ''],
+            'Size'    => ['', '', '', ''],
+            'Age'     => [1, 2, 3, 4],
         ];
 
         $result = assoc_array_fill_empty_values($array);
@@ -4250,16 +4250,16 @@ class ArrayTest extends TestCase
     {
         $array = [
             'Keyword' => ['Apples', 'Bananas'],
-            'Color' => ['Red', 'Yellow'],
-            'Size' => ['Small', 'Medium'],
-            'Age' => [1, 2]
+            'Color'   => ['Red', 'Yellow'],
+            'Size'    => ['Small', 'Medium'],
+            'Age'     => [1, 2],
         ];
 
         $expected = [
             'Keyword' => ['Apples', 'Bananas'],
-            'Color' => ['Red', 'Yellow'],
-            'Size' => ['Small', 'Medium'],
-            'Age' => [1, 2]
+            'Color'   => ['Red', 'Yellow'],
+            'Size'    => ['Small', 'Medium'],
+            'Age'     => [1, 2],
         ];
 
         $result = assoc_array_fill_empty_values($array);
@@ -4273,16 +4273,16 @@ class ArrayTest extends TestCase
     {
         $array = [
             'Keyword' => [],
-            'Color' => ['Red', 'Yellow'],
-            'Size' => ['Small'],
-            'Age' => [1, 2]
+            'Color'   => ['Red', 'Yellow'],
+            'Size'    => ['Small'],
+            'Age'     => [1, 2],
         ];
 
         $expected = [
             'Keyword' => [],
-            'Color' => ['Red', 'Yellow'],
-            'Size' => ['Small'],
-            'Age' => [1, 2]
+            'Color'   => ['Red', 'Yellow'],
+            'Size'    => ['Small'],
+            'Age'     => [1, 2],
         ];
 
         $result = assoc_array_fill_empty_values($array);
@@ -4303,8 +4303,8 @@ class ArrayTest extends TestCase
 
         $array = [
             'Color' => ['Red', 'Yellow'],
-            'Size' => ['Small', 'Medium'],
-            'Age' => [1, 2]
+            'Size'  => ['Small', 'Medium'],
+            'Age'   => [1, 2],
         ];
 
         // Call the function, which should throw an exception.
@@ -4318,12 +4318,12 @@ class ArrayTest extends TestCase
     {
         $array = [
             'Keyword' => [10, 20, 30],
-            'Color' => [1 => 'Red', 2 => 'Yellow']
+            'Color'   => [1 => 'Red', 2 => 'Yellow'],
         ];
 
         $expected = [
             'Keyword' => [10, 20, 30],
-            'Color' => [1 => 'Red', 2 => 'Yellow', 0 => '']
+            'Color'   => [1 => 'Red', 2 => 'Yellow', 0 => ''],
         ];
 
         $result = assoc_array_fill_empty_values($array);
@@ -4337,16 +4337,16 @@ class ArrayTest extends TestCase
     {
         $array = [
             'Keyword' => ['Apple', 'Banana', 'Cherry'],
-            'Color' => ['Red'],
-            'Size' => [null, 'Large'],
-            'Age' => [5.5]
+            'Color'   => ['Red'],
+            'Size'    => [null, 'Large'],
+            'Age'     => [5.5],
         ];
 
         $expected = [
             'Keyword' => ['Apple', 'Banana', 'Cherry'],
-            'Color' => ['Red', '', ''],
-            'Size' => [null, 'Large', ''],
-            'Age' => [5.5, '', '']
+            'Color'   => ['Red', '', ''],
+            'Size'    => [null, 'Large', ''],
+            'Age'     => [5.5, '', ''],
         ];
 
         $result = assoc_array_fill_empty_values($array);
@@ -4360,22 +4360,22 @@ class ArrayTest extends TestCase
     {
         $first = [
             'FieldA' => [1, 2, 3],
-            'FieldB' => [10, 20, 30]
+            'FieldB' => [10, 20, 30],
         ];
 
         $second = [
             'FieldA' => ['A', 'B', 'C'],
-            'FieldB' => ['Apple', 'Banana', 'Carrot']
+            'FieldB' => ['Apple', 'Banana', 'Carrot'],
         ];
 
         $third = [
             'FieldA' => [100, 2, 300],
-            'FieldB' => [1000, 9999, 3000]
+            'FieldB' => [1000, 9999, 3000],
         ];
 
         $expected = [
             'FieldA' => [1, 2, 3, 'A', 'B', 'C', 100, 300],
-            'FieldB' => [10, 20, 30, 'Apple', 'Banana', 'Carrot', 1000, 3000]
+            'FieldB' => [10, 20, 30, 'Apple', 'Banana', 'Carrot', 1000, 3000],
         ];
 
         $result = assoc_array_merge('FieldA', $first, $second, $third);
@@ -4392,12 +4392,12 @@ class ArrayTest extends TestCase
 
         $first = [
             'FieldA' => [1, 2, 3],
-            'FieldB' => [10, 20, 30]
+            'FieldB' => [10, 20, 30],
         ];
 
         $second = [
             'FieldX' => ['A', 'B', 'C'],
-            'FieldB' => ['Apple', 'Banana', 'Carrot']
+            'FieldB' => ['Apple', 'Banana', 'Carrot'],
         ];
 
         assoc_array_merge('FieldA', $first, $second);
@@ -4410,17 +4410,17 @@ class ArrayTest extends TestCase
     {
         $first = [
             'FieldA' => [1, 2],
-            'FieldB' => [10, 20]
+            'FieldB' => [10, 20],
         ];
 
         $second = [
             'FieldA' => [3, 4],
-            'FieldB' => [30, 40]
+            'FieldB' => [30, 40],
         ];
 
         $expected = [
             'FieldA' => [1, 2, 3, 4],
-            'FieldB' => [10, 20, 30, 40]
+            'FieldB' => [10, 20, 30, 40],
         ];
 
         $result = assoc_array_merge('FieldA', $first, $second);
@@ -4434,17 +4434,17 @@ class ArrayTest extends TestCase
     {
         $first = [
             'FieldA' => [1, 2],
-            'FieldB' => [10, 20]
+            'FieldB' => [10, 20],
         ];
 
         $second = [
             'FieldA' => [2, 1],
-            'FieldB' => [30, 40]
+            'FieldB' => [30, 40],
         ];
 
         $expected = [
             'FieldA' => [1, 2],
-            'FieldB' => [10, 20]
+            'FieldB' => [10, 20],
         ];
 
         $result = assoc_array_merge('FieldA', $first, $second);
@@ -4458,17 +4458,17 @@ class ArrayTest extends TestCase
     {
         $first = [
             'FieldA' => [1, 2],
-            'FieldB' => [10, 20]
+            'FieldB' => [10, 20],
         ];
 
         $second = [
             'FieldA' => [2, 3],
-            'FieldB' => [25, 35]
+            'FieldB' => [25, 35],
         ];
 
         $expected = [
             'FieldA' => [1, 2, 3],
-            'FieldB' => [10, 20, 35]
+            'FieldB' => [10, 20, 35],
         ];
 
         $result = assoc_array_merge('FieldA', $first, $second);
@@ -4482,17 +4482,17 @@ class ArrayTest extends TestCase
     {
         $first = [
             'FieldA' => [1, 2],
-            'FieldB' => [10, 20]
+            'FieldB' => [10, 20],
         ];
 
         $second = [
             'FieldA' => [],
-            'FieldB' => []
+            'FieldB' => [],
         ];
 
         $expected = [
             'FieldA' => [1, 2],
-            'FieldB' => [10, 20]
+            'FieldB' => [10, 20],
         ];
 
         $result = assoc_array_merge('FieldA', $first, $second);
@@ -4505,25 +4505,25 @@ class ArrayTest extends TestCase
     public function test_array_merge_recursive_distinct_with_associative_keys()
     {
         $array1 = [
-            'headers' => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
+            'headers'         => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
             'connect_timeout' => 10,
-            'timeout' => 10
+            'timeout'         => 10,
         ];
 
         $array2 = [
-            'headers' => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
+            'headers'         => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
             'connect_timeout' => 20,
-            'timeout' => 20
+            'timeout'         => 20,
         ];
 
         $expected = [
             'headers' => [
-                'User-Agent' => 'Guzzle',
+                'User-Agent'      => 'Guzzle',
                 'Accept-Language' => 'en-US,en;q=1.0',
-                'X-Foo' => ['Bar', 'Baz']
+                'X-Foo'           => ['Bar', 'Baz'],
             ],
             'connect_timeout' => 20,
-            'timeout' => 20
+            'timeout'         => 20,
         ];
 
         $result = array_merge_recursive_distinct($array1, $array2);
@@ -4536,28 +4536,28 @@ class ArrayTest extends TestCase
     public function test_array_merge_recursive_distinct_with_numeric_keys()
     {
         $array1 = [
-            'headers' => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
+            'headers'         => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
             'connect_timeout' => 10,
-            'timeout' => 10,
-            'options' => [1, 2, 3]
+            'timeout'         => 10,
+            'options'         => [1, 2, 3],
         ];
 
         $array2 = [
-            'headers' => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
+            'headers'         => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
             'connect_timeout' => 20,
-            'timeout' => 20,
-            'options' => [3, 4, 5]
+            'timeout'         => 20,
+            'options'         => [3, 4, 5],
         ];
 
         $expected = [
             'headers' => [
-                'User-Agent' => 'Guzzle',
+                'User-Agent'      => 'Guzzle',
                 'Accept-Language' => 'en-US,en;q=1.0',
-                'X-Foo' => ['Bar', 'Baz']
+                'X-Foo'           => ['Bar', 'Baz'],
             ],
             'connect_timeout' => 20,
-            'timeout' => 20,
-            'options' => [1, 2, 3, 4, 5]
+            'timeout'         => 20,
+            'options'         => [1, 2, 3, 4, 5],
         ];
 
         $result = array_merge_recursive_distinct($array1, $array2);
@@ -4571,17 +4571,17 @@ class ArrayTest extends TestCase
     {
         $array1 = [
             'timeout' => 10,
-            'headers' => ['User-Agent' => 'Mozilla/5.0']
+            'headers' => ['User-Agent' => 'Mozilla/5.0'],
         ];
 
         $array2 = [
             'timeout' => 20,
-            'headers' => ['User-Agent' => 'Guzzle']
+            'headers' => ['User-Agent' => 'Guzzle'],
         ];
 
         $expected = [
             'timeout' => 20,
-            'headers' => ['User-Agent' => 'Guzzle']
+            'headers' => ['User-Agent' => 'Guzzle'],
         ];
 
         $result = array_merge_recursive_distinct($array1, $array2);
@@ -4596,22 +4596,22 @@ class ArrayTest extends TestCase
         $array1 = [
             'headers' => [
                 'User-Agent' => 'Mozilla/5.0',
-                'X-Foo' => ['Bar', 'Baz']
-            ]
+                'X-Foo'      => ['Bar', 'Baz'],
+            ],
         ];
 
         $array2 = [
             'headers' => [
                 'User-Agent' => 'Guzzle',
-                'X-Foo' => ['Baz', 'Qux']
-            ]
+                'X-Foo'      => ['Baz', 'Qux'],
+            ],
         ];
 
         $expected = [
             'headers' => [
                 'User-Agent' => 'Guzzle',
-                'X-Foo' => ['Bar', 'Baz', 'Qux']
-            ]
+                'X-Foo'      => ['Bar', 'Baz', 'Qux'],
+            ],
         ];
 
         $result = array_merge_recursive_distinct($array1, $array2);
@@ -4638,29 +4638,29 @@ class ArrayTest extends TestCase
     public function test_array_merge_recursive_distinct_with_3_arrays()
     {
         $array1 = [
-            'headers' => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
+            'headers'         => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
             'connect_timeout' => 10,
-            'timeout' => 10
+            'timeout'         => 10,
         ];
 
         $array2 = [
-            'headers' => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
-            'connect_timeout' => 20
+            'headers'         => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
+            'connect_timeout' => 20,
         ];
 
         $array3 = [
             'headers' => ['X-Foo' => ['BazB', 'Qux']],
-            'timeout' => 30
+            'timeout' => 30,
         ];
 
         $expected = [
             'headers' => [
-                'User-Agent' => 'Guzzle',
+                'User-Agent'      => 'Guzzle',
                 'Accept-Language' => 'en-US,en;q=1.0',
-                'X-Foo' => ['Bar', 'Baz', 'BazB', 'Qux']
+                'X-Foo'           => ['Bar', 'Baz', 'BazB', 'Qux'],
             ],
             'connect_timeout' => 20,
-            'timeout' => 30
+            'timeout'         => 30,
         ];
 
         $result = array_merge_recursive_distinct($array1, $array2, $array3);
@@ -4673,34 +4673,34 @@ class ArrayTest extends TestCase
     public function test_array_merge_recursive_distinct_with_4_arrays()
     {
         $array1 = [
-            'headers' => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
+            'headers'         => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
             'connect_timeout' => 10,
-            'timeout' => 10
+            'timeout'         => 10,
         ];
 
         $array2 = [
-            'headers' => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
-            'connect_timeout' => 20
+            'headers'         => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
+            'connect_timeout' => 20,
         ];
 
         $array3 = [
             'headers' => ['X-Foo' => ['BazB', 'Qux']],
-            'timeout' => 30
+            'timeout' => 30,
         ];
 
         $array4 = [
             'headers' => ['X-Foo' => ['QuxB', 'BazB']],
-            'timeout' => 40
+            'timeout' => 40,
         ];
 
         $expected = [
             'headers' => [
-                'User-Agent' => 'Guzzle',
+                'User-Agent'      => 'Guzzle',
                 'Accept-Language' => 'en-US,en;q=1.0',
-                'X-Foo' => ['Bar', 'Baz', 'BazB', 'Qux', 'QuxB']
+                'X-Foo'           => ['Bar', 'Baz', 'BazB', 'Qux', 'QuxB'],
             ],
             'connect_timeout' => 20,
-            'timeout' => 40
+            'timeout'         => 40,
         ];
 
         $result = array_merge_recursive_distinct($array1, $array2, $array3, $array4);
@@ -4713,44 +4713,44 @@ class ArrayTest extends TestCase
     public function test_array_merge_recursive_distinct_with_6_arrays()
     {
         $array1 = [
-            'headers' => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
+            'headers'         => ['User-Agent' => 'Mozilla/5.0', 'Accept-Language' => 'en-US,en;q=1.0'],
             'connect_timeout' => 10,
-            'timeout' => 10
+            'timeout'         => 10,
         ];
 
         $array2 = [
-            'headers' => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
-            'connect_timeout' => 20
+            'headers'         => ['User-Agent' => 'Guzzle', 'X-Foo' => ['Bar', 'Baz']],
+            'connect_timeout' => 20,
         ];
 
         $array3 = [
             'headers' => ['X-Foo' => ['BazB', 'Qux']],
-            'timeout' => 30
+            'timeout' => 30,
         ];
 
         $array4 = [
             'headers' => ['X-Foo' => ['QuxB', 'BazB']],
-            'timeout' => 40
+            'timeout' => 40,
         ];
 
         $array5 = [
             'headers' => ['User-Agent' => 'PHP', 'X-Foo' => ['Apple', 'BarB']],
-            'timeout' => 50
+            'timeout' => 50,
         ];
 
         $array6 = [
             'headers' => ['X-Foo' => ['Baz', 'Pear', 'BazB']],
-            'timeout' => 60
+            'timeout' => 60,
         ];
 
         $expected = [
             'headers' => [
-                'User-Agent' => 'PHP',
+                'User-Agent'      => 'PHP',
                 'Accept-Language' => 'en-US,en;q=1.0',
-                'X-Foo' => ['Bar', 'Baz', 'BazB', 'Qux', 'QuxB', 'Apple', 'BarB', 'Pear']
+                'X-Foo'           => ['Bar', 'Baz', 'BazB', 'Qux', 'QuxB', 'Apple', 'BarB', 'Pear'],
             ],
             'connect_timeout' => 20,
-            'timeout' => 60
+            'timeout'         => 60,
         ];
 
         $result = array_merge_recursive_distinct($array1, $array2, $array3, $array4, $array5, $array6);
@@ -4763,7 +4763,7 @@ class ArrayTest extends TestCase
     public function test_file_to_array_with_invalid_filename()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid filename: ../some/invalid/path.txt");
+        $this->expectExceptionMessage('Invalid filename: ../some/invalid/path.txt');
 
         file_to_array('../some/invalid/path.txt');
     }
@@ -4774,7 +4774,7 @@ class ArrayTest extends TestCase
     public function test_file_to_array_with_non_existent_file()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("File cannot be read: non_existent_file.txt");
+        $this->expectExceptionMessage('File cannot be read: non_existent_file.txt');
 
         file_to_array('non_existent_file.txt');
     }
@@ -4784,12 +4784,12 @@ class ArrayTest extends TestCase
      */
     public function test_file_to_array_plain_text()
     {
-        $filename = 'test_plain_' . uniqid() . '.txt';
+        $filename      = 'test_plain_' . uniqid() . '.txt';
         $file_contents = "line1\nline2\nline3";
         file_put_contents($filename, $file_contents);
 
         $expected = ['line1', 'line2', 'line3'];
-        $result = file_to_array($filename);
+        $result   = file_to_array($filename);
 
         $this->assertEquals($expected, $result);
 
@@ -4802,12 +4802,12 @@ class ArrayTest extends TestCase
      */
     public function test_file_to_array_csv()
     {
-        $filename = 'test_' . uniqid() . '.csv';
+        $filename      = 'test_' . uniqid() . '.csv';
         $file_contents = "header1,header2\nvalue1,value2\nvalue3,value4";
         file_put_contents($filename, $file_contents);
 
         $expected = [
-            'headers' => ['header1', 'header2'],
+            'headers'  => ['header1', 'header2'],
             ['header1' => ['value1', 'value3']],
             ['header2' => ['value2', 'value4']],
         ];
@@ -4825,12 +4825,12 @@ class ArrayTest extends TestCase
      */
     public function test_file_to_array_with_windows_line_endings()
     {
-        $filename = 'test_windows_' . uniqid() . '.txt';
+        $filename      = 'test_windows_' . uniqid() . '.txt';
         $file_contents = "line1\r\nline2\r\nline3";
         file_put_contents($filename, $file_contents);
 
         $expected = ['line1', 'line2', 'line3'];
-        $result = file_to_array($filename);
+        $result   = file_to_array($filename);
 
         $this->assertEquals($expected, $result);
 
@@ -4843,12 +4843,12 @@ class ArrayTest extends TestCase
      */
     public function test_file_to_array_with_mac_line_endings()
     {
-        $filename = 'test_mac_' . uniqid() . '.txt';
+        $filename      = 'test_mac_' . uniqid() . '.txt';
         $file_contents = "line1\rline2\rline3";
         file_put_contents($filename, $file_contents);
 
         $expected = ['line1', 'line2', 'line3'];
-        $result = file_to_array($filename);
+        $result   = file_to_array($filename);
 
         $this->assertEquals($expected, $result);
 
@@ -4870,7 +4870,7 @@ class ArrayTest extends TestCase
      */
     public function test_build_nested_array_correct_length()
     {
-        $items = 5;
+        $items  = 5;
         $result = build_nested_array([], 0, $items);
         $this->assertCount($items, $result);
     }
@@ -4880,7 +4880,7 @@ class ArrayTest extends TestCase
      */
     public function test_build_nested_array_correct_depth()
     {
-        $depth = 3;
+        $depth  = 3;
         $result = build_nested_array([], 0, 1, $depth);
         $this->assertIsArray($result);
 
@@ -4893,9 +4893,8 @@ class ArrayTest extends TestCase
             $current = reset($current);
         }
         $this->assertIsArray($current, "Array did not reach the expected depth of $depth");
-        $this->assertCount(1, $current, "Final level array should contain exactly one element");
+        $this->assertCount(1, $current, 'Final level array should contain exactly one element');
     }
-
 
     /**
      * Test that the function handles string key probability correctly.
@@ -4920,8 +4919,8 @@ class ArrayTest extends TestCase
      */
     public function test_build_nested_array_randomizes_item_counts()
     {
-        $result1 = build_nested_array([], 0, 5, 1, TRUE, 'hash1');
-        $result2 = build_nested_array([], 0, 5, 1, TRUE, 'hash2');
+        $result1 = build_nested_array([], 0, 5, 1, true, 'hash1');
+        $result2 = build_nested_array([], 0, 5, 1, true, 'hash2');
 
         // Different hash strings should lead to different item counts
         $this->assertNotEquals(count($result1), count($result2));
@@ -4959,7 +4958,7 @@ class ArrayTest extends TestCase
     public function test_build_nested_array_with_non_empty_options()
     {
         $options = ['apple', 'banana', 'cherry'];
-        $result = build_nested_array($options, 0, 5, 1, FALSE, 'hash');
+        $result  = build_nested_array($options, 0, 5, 1, false, 'hash');
 
         // Recursively ensure all elements are from the provided options
         $this->assertAllElementsAreInOptions($result, $options);
@@ -4970,10 +4969,10 @@ class ArrayTest extends TestCase
      */
     public function test_build_nested_array_with_hash_string()
     {
-        $options = ['apple', 'banana', 'cherry'];
+        $options     = ['apple', 'banana', 'cherry'];
         $hash_string = 'test_hash';
-        $result1 = build_nested_array($options, 0, 5, 1, FALSE, $hash_string);
-        $result2 = build_nested_array($options, 0, 5, 1, FALSE, $hash_string);
+        $result1     = build_nested_array($options, 0, 5, 1, false, $hash_string);
+        $result2     = build_nested_array($options, 0, 5, 1, false, $hash_string);
 
         // With the same hash string, the results should be the same
         $this->assertEquals($result1, $result2);
@@ -5075,7 +5074,7 @@ class ArrayTest extends TestCase
 
         // Repeat the test with reversed arrays
         $expected = [1, 2, 3];
-        $result = array_diff_net($array2, $array1);
+        $result   = array_diff_net($array2, $array1);
         $this->assertEquals($expected, $result);
     }
 
@@ -5213,7 +5212,7 @@ class ArrayTest extends TestCase
 
         // Repeat the test with reversed arrays
         $expected = [];
-        $result = array_diff_recursive($array2, $array1);
+        $result   = array_diff_recursive($array2, $array1);
         $this->assertEquals($expected, $result);
     }
 
@@ -5238,7 +5237,7 @@ class ArrayTest extends TestCase
     }
 
     /**
-     * Tests that array_diff_recursive_net returns the correct differences 
+     * Tests that array_diff_recursive_net returns the correct differences
      * when the arrays have different values and structures.
      */
     public function test_array_diff_recursive_net_with_different_arrays()
@@ -5256,7 +5255,7 @@ class ArrayTest extends TestCase
             'notseven' => 6,
             8,
             [3, 4, 5],
-            'hundreds' => [100, 200, 300, 400]
+            'hundreds' => [100, 200, 300, 400],
         ];
 
         $array2 = [
@@ -5266,14 +5265,14 @@ class ArrayTest extends TestCase
             1,
             7,
             'notseven' => 666,
-            'five' => 555,
+            'five'     => 555,
             2,
             10,
             11,
             'twelve' => 12,
             13,
             'hundreds' => [100, 300, 500],
-            [3, 7, 5]
+            [3, 7, 5],
         ];
 
         $expected = [
@@ -5281,8 +5280,8 @@ class ArrayTest extends TestCase
                 0 => 5,
                 1 => 555,
             ],
-            0 => 6,
-            'six' => 6,
+            0          => 6,
+            'six'      => 6,
             'notseven' => [
                 0 => 6,
                 1 => 666,
@@ -5298,11 +5297,11 @@ class ArrayTest extends TestCase
                 3 => 400,
                 4 => 500,
             ],
-            3 => 10,
-            4 => 11,
+            3        => 10,
+            4        => 11,
             'twelve' => 12,
-            5 => 13,
-            6 => [
+            5        => 13,
+            6        => [
                 0 => 3,
                 1 => 7,
                 2 => 5,
@@ -5315,7 +5314,7 @@ class ArrayTest extends TestCase
     }
 
     /**
-     * Tests that array_diff_recursive_net returns an empty array 
+     * Tests that array_diff_recursive_net returns an empty array
      * when both arrays are identical.
      */
     public function test_array_diff_recursive_net_with_identical_arrays()
@@ -5333,7 +5332,7 @@ class ArrayTest extends TestCase
             'notseven' => 6,
             8,
             [3, 4, 5],
-            'hundreds' => [100, 200, 300, 400]
+            'hundreds' => [100, 200, 300, 400],
         ];
 
         $array2 = [
@@ -5349,7 +5348,7 @@ class ArrayTest extends TestCase
             'notseven' => 6,
             8,
             [3, 4, 5],
-            'hundreds' => [100, 200, 300, 400]
+            'hundreds' => [100, 200, 300, 400],
         ];
 
         $expected = [];
@@ -5365,13 +5364,13 @@ class ArrayTest extends TestCase
     public function test_array_diff_recursive_net_with_nested_arrays()
     {
         $array1 = [
-            'first' => [1, 2, 3],
-            'second' => [4, 5, [6, 7]]
+            'first'  => [1, 2, 3],
+            'second' => [4, 5, [6, 7]],
         ];
 
         $array2 = [
-            'first' => [1, 2, 4],
-            'second' => [4, 5, [6, 8]]
+            'first'  => [1, 2, 4],
+            'second' => [4, 5, [6, 8]],
         ];
 
         $expected = [
@@ -5395,7 +5394,7 @@ class ArrayTest extends TestCase
     }
 
     /**
-     * Tests that array_diff_recursive_net returns the correct result 
+     * Tests that array_diff_recursive_net returns the correct result
      * when one array is empty.
      */
     public function test_array_diff_recursive_net_with_empty_array()
@@ -5412,7 +5411,7 @@ class ArrayTest extends TestCase
             'six' => 6,
             7,
             'notseven' => 666,
-            'hundreds' => [100, 300, 500]
+            'hundreds' => [100, 300, 500],
         ];
 
         $expected = $array2;
@@ -5878,7 +5877,7 @@ class ArrayTest extends TestCase
      */
     public function test_isset_array_with_null()
     {
-        $nullValue = NULL;
+        $nullValue = null;
 
         // Call the function with a NULL value
         $result = isset_array($nullValue);
@@ -5935,14 +5934,14 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_returns_substring_on_match()
     {
-        $haystack = "This is a test string.";
-        $needles = ["test", "string", "example"];
+        $haystack = 'This is a test string.';
+        $needles  = ['test', 'string', 'example'];
 
         // Call the function
         $result = strstr_array($haystack, $needles);
 
         // Verify that the function returns the correct substring
-        $this->assertEquals("test string.", $result);
+        $this->assertEquals('test string.', $result);
     }
 
     /**
@@ -5950,8 +5949,8 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_returns_false_on_no_match()
     {
-        $haystack = "This is a test string.";
-        $needles = ["example", "dummy", "placeholder"];
+        $haystack = 'This is a test string.';
+        $needles  = ['example', 'dummy', 'placeholder'];
 
         // Call the function
         $result = strstr_array($haystack, $needles);
@@ -5965,14 +5964,14 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_returns_before_needle_on_match()
     {
-        $haystack = "This is a test string.";
-        $needles = ["test", "string", "example"];
+        $haystack = 'This is a test string.';
+        $needles  = ['test', 'string', 'example'];
 
         // Call the function with before_needle = TRUE
-        $result = strstr_array($haystack, $needles, TRUE);
+        $result = strstr_array($haystack, $needles, true);
 
         // Verify that the function returns the part of the string before the needle
-        $this->assertEquals("This is a ", $result);
+        $this->assertEquals('This is a ', $result);
     }
 
     /**
@@ -5980,8 +5979,8 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_with_empty_needles()
     {
-        $haystack = "This is a test string.";
-        $needles = [];
+        $haystack = 'This is a test string.';
+        $needles  = [];
 
         // Call the function with an empty needles array
         $result = strstr_array($haystack, $needles);
@@ -5995,14 +5994,14 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_returns_first_match()
     {
-        $haystack = "This is a test string.";
-        $needles = ["string", "test", "is"];
+        $haystack = 'This is a test string.';
+        $needles  = ['string', 'test', 'is'];
 
         // Call the function
         $result = strstr_array($haystack, $needles);
 
         // Verify that the function returns the first match found
-        $this->assertEquals("string.", $result);
+        $this->assertEquals('string.', $result);
     }
 
     /**
@@ -6010,14 +6009,14 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_with_multiple_occurrences()
     {
-        $haystack = "This is a test string with test cases.";
-        $needles = ["test", "cases"];
+        $haystack = 'This is a test string with test cases.';
+        $needles  = ['test', 'cases'];
 
         // Call the function
         $result = strstr_array($haystack, $needles);
 
         // Verify that the function returns the first occurrence
-        $this->assertEquals("test string with test cases.", $result);
+        $this->assertEquals('test string with test cases.', $result);
     }
 
     /**
@@ -6027,14 +6026,14 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_third_needle_match_before_needle_false()
     {
-        $haystack = "This is a test string for unit testing.";
-        $needles = ["absent", "missing", "test", "none"];
+        $haystack = 'This is a test string for unit testing.';
+        $needles  = ['absent', 'missing', 'test', 'none'];
 
         // Call the function with $before_needle = FALSE
-        $result = strstr_array($haystack, $needles, FALSE);
+        $result = strstr_array($haystack, $needles, false);
 
         // Verify that the function returns the correct substring starting from the third needle
-        $this->assertEquals("test string for unit testing.", $result);
+        $this->assertEquals('test string for unit testing.', $result);
     }
 
     /**
@@ -6044,14 +6043,14 @@ class ArrayTest extends TestCase
      */
     public function test_strstr_array_third_needle_match_before_needle_true()
     {
-        $haystack = "This is a test string for unit testing.";
-        $needles = ["absent", "missing", "test", "none"];
+        $haystack = 'This is a test string for unit testing.';
+        $needles  = ['absent', 'missing', 'test', 'none'];
 
         // Call the function with $before_needle = TRUE
-        $result = strstr_array($haystack, $needles, TRUE);
+        $result = strstr_array($haystack, $needles, true);
 
         // Verify that the function returns the part of the string before the third needle
-        $this->assertEquals("This is a ", $result);
+        $this->assertEquals('This is a ', $result);
     }
 
     /**
@@ -6060,14 +6059,14 @@ class ArrayTest extends TestCase
      */
     public function test_stristr_array_returns_substring_on_match()
     {
-        $haystack = "This is a Test String.";
-        $needles = ["test", "string", "example"];
+        $haystack = 'This is a Test String.';
+        $needles  = ['test', 'string', 'example'];
 
         // Call the function
         $result = stristr_array($haystack, $needles);
 
         // Verify that the function returns the correct substring, ignoring case
-        $this->assertEquals("Test String.", $result);
+        $this->assertEquals('Test String.', $result);
     }
 
     /**
@@ -6075,8 +6074,8 @@ class ArrayTest extends TestCase
      */
     public function test_stristr_array_returns_false_on_no_match()
     {
-        $haystack = "This is a Test String.";
-        $needles = ["example", "dummy", "placeholder"];
+        $haystack = 'This is a Test String.';
+        $needles  = ['example', 'dummy', 'placeholder'];
 
         // Call the function
         $result = stristr_array($haystack, $needles);
@@ -6091,14 +6090,14 @@ class ArrayTest extends TestCase
      */
     public function test_stristr_array_returns_before_needle_on_match()
     {
-        $haystack = "This is a Test String.";
-        $needles = ["test", "string", "example"];
+        $haystack = 'This is a Test String.';
+        $needles  = ['test', 'string', 'example'];
 
         // Call the function with $before_needle = TRUE
-        $result = stristr_array($haystack, $needles, TRUE);
+        $result = stristr_array($haystack, $needles, true);
 
         // Verify that the function returns the part of the string before the needle, ignoring case
-        $this->assertEquals("This is a ", $result);
+        $this->assertEquals('This is a ', $result);
     }
 
     /**
@@ -6106,8 +6105,8 @@ class ArrayTest extends TestCase
      */
     public function test_stristr_array_with_empty_needles()
     {
-        $haystack = "This is a Test String.";
-        $needles = [];
+        $haystack = 'This is a Test String.';
+        $needles  = [];
 
         // Call the function with an empty needles array
         $result = stristr_array($haystack, $needles);
@@ -6121,14 +6120,14 @@ class ArrayTest extends TestCase
      */
     public function test_stristr_array_returns_first_match()
     {
-        $haystack = "This is a Test String.";
-        $needles = ["string", "test", "is"];
+        $haystack = 'This is a Test String.';
+        $needles  = ['string', 'test', 'is'];
 
         // Call the function
         $result = stristr_array($haystack, $needles);
 
         // Verify that the function returns the first match found, ignoring case
-        $this->assertEquals("String.", $result);
+        $this->assertEquals('String.', $result);
     }
 
     /**
@@ -6136,14 +6135,14 @@ class ArrayTest extends TestCase
      */
     public function test_stristr_array_with_multiple_occurrences()
     {
-        $haystack = "This is a test string with test cases.";
-        $needles = ["test", "cases"];
+        $haystack = 'This is a test string with test cases.';
+        $needles  = ['test', 'cases'];
 
         // Call the function
         $result = stristr_array($haystack, $needles);
 
         // Verify that the function returns the first occurrence, ignoring case
-        $this->assertEquals("test string with test cases.", $result);
+        $this->assertEquals('test string with test cases.', $result);
     }
 
     /**
@@ -6186,7 +6185,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', 'Bob'],
-            'age' => [30, 25]
+            'age'  => [30, 25],
         ];
         $this->assertTrue(is_column_based_array($input));
     }
@@ -6205,7 +6204,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', 'Bob'],
-            'age' => [30, 25, 35]
+            'age'  => [30, 25, 35],
         ];
         $this->assertFalse(is_column_based_array($input));
     }
@@ -6214,7 +6213,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', 'Bob'],
-            'data' => [[1, 2], [3, 4]]
+            'data' => [[1, 2], [3, 4]],
         ];
         $this->assertFalse(is_column_based_array($input));
     }
@@ -6226,7 +6225,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             ['name' => 'Alice', 'age' => 30],
-            ['name' => 'Bob', 'age' => 25]
+            ['name' => 'Bob', 'age' => 25],
         ];
         $this->assertTrue(is_row_based_array($input));
     }
@@ -6240,7 +6239,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             ['name' => 'Alice', 'age' => 30],
-            ['name' => 'Bob', 'height' => 180]
+            ['name' => 'Bob', 'height' => 180],
         ];
         $this->assertFalse(is_row_based_array($input));
     }
@@ -6249,7 +6248,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             ['name' => 'Alice', 'data' => [1, 2]],
-            ['name' => 'Bob', 'data' => [3, 4]]
+            ['name' => 'Bob', 'data' => [3, 4]],
         ];
         $this->assertFalse(is_row_based_array($input));
     }
@@ -6259,7 +6258,7 @@ class ArrayTest extends TestCase
      */
     public function test_convert_array_to_row_structure_empty_array()
     {
-        $input = [];
+        $input    = [];
         $expected = [];
         $this->assertEquals($expected, convert_array_to_row_structure($input));
     }
@@ -6271,13 +6270,13 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', 'Bob', 'Charlie'],
-            'age' => [25, 30, 35],
-            'city' => ['New York', 'London', 'Paris']
+            'age'  => [25, 30, 35],
+            'city' => ['New York', 'London', 'Paris'],
         ];
         $expected = [
             ['name' => 'Alice', 'age' => 25, 'city' => 'New York'],
             ['name' => 'Bob', 'age' => 30, 'city' => 'London'],
-            ['name' => 'Charlie', 'age' => 35, 'city' => 'Paris']
+            ['name' => 'Charlie', 'age' => 35, 'city' => 'Paris'],
         ];
         $this->assertEquals($expected, convert_array_to_row_structure($input));
     }
@@ -6290,7 +6289,7 @@ class ArrayTest extends TestCase
         $input = [
             ['name' => 'Alice', 'age' => 25, 'city' => 'New York'],
             ['name' => 'Bob', 'age' => 30, 'city' => 'London'],
-            ['name' => 'Charlie', 'age' => 35, 'city' => 'Paris']
+            ['name' => 'Charlie', 'age' => 35, 'city' => 'Paris'],
         ];
         $this->assertEquals($input, convert_array_to_row_structure($input));
     }
@@ -6300,7 +6299,7 @@ class ArrayTest extends TestCase
      */
     public function test_convert_array_to_row_structure_indexed()
     {
-        $input = [1, 2, 3, 4, 5];
+        $input    = [1, 2, 3, 4, 5];
         $expected = $input;
         $this->assertEquals($expected, convert_array_to_row_structure($input));
     }
@@ -6313,13 +6312,13 @@ class ArrayTest extends TestCase
         // Explicitly represent missing value
         $input = [
             'name' => ['Alice', 'Bob', ''],
-            'age' => [25, 30, 35],
-            'city' => ['New York', 'London', 'Paris']
+            'age'  => [25, 30, 35],
+            'city' => ['New York', 'London', 'Paris'],
         ];
         $expected = [
             ['name' => 'Alice', 'age' => 25, 'city' => 'New York'],
             ['name' => 'Bob', 'age' => 30, 'city' => 'London'],
-            ['name' => '', 'age' => 35, 'city' => 'Paris']
+            ['name' => '', 'age' => 35, 'city' => 'Paris'],
         ];
         $this->assertEquals($expected, convert_array_to_row_structure($input));
     }
@@ -6331,13 +6330,13 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', '', 'Charlie'],
-            'age' => [25, 30, ''],
-            'city' => ['New York', 'London', '']
+            'age'  => [25, 30, ''],
+            'city' => ['New York', 'London', ''],
         ];
         $expected = [
             ['name' => 'Alice', 'age' => 25, 'city' => 'New York'],
             ['name' => '', 'age' => 30, 'city' => 'London'],
-            ['name' => 'Charlie', 'age' => '', 'city' => '']
+            ['name' => 'Charlie', 'age' => '', 'city' => ''],
         ];
         $this->assertEquals($expected, convert_array_to_row_structure($input));
     }
@@ -6349,13 +6348,13 @@ class ArrayTest extends TestCase
     {
         $input = [
             'col1' => [1, '2', null, false],
-            'col2' => ['a', 'b', 'c', 'd']
+            'col2' => ['a', 'b', 'c', 'd'],
         ];
         $expected = [
             ['col1' => 1, 'col2' => 'a'],
             ['col1' => '2', 'col2' => 'b'],
             ['col1' => null, 'col2' => 'c'],
-            ['col1' => false, 'col2' => 'd']
+            ['col1' => false, 'col2' => 'd'],
         ];
         $this->assertEquals($expected, convert_array_to_row_structure($input));
     }
@@ -6367,7 +6366,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             'key1' => 'value1',
-            'key2' => 'value2'
+            'key2' => 'value2',
         ];
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid array structure. Must be indexed, column-based, or row-based.');
@@ -6381,7 +6380,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             'col1' => [1, [2, 3], 4],
-            'col2' => ['a', 'b', 'c']
+            'col2' => ['a', 'b', 'c'],
         ];
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid array structure. Must be indexed, column-based, or row-based.');
@@ -6395,7 +6394,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', 'Bob'],
-            'age' => [30, 25]
+            'age'  => [30, 25],
         ];
         $expected = ['name', 'age'];
         $this->assertEquals($expected, get_csv_headers($input, true));
@@ -6405,7 +6404,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             ['name' => 'Alice', 'age' => 30],
-            ['name' => 'Bob', 'age' => 25]
+            ['name' => 'Bob', 'age' => 25],
         ];
         $expected = ['name', 'age'];
         $this->assertEquals($expected, get_csv_headers($input, false));
@@ -6423,7 +6422,7 @@ class ArrayTest extends TestCase
     public function test_write_csv_row()
     {
         $handle = fopen('php://temp', 'r+');
-        $row = ['Alice', 30, 'New York'];
+        $row    = ['Alice', 30, 'New York'];
         write_csv_row($handle, $row, ',', '"', '\\');
         rewind($handle);
         $this->assertEquals("Alice,30,\"New York\"\n", fgets($handle));
@@ -6445,9 +6444,9 @@ class ArrayTest extends TestCase
     public function test_write_column_based_data()
     {
         $handle = fopen('php://temp', 'r+');
-        $data = [
+        $data   = [
             'name' => ['Alice', 'Bob'],
-            'age' => [30, 25]
+            'age'  => [30, 25],
         ];
         write_column_based_data($handle, $data, ',', '"', '\\');
         rewind($handle);
@@ -6459,9 +6458,9 @@ class ArrayTest extends TestCase
     public function test_write_column_based_data_with_missing_values()
     {
         $handle = fopen('php://temp', 'r+');
-        $data = [
+        $data   = [
             'name' => ['Alice', 'Bob'],
-            'age' => [30]
+            'age'  => [30],
         ];
         write_column_based_data($handle, $data, ',', '"', '\\');
         rewind($handle);
@@ -6476,9 +6475,9 @@ class ArrayTest extends TestCase
     public function test_write_row_based_data()
     {
         $handle = fopen('php://temp', 'r+');
-        $data = [
+        $data   = [
             ['name' => 'Alice', 'age' => 30],
-            ['name' => 'Bob', 'age' => 25]
+            ['name' => 'Bob', 'age' => 25],
         ];
         write_row_based_data($handle, $data, ',', '"', '\\');
         rewind($handle);
@@ -6490,9 +6489,9 @@ class ArrayTest extends TestCase
     public function test_write_row_based_data_with_invalid_row()
     {
         $handle = fopen('php://temp', 'r+');
-        $data = [
+        $data   = [
             ['name' => 'Alice', 'age' => 30],
-            'Invalid Row'
+            'Invalid Row',
         ];
         $this->expectException(\InvalidArgumentException::class);
         write_row_based_data($handle, $data, ',', '"', '\\');
@@ -6504,7 +6503,7 @@ class ArrayTest extends TestCase
      */
     public function test_array_to_csv_with_indexed_array()
     {
-        $input = [1, 2, 3, 4, 5];
+        $input    = [1, 2, 3, 4, 5];
         $expected = "1,2,3,4,5\n";
         $this->assertEquals($expected, array_to_csv($input));
     }
@@ -6513,7 +6512,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', 'Bob'],
-            'age' => [30, 25]
+            'age'  => [30, 25],
         ];
         $expected = "name,age\nAlice,30\nBob,25\n";
         $this->assertEquals($expected, array_to_csv($input));
@@ -6523,7 +6522,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             ['name' => 'Alice', 'age' => 30],
-            ['name' => 'Bob', 'age' => 25]
+            ['name' => 'Bob', 'age' => 25],
         ];
         $expected = "name,age\nAlice,30\nBob,25\n";
         $this->assertEquals($expected, array_to_csv($input));
@@ -6536,7 +6535,7 @@ class ArrayTest extends TestCase
 
     public function test_array_to_csv_with_custom_delimiter()
     {
-        $input = ['a', 'b', 'c'];
+        $input    = ['a', 'b', 'c'];
         $expected = "a;b;c\n";
         $this->assertEquals($expected, array_to_csv($input, ';'));
     }
@@ -6545,7 +6544,7 @@ class ArrayTest extends TestCase
     {
         $input = [
             ['name' => 'Alice', 'age' => 30],
-            ['name' => 'Bob', 'age' => 25]
+            ['name' => 'Bob', 'age' => 25],
         ];
         $expected = "Alice,30\nBob,25\n";
         $this->assertEquals($expected, array_to_csv($input, ',', '"', '\\', false));
@@ -6556,7 +6555,7 @@ class ArrayTest extends TestCase
         $input = [
             'a' => 1,
             'b' => [2, 3],
-            'c' => 4
+            'c' => 4,
         ];
         $this->expectException(\InvalidArgumentException::class);
         array_to_csv($input);
@@ -6567,8 +6566,8 @@ class ArrayTest extends TestCase
      */
     public function test_align_array_columns_simple_indexed_array()
     {
-        $input = ['Alice', 25, 'New York', 'Bob', 30, 'London'];
-        $expected = "Alice 25 New York Bob 30 London";
+        $input    = ['Alice', 25, 'New York', 'Bob', 30, 'London'];
+        $expected = 'Alice 25 New York Bob 30 London';
         $this->assertEquals($expected, align_array_columns($input));
     }
 
@@ -6581,7 +6580,7 @@ class ArrayTest extends TestCase
             ['name' => 'Alice', 'age' => 25, 'city' => 'New York'],
             ['name' => 'Bob', 'age' => 30, 'city' => 'London'],
         ];
-        $expected = "Alice 25 New York" . PHP_EOL . "Bob   30 London  ";
+        $expected = 'Alice 25 New York' . PHP_EOL . 'Bob   30 London  ';
         $this->assertEquals($expected, align_array_columns($input));
     }
 
@@ -6592,10 +6591,10 @@ class ArrayTest extends TestCase
     {
         $input = [
             'name' => ['Alice', 'Bob'],
-            'age' => [25, 30],
+            'age'  => [25, 30],
             'city' => ['New York', 'London'],
         ];
-        $expected = "Alice 25 New York" . PHP_EOL . "Bob   30 London  ";
+        $expected = 'Alice 25 New York' . PHP_EOL . 'Bob   30 London  ';
         $this->assertEquals($expected, align_array_columns($input));
     }
 
@@ -6608,7 +6607,7 @@ class ArrayTest extends TestCase
             ['name' => 'Alice', 'age' => null, 'active' => true],
             ['name' => 'Bob', 'age' => 30, 'active' => false],
         ];
-        $expected = "Alice    1" . PHP_EOL . "Bob   30  ";
+        $expected = 'Alice    1' . PHP_EOL . 'Bob   30  ';
         $this->assertEquals($expected, align_array_columns($input));
     }
 
@@ -6625,8 +6624,8 @@ class ArrayTest extends TestCase
      */
     public function test_align_array_columns_single_element_array()
     {
-        $input = ['Alice'];
-        $expected = "Alice";
+        $input    = ['Alice'];
+        $expected = 'Alice';
         $this->assertEquals($expected, align_array_columns($input));
     }
 
@@ -6639,8 +6638,8 @@ class ArrayTest extends TestCase
             ['name' => 'Alice', 'description' => str_repeat('a', 1000)],
             ['name' => 'Bob', 'description' => str_repeat('b', 500)],
         ];
-        $expected = "Alice " . str_repeat('a', 1000) . PHP_EOL .
-            "Bob   " . str_repeat('b', 500) . str_repeat(' ', 500);
+        $expected = 'Alice ' . str_repeat('a', 1000) . PHP_EOL .
+            'Bob   ' . str_repeat('b', 500) . str_repeat(' ', 500);
         $this->assertEquals($expected, align_array_columns($input));
     }
 
@@ -6655,15 +6654,15 @@ class ArrayTest extends TestCase
         ];
 
         // Test left alignment (default)
-        $expected_left = "Alice 25" . PHP_EOL . "Bob   30";
+        $expected_left = 'Alice 25' . PHP_EOL . 'Bob   30';
         $this->assertEquals($expected_left, align_array_columns($input));
 
         // Test right alignment
-        $expected_right = "Alice 25" . PHP_EOL . "  Bob 30";
+        $expected_right = 'Alice 25' . PHP_EOL . '  Bob 30';
         $this->assertEquals($expected_right, align_array_columns($input, 'right'));
 
         // Test center alignment
-        $expected_center = "Alice 25" . PHP_EOL . " Bob  30";
+        $expected_center = 'Alice 25' . PHP_EOL . ' Bob  30';
         $this->assertEquals($expected_center, align_array_columns($input, 'center'));
     }
 
@@ -6676,7 +6675,7 @@ class ArrayTest extends TestCase
             ['name' => '中文', 'greeting' => 'こんにちは'],
             ['name' => 'Alice', 'greeting' => 'Hello'],
         ];
-        $expected = "中文  こんにちは" . PHP_EOL . "Alice Hello     ";
+        $expected = '中文  こんにちは' . PHP_EOL . 'Alice Hello     ';
         $this->assertEquals($expected, align_array_columns($input));
     }
 
@@ -6727,7 +6726,7 @@ class ArrayTest extends TestCase
             ['name' => 'Alice', 'age' => 25, 'city' => 'New York'],
             ['name' => 'Bob', 'age' => 30, 'city' => 'London'],
         ];
-        $expected = "Alice 25 New York" . PHP_EOL . "Bob   30 London  ";
+        $expected = 'Alice 25 New York' . PHP_EOL . 'Bob   30 London  ';
         $this->assertEquals($expected, align_array_columns($input));
     }
 }

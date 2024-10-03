@@ -7,14 +7,14 @@ use PHPUnit\Framework\TestCase;
 class MemoryTest extends TestCase
 {
     /**
-     * @var  string
+     * @var string
      */
     private $originalMemoryLimit;
 
     /**
      * Set up the test environment.
      *
-     * @return  void
+     * @return void
      */
     protected function setUp(): void
     {
@@ -27,7 +27,7 @@ class MemoryTest extends TestCase
     /**
      * Tear down the test environment.
      *
-     * @return  void
+     * @return void
      */
     protected function tearDown(): void
     {
@@ -40,7 +40,7 @@ class MemoryTest extends TestCase
     /**
      * Test that set_memory_max sets the memory limit to -1.
      *
-     * @return  void
+     * @return void
      */
     public function test_set_memory_max_sets_limit_to_unlimited(): void
     {
@@ -54,7 +54,7 @@ class MemoryTest extends TestCase
     /**
      * Test that set_memory_max works when the initial limit is already unlimited.
      *
-     * @return  void
+     * @return void
      */
     public function test_set_memory_max_when_already_unlimited(): void
     {
@@ -71,7 +71,7 @@ class MemoryTest extends TestCase
     /**
      * Test that set_memory_max works with a high initial limit.
      *
-     * @return  void
+     * @return void
      */
     public function test_set_memory_max_from_high_initial_limit(): void
     {
@@ -92,7 +92,7 @@ class MemoryTest extends TestCase
     /**
      * Test that set_memory_max works with the default memory limit.
      *
-     * @return  void
+     * @return void
      */
     public function test_set_memory_max_from_default_limit(): void
     {
@@ -109,7 +109,7 @@ class MemoryTest extends TestCase
     /**
      * Test that the function increases the memory limit when it's below the minimum.
      *
-     * @return  void
+     * @return void
      */
     public function test_minimum_memory_limit_increases_when_below(): void
     {
@@ -126,7 +126,7 @@ class MemoryTest extends TestCase
     /**
      * Test that the function doesn't change the limit when it's already above the minimum.
      *
-     * @return  void
+     * @return void
      */
     public function test_minimum_memory_limit_unchanged_when_above(): void
     {
@@ -143,7 +143,7 @@ class MemoryTest extends TestCase
     /**
      * Test that the function doesn't change the limit when it's set to unlimited (-1).
      *
-     * @return  void
+     * @return void
      */
     public function test_minimum_memory_limit_unchanged_when_unlimited(): void
     {
@@ -160,7 +160,7 @@ class MemoryTest extends TestCase
     /**
      * Test that the function accepts integer input.
      *
-     * @return  void
+     * @return void
      */
     public function test_minimum_memory_limit_accepts_integer_input(): void
     {
@@ -177,7 +177,7 @@ class MemoryTest extends TestCase
     /**
      * Test that the function rounds up to the nearest MB.
      *
-     * @return  void
+     * @return void
      */
     public function test_minimum_memory_limit_rounds_up(): void
     {
@@ -194,7 +194,7 @@ class MemoryTest extends TestCase
     /**
      * Test that the function throws an exception for invalid input.
      *
-     * @return  void
+     * @return void
      */
     public function test_minimum_memory_limit_throws_exception_for_invalid_input(): void
     {
@@ -205,11 +205,11 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size returns a non-negative integer for a simple string.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_returns_non_negative_for_string(): void
     {
-        $result = get_memory_size("Hello, World!");
+        $result = get_memory_size('Hello, World!');
         $this->assertIsInt($result);
         $this->assertGreaterThanOrEqual(0, $result);
     }
@@ -217,7 +217,7 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size returns a larger value for a larger data structure.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_increases_with_data_size(): void
     {
@@ -233,13 +233,13 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size handles nested arrays.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_handles_nested_arrays(): void
     {
         $nestedArray = [
             'a' => [1, 2, 3],
-            'b' => ['x' => 'y', 'z' => [4, 5, 6]]
+            'b' => ['x' => 'y', 'z' => [4, 5, 6]],
         ];
 
         $result = get_memory_size($nestedArray);
@@ -250,12 +250,12 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size handles objects.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_handles_objects(): void
     {
-        $obj = new \stdClass();
-        $obj->name = "Test Object";
+        $obj       = new \stdClass();
+        $obj->name = 'Test Object';
         $obj->data = [1, 2, 3];
 
         $result = get_memory_size($obj);
@@ -266,7 +266,7 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size returns 0 for null.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_returns_zero_for_null(): void
     {
@@ -277,11 +277,11 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size handles resource types.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_handles_resources(): void
     {
-        $file = fopen(__FILE__, 'r');
+        $file   = fopen(__FILE__, 'r');
         $result = get_memory_size($file);
         fclose($file);
 
@@ -292,12 +292,12 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size handles closures.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_handles_closures(): void
     {
         $closure = function () {
-            return "Hello";
+            return 'Hello';
         };
         $result = get_memory_size($closure);
 
@@ -308,12 +308,12 @@ class MemoryTest extends TestCase
     /**
      * Test that get_memory_size handles circular references.
      *
-     * @return  void
+     * @return void
      */
     public function test_get_memory_size_handles_circular_references(): void
     {
-        $arr1 = ['a' => 1];
-        $arr2 = ['b' => 2];
+        $arr1        = ['a' => 1];
+        $arr2        = ['b' => 2];
         $arr1['ref'] = &$arr2;
         $arr2['ref'] = &$arr1;
 
@@ -340,21 +340,21 @@ class MemoryTest extends TestCase
      */
     public function test_parse_windows_memory_output_valid_input()
     {
-        $input = "TotalVirtualMemorySize=8388608" . PHP_EOL .
-            "TotalVisibleMemorySize=4194304" . PHP_EOL .
-            "FreeVirtualMemory=6291456" . PHP_EOL .
-            "FreePhysicalMemory=2097152" . PHP_EOL .
-            "SizeStoredInPagingFiles=4194304" . PHP_EOL .
-            "FreeSpaceInPagingFiles=3145728" . PHP_EOL;
+        $input = 'TotalVirtualMemorySize=8388608' . PHP_EOL .
+            'TotalVisibleMemorySize=4194304' . PHP_EOL .
+            'FreeVirtualMemory=6291456' . PHP_EOL .
+            'FreePhysicalMemory=2097152' . PHP_EOL .
+            'SizeStoredInPagingFiles=4194304' . PHP_EOL .
+            'FreeSpaceInPagingFiles=3145728' . PHP_EOL;
         $result = parse_windows_memory_output($input);
 
         $this->assertEquals([
-            'TotalVirtualMemorySize' => 8388608,
-            'TotalVisibleMemorySize' => 4194304,
-            'FreeVirtualMemory' => 6291456,
-            'FreePhysicalMemory' => 2097152,
+            'TotalVirtualMemorySize'  => 8388608,
+            'TotalVisibleMemorySize'  => 4194304,
+            'FreeVirtualMemory'       => 6291456,
+            'FreePhysicalMemory'      => 2097152,
             'SizeStoredInPagingFiles' => 4194304,
-            'FreeSpaceInPagingFiles' => 3145728,
+            'FreeSpaceInPagingFiles'  => 3145728,
         ], $result);
     }
 
@@ -363,16 +363,16 @@ class MemoryTest extends TestCase
      */
     public function test_parse_windows_memory_output_invalid_input()
     {
-        $input = "InvalidKey=123" . PHP_EOL . "AnotherInvalidKey=456" . PHP_EOL;
+        $input  = 'InvalidKey=123' . PHP_EOL . 'AnotherInvalidKey=456' . PHP_EOL;
         $result = parse_windows_memory_output($input);
 
         $this->assertEquals([
-            'TotalVirtualMemorySize' => 0,
-            'TotalVisibleMemorySize' => 0,
-            'FreeVirtualMemory' => 0,
-            'FreePhysicalMemory' => 0,
+            'TotalVirtualMemorySize'  => 0,
+            'TotalVisibleMemorySize'  => 0,
+            'FreeVirtualMemory'       => 0,
+            'FreePhysicalMemory'      => 0,
             'SizeStoredInPagingFiles' => 0,
-            'FreeSpaceInPagingFiles' => 0,
+            'FreeSpaceInPagingFiles'  => 0,
         ], $result);
     }
 
@@ -382,22 +382,22 @@ class MemoryTest extends TestCase
     public function test_calculate_windows_memory_info()
     {
         $input = [
-            'TotalVirtualMemorySize' => 8388608,
-            'TotalVisibleMemorySize' => 4194304,
-            'FreeVirtualMemory' => 6291456,
-            'FreePhysicalMemory' => 2097152,
+            'TotalVirtualMemorySize'  => 8388608,
+            'TotalVisibleMemorySize'  => 4194304,
+            'FreeVirtualMemory'       => 6291456,
+            'FreePhysicalMemory'      => 2097152,
             'SizeStoredInPagingFiles' => 4194304,
-            'FreeSpaceInPagingFiles' => 3145728,
+            'FreeSpaceInPagingFiles'  => 3145728,
         ];
         $result = calculate_windows_memory_info($input);
 
         $this->assertEquals([
-            'MemTotal' => 4194304,
-            'MemFree' => 2097152,
+            'MemTotal'     => 4194304,
+            'MemFree'      => 2097152,
             'MemAvailable' => 2097152,
-            'SwapTotal' => 4194304,
-            'SwapFree' => 3145728,
-            'SwapUsed' => 1048576,
+            'SwapTotal'    => 4194304,
+            'SwapFree'     => 3145728,
+            'SwapUsed'     => 1048576,
         ], $result);
     }
 
@@ -407,11 +407,11 @@ class MemoryTest extends TestCase
     public function test_format_memory_info()
     {
         $input = [
-            'MemTotal' => 4194304,
-            'MemFree' => 2097152,
+            'MemTotal'     => 4194304,
+            'MemFree'      => 2097152,
             'MemAvailable' => 3145728,
-            'SwapTotal' => 8388608,
-            'SwapFree' => 6291456,
+            'SwapTotal'    => 8388608,
+            'SwapFree'     => 6291456,
         ];
         $result = format_memory_info($input);
 

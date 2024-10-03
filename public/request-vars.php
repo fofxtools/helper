@@ -3,8 +3,8 @@
 /**
  * Outputs the GET or POST variables in a safe and formatted way.
  *
- * @param  array   $vars  The array of variables ($_GET or $_POST).
- * @param  string  $type  The type of request ("GET" or "POST").
+ * @param array  $vars The array of variables ($_GET or $_POST).
+ * @param string $type The type of request ("GET" or "POST").
  */
 function output_vars(array $vars, string $type): void
 {

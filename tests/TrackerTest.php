@@ -14,7 +14,7 @@ class TrackerTest extends TestCase
 
     /**
      * Set up the test environment before each test
-     * 
+     *
      * @return void
      */
     protected function setUp(): void
@@ -26,7 +26,7 @@ class TrackerTest extends TestCase
 
         // Reset the Tracker instance before each test
         $reflection = new \ReflectionClass(Tracker::class);
-        $instance = $reflection->getProperty('instance');
+        $instance   = $reflection->getProperty('instance');
         $instance->setAccessible(true);
         $instance->setValue(null, null);
 
@@ -35,7 +35,7 @@ class TrackerTest extends TestCase
 
     /**
      * Clean up the test environment after each test
-     * 
+     *
      * @return void
      */
     protected function tearDown(): void
@@ -164,7 +164,7 @@ class TrackerTest extends TestCase
 
     /**
      * Test inCheckIPs with a single IP address
-     * 
+     *
      * @return void
      */
     public function testSingleIPInCheckIPs(): void
@@ -180,7 +180,7 @@ class TrackerTest extends TestCase
 
     /**
      * Test inCheckIPs with multiple IP addresses
-     * 
+     *
      * @return void
      */
     public function testMultipleIPsInCheckIPs(): void
@@ -196,7 +196,7 @@ class TrackerTest extends TestCase
 
     /**
      * Test inCheckIPs with null input (should use REMOTE_ADDR)
-     * 
+     *
      * @return void
      */
     public function testNullIPUsesRemoteAddr(): void
@@ -211,7 +211,7 @@ class TrackerTest extends TestCase
 
     /**
      * Test inCheckIPs with localhost inclusion
-     * 
+     *
      * @return void
      */
     public function testIncludeLocalhost(): void
@@ -227,7 +227,7 @@ class TrackerTest extends TestCase
 
     /**
      * Test inCheckIPs with localhost exclusion
-     * 
+     *
      * @return void
      */
     public function testExcludeLocalhost(): void
@@ -243,14 +243,15 @@ class TrackerTest extends TestCase
 
     /**
      * Helper method to set Tracker's checkIPs
-     * 
-     * @param  array  $ips
+     *
+     * @param array $ips
+     *
      * @return void
      */
     private function setTrackerCheckIPs(array $ips): void
     {
         $reflection = new \ReflectionClass(Tracker::class);
-        $instance = $reflection->getProperty('instance');
+        $instance   = $reflection->getProperty('instance');
         $instance->setAccessible(true);
         $tracker = $instance->getValue();
 

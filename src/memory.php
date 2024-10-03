@@ -17,12 +17,12 @@ namespace FOfX\Helper;
 
 /**
  * Sets the memory limit to the maximum value.
- * 
- * @return  void
+ *
+ * @return void
  */
 function set_memory_max(): void
 {
-    ini_set("memory_limit", -1);
+    ini_set('memory_limit', -1);
 }
 
 /**
@@ -30,10 +30,12 @@ function set_memory_max(): void
  *
  * @link    https://stackoverflow.com/questions/10208698/checking-memory-limit-in-php
  *
- * @param   string|int         $min  Minimum memory limit (e.g., '2048M' or bytes as integer)
- * @return  void
+ * @param string|int $min Minimum memory limit (e.g., '2048M' or bytes as integer)
  *
- * @throws  \RuntimeException        If unable to set the new memory limit
+ * @throws \RuntimeException If unable to set the new memory limit
+ *
+ * @return void
+ *
  * @see     convert_to_bytes
  */
 function minimum_memory_limit(string|int $min = '2048M'): void
@@ -56,17 +58,18 @@ function minimum_memory_limit(string|int $min = '2048M'): void
 
 /**
  * Calculate the memory usage of a variable
- * 
+ *
  * Based on Adam's getMemorySize() function
- * 
+ *
  * This function attempts to measure the memory usage of a given variable.
  * Note that the result is an approximation and may not be exact due to
  * PHP's memory management and garbage collection.
- * 
+ *
  * @link    https://stackoverflow.com/questions/2192657/how-to-determine-the-memory-footprint-size-of-a-variable
- * 
- * @param   mixed  $value  The variable whose memory usage is to be calculated.
- * @return  int            The approximate memory usage of the variable in bytes.
+ *
+ * @param mixed $value The variable whose memory usage is to be calculated.
+ *
+ * @return int The approximate memory usage of the variable in bytes.
  */
 function get_memory_size(mixed $value): int
 {
@@ -85,10 +88,12 @@ function get_memory_size(mixed $value): int
 /**
  * Get memory information for the current system
  *
- * @param   bool        $format  Whether to format the memory sizes
- * @return  array                An array containing memory information
+ * @param bool $format Whether to format the memory sizes
  *
- * @throws  \Exception           If the OS family is not supported
+ * @throws \Exception If the OS family is not supported
+ *
+ * @return array An array containing memory information
+ *
  * @see     get_windows_memory_info
  * @see     get_linux_memory_info
  * @see     get_macos_memory_info
@@ -96,18 +101,21 @@ function get_memory_size(mixed $value): int
  */
 function get_memory_info(bool $format = false): array
 {
-    $os_family = PHP_OS_FAMILY;
+    $os_family   = PHP_OS_FAMILY;
     $memory_info = [];
 
     switch ($os_family) {
         case 'Windows':
             $memory_info = get_windows_memory_info();
+
             break;
         case 'Linux':
             $memory_info = get_linux_memory_info();
+
             break;
         case 'Darwin':
             $memory_info = get_macos_memory_info();
+
             break;
         default:
             throw new \Exception("Unsupported OS family: $os_family");
@@ -119,9 +127,10 @@ function get_memory_info(bool $format = false): array
 /**
  * Get memory information for Windows systems
  *
- * @return  array         An array containing Windows memory information
+ * @throws \Exception If wmic command fails
  *
- * @throws  \Exception    If wmic command fails
+ * @return array An array containing Windows memory information
+ *
  * @see     parse_windows_memory_output
  * @see     calculate_windows_memory_info
  */
@@ -132,28 +141,30 @@ function get_windows_memory_info(): array
 
     // Handle error
     if ($output === false || $output === null) {
-        throw new \Exception("Failed to retrieve memory information on Windows.");
+        throw new \Exception('Failed to retrieve memory information on Windows.');
     }
 
     $memory_info = parse_windows_memory_output($output);
+
     return calculate_windows_memory_info($memory_info);
 }
 
 /**
  * Parse Windows memory output from wmic command
  *
- * @param   string  $output  The output from the wmic command
- * @return  array            An array of parsed memory values
+ * @param string $output The output from the wmic command
+ *
+ * @return array An array of parsed memory values
  */
 function parse_windows_memory_output(string $output): array
 {
     $memory_info = [
-        'TotalVirtualMemorySize' => 0,
-        'TotalVisibleMemorySize' => 0,
-        'FreeVirtualMemory' => 0,
-        'FreePhysicalMemory' => 0,
+        'TotalVirtualMemorySize'  => 0,
+        'TotalVisibleMemorySize'  => 0,
+        'FreeVirtualMemory'       => 0,
+        'FreePhysicalMemory'      => 0,
         'SizeStoredInPagingFiles' => 0,
-        'FreeSpaceInPagingFiles' => 0,
+        'FreeSpaceInPagingFiles'  => 0,
     ];
 
     // Parse wmic output
@@ -171,20 +182,21 @@ function parse_windows_memory_output(string $output): array
 /**
  * Calculate Windows memory information from parsed values
  *
- * @param   array  $memory_info  The parsed memory information
- * @return  array                Calculated memory and swap information
+ * @param array $memory_info The parsed memory information
+ *
+ * @return array Calculated memory and swap information
  */
 function calculate_windows_memory_info(array $memory_info): array
 {
     // Calculate swap information
     $swapTotal = $memory_info['SizeStoredInPagingFiles'];
-    $swapFree = $memory_info['FreeSpaceInPagingFiles'];
-    $swapUsed = $swapTotal - $swapFree;
+    $swapFree  = $memory_info['FreeSpaceInPagingFiles'];
+    $swapUsed  = $swapTotal - $swapFree;
 
     // Ensure non-negative values
     $swapTotal = max(0, $swapTotal);
-    $swapFree = max(0, $swapFree);
-    $swapUsed = max(0, $swapUsed);
+    $swapFree  = max(0, $swapFree);
+    $swapUsed  = max(0, $swapUsed);
 
     // Ensure SwapFree and SwapUsed don't exceed SwapTotal
     $swapFree = min($swapFree, $swapTotal);
@@ -192,57 +204,57 @@ function calculate_windows_memory_info(array $memory_info): array
 
     // Calculate memory and swap information
     return [
-        'MemTotal' => $memory_info['TotalVisibleMemorySize'],
-        'MemFree' => $memory_info['FreePhysicalMemory'],
+        'MemTotal'     => $memory_info['TotalVisibleMemorySize'],
+        'MemFree'      => $memory_info['FreePhysicalMemory'],
         'MemAvailable' => $memory_info['FreePhysicalMemory'],
-        'SwapTotal' => $swapTotal,
-        'SwapFree' => $swapFree,
-        'SwapUsed' => $swapUsed,
+        'SwapTotal'    => $swapTotal,
+        'SwapFree'     => $swapFree,
+        'SwapUsed'     => $swapUsed,
     ];
 }
 
 /**
  * Get memory information for Linux systems
- * 
+ *
  * file_get_contents() may give open_basedir restriction errors
  * so try shell_exec() if file_get_contents() fails.
- * 
+ *
  * If using CyberPanel, and fopen(). To prevent errors like:
  *      Warning: fopen(): open_basedir restriction in effect. File(/proc/meminfo) is not within the allowed path(s): (/tmp:/home/[snip]/:/usr/local/lsws/share/autoindex)
  *      Warning: fopen(/proc/meminfo): Failed to open stream: Operation not permitted
- * 
+ *
  * Go to CyberPanel dashboard>List Websites>Select the website>Manage>vHost Conf
  * And edit the phpIniOverride { php_admin_value open_basedir } value.
  * Edit the /usr/local/CyberCP/plogical/vhost.py and the two lines containing /tmp:$VH_ROOT to make this change the default for all new accounts
- * 
+ *
  * @link    https://stackoverflow.com/questions/1455379/get-server-ram-with-php
  *
- * @return  array         An array containing Linux memory information
+ * @throws \Exception If /proc/meminfo cannot be read
  *
- * @throws  \Exception    If /proc/meminfo cannot be read
+ * @return array An array containing Linux memory information
  */
 function get_linux_memory_info(): array
 {
     // Try file_get_contents first
-    $contents = @file_get_contents("/proc/meminfo");
+    $contents = @file_get_contents('/proc/meminfo');
 
     // If file_get_contents fails, try shell_exec
     if ($contents === false) {
-        $contents = shell_exec("cat /proc/meminfo");
+        $contents = shell_exec('cat /proc/meminfo');
     }
 
     // If both methods fail, throw an exception
     if ($contents === false || $contents === null) {
-        throw new \Exception("Failed to retrieve memory information on Linux.");
+        throw new \Exception('Failed to retrieve memory information on Linux.');
     }
 
-    $lines = explode("\n", $contents);
+    $lines       = explode("\n", $contents);
     $memory_info = [
-        'MemTotal' => 0,
-        'MemFree' => 0,
+        'MemTotal'     => 0,
+        'MemFree'      => 0,
         'MemAvailable' => 0,
-        'SwapTotal' => 0,
-        'SwapFree' => 0,
+        'SwapTotal'    => 0,
+        'SwapFree'     => 0,
     ];
 
     // Parse /proc/meminfo
@@ -261,34 +273,35 @@ function get_linux_memory_info(): array
 /**
  * Get memory information for macOS systems
  *
- * @return  array         An array containing macOS memory information
+ * @throws \Exception If vm_stat command fails
  *
- * @throws  \Exception    If vm_stat command fails
+ * @return array An array containing macOS memory information
+ *
  * @see     get_macos_total_memory
  * @see     get_macos_vm_stat
  */
 function get_macos_memory_info(): array
 {
     $memory_info = [
-        'MemTotal' => 0,
-        'MemFree' => 0,
+        'MemTotal'     => 0,
+        'MemFree'      => 0,
         'MemAvailable' => 0,
-        'SwapTotal' => 0,
-        'SwapFree' => 0,
+        'SwapTotal'    => 0,
+        'SwapFree'     => 0,
     ];
 
     // Get total memory and vm_stat info
     $memory_info['MemTotal'] = get_macos_total_memory();
-    $vm_stat_info = get_macos_vm_stat();
+    $vm_stat_info            = get_macos_vm_stat();
 
     // Calculate memory and swap information
     if ($vm_stat_info['page_size'] > 0) {
-        $memory_info['MemFree'] = $vm_stat_info['mem_free'] * $vm_stat_info['page_size'];
+        $memory_info['MemFree']      = $vm_stat_info['mem_free'] * $vm_stat_info['page_size'];
         $memory_info['MemAvailable'] = ($vm_stat_info['mem_free'] + $vm_stat_info['mem_inactive']) * $vm_stat_info['page_size'];
-        $memory_info['SwapTotal'] = $vm_stat_info['swap_total'] * $vm_stat_info['page_size'];
-        $memory_info['SwapFree'] = $vm_stat_info['swap_free'] * $vm_stat_info['page_size'];
+        $memory_info['SwapTotal']    = $vm_stat_info['swap_total'] * $vm_stat_info['page_size'];
+        $memory_info['SwapFree']     = $vm_stat_info['swap_free'] * $vm_stat_info['page_size'];
     } else {
-        throw new \Exception("Failed to calculate memory information on macOS.");
+        throw new \Exception('Failed to calculate memory information on macOS.');
     }
 
     return $memory_info;
@@ -297,10 +310,10 @@ function get_macos_memory_info(): array
 /**
  * Get total memory for macOS
  *
- * @return  int           The total memory in bytes
+ * @throws \Exception If sysctl command fails
+ * @throws \Exception If unable to parse total memory information
  *
- * @throws  \Exception    If sysctl command fails
- * @throws  \Exception    If unable to parse total memory information
+ * @return int The total memory in bytes
  */
 function get_macos_total_memory(): int
 {
@@ -310,7 +323,7 @@ function get_macos_total_memory(): int
 
     // Handle error
     if (empty($output)) {
-        throw new \Exception("Failed to retrieve total memory on macOS.");
+        throw new \Exception('Failed to retrieve total memory on macOS.');
     }
 
     foreach ($output as $line) {
@@ -319,16 +332,16 @@ function get_macos_total_memory(): int
         }
     }
 
-    throw new \Exception("Failed to parse total memory information on macOS.");
+    throw new \Exception('Failed to parse total memory information on macOS.');
 }
 
 /**
  * Get vm_stat information for macOS
  *
- * @return  array         An array containing vm_stat information
+ * @throws \Exception If vm_stat command fails
+ * @throws \Exception If unable to parse vm_stat information
  *
- * @throws  \Exception    If vm_stat command fails
- * @throws  \Exception    If unable to parse vm_stat information
+ * @return array An array containing vm_stat information
  */
 function get_macos_vm_stat(): array
 {
@@ -338,15 +351,15 @@ function get_macos_vm_stat(): array
 
     // Handle error
     if (empty($output)) {
-        throw new \Exception("Failed to retrieve vm_stat information on macOS.");
+        throw new \Exception('Failed to retrieve vm_stat information on macOS.');
     }
 
     $vm_stat_info = [
-        'page_size' => 0,
-        'mem_free' => 0,
+        'page_size'    => 0,
+        'mem_free'     => 0,
         'mem_inactive' => 0,
-        'swap_total' => 0,
-        'swap_free' => 0,
+        'swap_total'   => 0,
+        'swap_free'    => 0,
     ];
 
     // Parse vm_stat output
@@ -372,7 +385,7 @@ function get_macos_vm_stat(): array
     }
 
     if ($vm_stat_info['page_size'] === 0) {
-        throw new \Exception("Failed to parse vm_stat information on macOS.");
+        throw new \Exception('Failed to parse vm_stat information on macOS.');
     }
 
     return $vm_stat_info;
@@ -381,8 +394,9 @@ function get_macos_vm_stat(): array
 /**
  * Format memory information by converting bytes to human-readable format
  *
- * @param   array  $memory_info  The memory information to format
- * @return  array                The formatted memory information
+ * @param array $memory_info The memory information to format
+ *
+ * @return array The formatted memory information
  *
  * @see     format_bytes
  */
@@ -394,79 +408,90 @@ function format_memory_info(array $memory_info): array
 /**
  * Get total memory.
  *
- * @param   bool             $format  Whether to format the memory size.
- * @return  int|string|null           Total memory (int if not formatted, string if formatted, or null if missing).
+ * @param bool $format Whether to format the memory size.
+ *
+ * @return int|string|null Total memory (int if not formatted, string if formatted, or null if missing).
  *
  * @see     get_memory_info
  */
 function get_mem_total(bool $format = false): int|string|null
 {
     $memory_info = get_memory_info($format);
+
     return $memory_info['MemTotal'] ?? null;
 }
 
 /**
  * Get free memory.
  *
- * @param   bool             $format  Whether to format the memory size.
- * @return  int|string|null           Free memory (int if not formatted, string if formatted, or null if missing).
+ * @param bool $format Whether to format the memory size.
+ *
+ * @return int|string|null Free memory (int if not formatted, string if formatted, or null if missing).
  *
  * @see     get_memory_info
  */
 function get_mem_free(bool $format = false): int|string|null
 {
     $memory_info = get_memory_info($format);
+
     return $memory_info['MemFree'] ?? null;
 }
 
 /**
  * Get available memory.
  *
- * @param   bool             $format  Whether to format the memory size.
- * @return  int|string|null           Available memory (int if not formatted, string if formatted, or null if missing).
+ * @param bool $format Whether to format the memory size.
+ *
+ * @return int|string|null Available memory (int if not formatted, string if formatted, or null if missing).
  *
  * @see     get_memory_info
  */
 function get_mem_available(bool $format = false): int|string|null
 {
     $memory_info = get_memory_info($format);
+
     return $memory_info['MemAvailable'] ?? null;
 }
 
 /**
  * Get total swap.
  *
- * @param   bool             $format  Whether to format the memory size.
- * @return  int|string|null           Total swap (int if not formatted, string if formatted, or null if missing).
+ * @param bool $format Whether to format the memory size.
+ *
+ * @return int|string|null Total swap (int if not formatted, string if formatted, or null if missing).
  *
  * @see     get_memory_info
  */
 function get_swap_total(bool $format = false): int|string|null
 {
     $memory_info = get_memory_info($format);
+
     return $memory_info['SwapTotal'] ?? null;
 }
 
 /**
  * Get free swap.
  *
- * @param   bool             $format  Whether to format the memory size.
- * @return  int|string|null           Free swap (int if not formatted, string if formatted, or null if missing).
+ * @param bool $format Whether to format the memory size.
+ *
+ * @return int|string|null Free swap (int if not formatted, string if formatted, or null if missing).
  *
  * @see     get_memory_info
  */
 function get_swap_free(bool $format = false): int|string|null
 {
     $memory_info = get_memory_info($format);
+
     return $memory_info['SwapFree'] ?? null;
 }
 
 /**
  * Get the total memory and swap memory free.
  *
- * @param   bool             $get_available  Whether to get MemAvailable instead of MemFree.
- * @param   bool             $format         Whether to format the memory sizes.
- * @return  int|string|null                  The total free memory and swap memory size (or null if missing).
+ * @param bool $get_available Whether to get MemAvailable instead of MemFree.
+ * @param bool $format        Whether to format the memory sizes.
+ *
+ * @return int|string|null The total free memory and swap memory size (or null if missing).
  *
  * @see     get_memory_info
  * @see     format_bytes

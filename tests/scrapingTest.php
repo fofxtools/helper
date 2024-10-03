@@ -48,9 +48,9 @@ class ScrapingTest extends TestCase
         $proxy = get_random_proxy();
 
         $this->assertTrue(
-             // @phpstan-ignore-next-line
+            // @phpstan-ignore-next-line
             is_null($proxy) || is_string($proxy),
-            "Expected value to be either null or string, but got " . gettype($proxy)
+            'Expected value to be either null or string, but got ' . gettype($proxy)
         );
     }
 
@@ -105,7 +105,7 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_success()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
+        $url     = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -149,7 +149,7 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_url_with_special_chars()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?param=' . urlencode('value with spaces');
+        $url     = 'http://localhost/helper/public/request-vars.php?param=' . urlencode('value with spaces');
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -161,7 +161,7 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_url_with_query_params()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?foo=bar&baz=qux';
+        $url     = 'http://localhost/helper/public/request-vars.php?foo=bar&baz=qux';
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -174,7 +174,7 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_redirect()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?redirect=true';
+        $url     = 'http://localhost/helper/public/request-vars.php?redirect=true';
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -186,7 +186,7 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_valid_url()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
+        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
         $result = curl_get_contents($url);
 
         $this->assertIsString($result);
@@ -198,7 +198,7 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_proxy()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
+        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
         $config = ['use_proxy' => true];
 
         $result = curl_get_contents($url, $config['use_proxy']);
@@ -213,7 +213,7 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_headers()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
+        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
         $config = ['return_headers' => true];
 
         $result = curl_get_contents($url, false, [], true, false, $config['return_headers']);
@@ -228,7 +228,7 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_info()
     {
-        $url = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
+        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
         $config = ['return_info' => true];
 
         $result = curl_get_contents($url, false, [], true, $config['return_info']);
@@ -261,7 +261,6 @@ class ScrapingTest extends TestCase
 
         curl_get_contents($url);
     }
-
 
     /**
      * Tests error handling when cURL execution fails.
@@ -315,15 +314,15 @@ class ScrapingTest extends TestCase
                 'post' => [
                     'postvar1' => 'Demo',
                     'postvar2' => 'Roses are red, Violets are blue.',
-                ]
+                ],
             ],
             [
                 'url'  => 'http://localhost/helper/public/request-vars.php?string=testing',
                 'post' => [
                     'postvar1' => 'Demo',
                     'postvar2' => 'Sugar is sweet, And so are you.',
-                ]
-            ]
+                ],
+            ],
         ];
 
         // Call the curl_multi_get_contents function with POST data.
@@ -350,7 +349,7 @@ class ScrapingTest extends TestCase
         // Set up an array with an invalid URL.
         $urls = [
             'invalid-url',
-            'http://localhost/helper/public/request-vars.php?string=testing&num=2'
+            'http://localhost/helper/public/request-vars.php?string=testing&num=2',
         ];
 
         // Expect an InvalidArgumentException to be thrown due to the invalid URL.
@@ -400,7 +399,7 @@ class ScrapingTest extends TestCase
             ],
             [
                 CURLOPT_TIMEOUT => 5,
-            ]
+            ],
         ];
 
         // Call the curl_multi_get_contents function with additional cURL options.

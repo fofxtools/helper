@@ -32,7 +32,7 @@ class FileTest extends TestCase
      */
     public function test_debug_log_creates_file_and_logs_message()
     {
-        $message = "This is a test message.";
+        $message = 'This is a test message.';
 
         // Call the function
         debug_log($message, basename($this->logFile));
@@ -50,8 +50,8 @@ class FileTest extends TestCase
      */
     public function test_debug_log_appends_message_to_existing_file()
     {
-        $message1 = "First message.";
-        $message2 = "Second message.";
+        $message1 = 'First message.';
+        $message2 = 'Second message.';
 
         // Call the function twice
         debug_log($message1, basename($this->logFile));
@@ -77,7 +77,7 @@ class FileTest extends TestCase
             // Expect that an exception will be thrown
             $this->expectException(\Exception::class);
             // Simulate a failure by trying to write to an invalid directory
-            debug_log("This should fail.", "/invalid_directory/" . uniqid('test_debug_log_', true) . '.log');
+            debug_log('This should fail.', '/invalid_directory/' . uniqid('test_debug_log_', true) . '.log');
         } finally {
             // Restore the previous error handler
             restore_error_handler();
@@ -89,7 +89,7 @@ class FileTest extends TestCase
      */
     public function test_debug_log_includes_correct_timestamp()
     {
-        $message = "Timestamp test message.";
+        $message = 'Timestamp test message.';
 
         // Call the function
         debug_log($message, basename($this->logFile));
@@ -101,8 +101,8 @@ class FileTest extends TestCase
         // Assert that the timestamp is present and within 1 second of the current time
         $this->assertNotEmpty($matches);
         $logTime = new \DateTime($matches[1]);
-        $now = new \DateTime();
-        $diff = $now->getTimestamp() - $logTime->getTimestamp();
+        $now     = new \DateTime();
+        $diff    = $now->getTimestamp() - $logTime->getTimestamp();
         $this->assertLessThanOrEqual(1, abs($diff));
     }
 
@@ -111,7 +111,7 @@ class FileTest extends TestCase
      */
     public function test_debug_log_includes_correct_script_filename()
     {
-        $message = "Filename test message.";
+        $message = 'Filename test message.';
 
         // Call the function
         debug_log($message, basename($this->logFile));
@@ -130,8 +130,8 @@ class FileTest extends TestCase
      */
     public function test_log_file_creates_file_and_logs_message()
     {
-        $message = "This is a test message.";
-        $prefix = "test_log";
+        $message = 'This is a test message.';
+        $prefix  = 'test_log';
 
         // Call the function and capture the returned log filename
         $this->logFile = log_file($message, $prefix, false);
@@ -158,8 +158,8 @@ class FileTest extends TestCase
             // Expect that a RuntimeException will be thrown
             $this->expectException(\RuntimeException::class);
             // Try writing to an invalid directory (should fail)
-            $invalidDirectory = "/invalid_directory";
-            $this->logFile = log_file("This should fail.", $invalidDirectory . "/test_log", false);
+            $invalidDirectory = '/invalid_directory';
+            $this->logFile    = log_file('This should fail.', $invalidDirectory . '/test_log', false);
         } finally {
             // Restore the previous error handler
             restore_error_handler();
@@ -176,8 +176,8 @@ class FileTest extends TestCase
      */
     public function test_log_file_includes_correct_timestamp()
     {
-        $message = "Timestamp test message.";
-        $prefix = "test_log";
+        $message = 'Timestamp test message.';
+        $prefix  = 'test_log';
 
         // Call the function and capture the returned log filename
         $this->logFile = log_file($message, $prefix, false);
@@ -189,8 +189,8 @@ class FileTest extends TestCase
         // Assert that the timestamp is present and within 1 second of the current time
         $this->assertNotEmpty($matches);
         $logTime = new \DateTime($matches[1]);
-        $now = new \DateTime();
-        $diff = $now->getTimestamp() - $logTime->getTimestamp();
+        $now     = new \DateTime();
+        $diff    = $now->getTimestamp() - $logTime->getTimestamp();
         $this->assertLessThanOrEqual(1, abs($diff));
     }
 
@@ -199,8 +199,8 @@ class FileTest extends TestCase
      */
     public function test_log_file_includes_microseconds_in_filename()
     {
-        $message = "Microseconds in filename.";
-        $prefix = "test_log";
+        $message = 'Microseconds in filename.';
+        $prefix  = 'test_log';
 
         // Call the function with microseconds enabled and capture the returned log filename
         $this->logFile = log_file($message, $prefix, true);
@@ -219,8 +219,8 @@ class FileTest extends TestCase
     public function test_log_file_sanitizes_prefix()
     {
         // The message and prefix for the test
-        $message = "Sanitized prefix test.";
-        $prefix = "invalid@prefix#name!*";
+        $message = 'Sanitized prefix test.';
+        $prefix  = 'invalid@prefix#name!*';
 
         // Call the function with the invalid prefix and capture the returned filename
         $this->logFile = log_file($message, $prefix, false);

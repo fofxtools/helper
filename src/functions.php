@@ -22,8 +22,9 @@ namespace FOfX\Helper;
  * 2. In the current working directory
  * 3. In the parent directory of the current working directory
  *
- * @param   string|null  $config_file  The name or relative path of the configuration file.
- * @return  string|null                The resolved absolute path to the configuration file, or null if not found.
+ * @param string|null $config_file The name or relative path of the configuration file.
+ *
+ * @return string|null The resolved absolute path to the configuration file, or null if not found.
  */
 function resolve_config_file_path(?string $config_file = 'config' . DIRECTORY_SEPARATOR . 'config.php'): ?string
 {
@@ -57,10 +58,12 @@ function resolve_config_file_path(?string $config_file = 'config' . DIRECTORY_SE
 
 /**
  * Loads the configuration from a specified file.
- * 
- * @param   string             $config_file  The path to the configuration file.
- * @return  array                            The configuration data loaded from the file.
- * @throws  \RuntimeException                If the configuration file is not found or invalid.
+ *
+ * @param string $config_file The path to the configuration file.
+ *
+ * @throws \RuntimeException If the configuration file is not found or invalid.
+ *
+ * @return array The configuration data loaded from the file.
  */
 function load_config(string $config_file = 'config' . DIRECTORY_SEPARATOR . 'config.php'): array
 {
@@ -79,10 +82,11 @@ function load_config(string $config_file = 'config' . DIRECTORY_SEPARATOR . 'con
 
 /**
  * Check if the script is in a PHPUnit testing environment.
- * 
- * @param   bool  $include_class_check  Whether to include the PHPUnit TestCase class check.
- * @param   bool  $skip_constant_check  Whether to ignore PHPUnit-specific constants (for testing purposes).
- * @return  bool                        True if in a PHPUnit environment, false otherwise.
+ *
+ * @param bool $include_class_check Whether to include the PHPUnit TestCase class check.
+ * @param bool $skip_constant_check Whether to ignore PHPUnit-specific constants (for testing purposes).
+ *
+ * @return bool True if in a PHPUnit environment, false otherwise.
  */
 function is_phpunit_environment(bool $include_class_check = false, bool $skip_constant_check = false): bool
 {

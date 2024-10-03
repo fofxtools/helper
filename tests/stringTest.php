@@ -54,6 +54,7 @@ class StringTest extends TestCase
      * Normalize a path for comparison across different operating systems
      *
      * @param string $path The path to normalize
+     *
      * @return string The normalized path
      */
     private function normalizePathForComparison(string $path): string
@@ -70,7 +71,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function with default parameters.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_default(): void
@@ -84,7 +85,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function with a specific length.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_custom_length(): void
@@ -98,7 +99,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function with numbers included.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_include_numbers(): void
@@ -110,7 +111,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function with uppercase letters included.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_include_uppercase(): void
@@ -122,7 +123,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function with special characters included.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_include_special(): void
@@ -134,7 +135,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function with all character sets included.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_include_all(): void
@@ -150,7 +151,7 @@ class StringTest extends TestCase
 
     /**
      * Test that generate_password throws an exception for lengths less than 4.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_throws_exception_for_invalid_length(): void
@@ -162,7 +163,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function with an extremely large length.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_large_length(): void
@@ -176,7 +177,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function for dirty input, passing negative length.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_negative_length(): void
@@ -188,7 +189,7 @@ class StringTest extends TestCase
 
     /**
      * Test the generate_password function for edge case where length equals 4.
-     * 
+     *
      * @return void
      */
     public function test_generate_password_length_of_4(): void
@@ -202,7 +203,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with typical input.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_standard_case(): void
@@ -216,7 +217,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with zero bytes.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_zero_bytes(): void
@@ -230,7 +231,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with very small bytes (under 1 KB).
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_small_bytes(): void
@@ -244,7 +245,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with large bytes (over 1 GB).
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_large_bytes(): void
@@ -258,7 +259,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with precision specified.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_with_precision(): void
@@ -272,7 +273,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with very large number of bytes (over 1 TB).
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_very_large_bytes(): void
@@ -286,7 +287,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with a negative byte value.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_negative_bytes(): void
@@ -300,7 +301,7 @@ class StringTest extends TestCase
 
     /**
      * Test the format_bytes function with extreme large bytes.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_extreme_large_bytes(): void
@@ -314,7 +315,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with a flat array of numeric values.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_flat_numeric_values(): void
@@ -331,26 +332,26 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with a nested array of numeric values.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_nested_numeric_values(): void
     {
         $input = [
-            'file1' => 1024,
+            'file1'  => 1024,
             'folder' => [
                 'file2' => 2048,
                 'file3' => 3072,
-            ]
+            ],
         ];
 
         // Expecting formatted byte values in nested arrays
         $expected = [
-            'file1' => '1 KB',
+            'file1'  => '1 KB',
             'folder' => [
                 'file2' => '2 KB',
                 'file3' => '3 KB',
-            ]
+            ],
         ];
 
         $result = format_bytes_array($input);
@@ -360,7 +361,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with mixed numeric and non-numeric values.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_mixed_values(): void
@@ -377,7 +378,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with an empty array.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_empty_array(): void
@@ -394,7 +395,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with a large numeric value.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_large_value(): void
@@ -412,7 +413,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with a precision parameter.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_with_precision(): void
@@ -429,7 +430,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with a dirty input (non-array and non-numeric values).
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_dirty_input(): void
@@ -446,7 +447,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with deeply nested arrays.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_deeply_nested_arrays(): void
@@ -481,7 +482,7 @@ class StringTest extends TestCase
 
     /**
      * Test format_bytes_array with all zero values.
-     * 
+     *
      * @return void
      */
     public function test_format_bytes_array_all_zeros(): void
@@ -535,7 +536,7 @@ class StringTest extends TestCase
     {
         // Simulate the HTTP_HOST value
         $_SERVER['HTTP_HOST'] = 'www.example.com';
-        $result = strip_www(null);
+        $result               = strip_www(null);
 
         // Expected result without "www."
         $this->assertEquals('example.com', $result);
@@ -712,7 +713,7 @@ class StringTest extends TestCase
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
+                if ($object != '.' && $object != '..') {
                     if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
                         $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
                     } else {
@@ -733,7 +734,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$var1', '$var2'],
-            ['var1', 'var2']
+            ['var1', 'var2'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -748,7 +749,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$realVar'],
-            ['realVar']
+            ['realVar'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -763,7 +764,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$var', '$var2'],
-            ['var', 'var2']
+            ['var', 'var2'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -778,7 +779,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$var_one', '$var_two'],
-            ['var_one', 'var_two']
+            ['var_one', 'var_two'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -793,7 +794,7 @@ class StringTest extends TestCase
 
         $expected = [
             [],
-            []
+            [],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -808,7 +809,7 @@ class StringTest extends TestCase
 
         $expected = [
             [],
-            []
+            [],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -823,7 +824,7 @@ class StringTest extends TestCase
 
         $expected = [
             [],
-            []
+            [],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -838,7 +839,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$var'],
-            ['var']
+            ['var'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -853,7 +854,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$var'],
-            ['var']
+            ['var'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject, true));
@@ -868,7 +869,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$user'],
-            ['user']
+            ['user'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -883,7 +884,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$var1_', '$var3'],
-            ['var1_', 'var3']
+            ['var1_', 'var3'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -898,7 +899,7 @@ class StringTest extends TestCase
 
         $expected = [
             ['$变量'],
-            ['变量']
+            ['变量'],
         ];
 
         $this->assertEquals($expected, string_get_vars($subject));
@@ -1021,7 +1022,7 @@ class StringTest extends TestCase
     public function test_replace_vars_scope_invalid_scope(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid scope provided. Allowed scopes are:");
+        $this->expectExceptionMessage('Invalid scope provided. Allowed scopes are:');
 
         $subject = 'Hello $var';
         replace_vars_scope($subject, 'INVALID_SCOPE');
@@ -1035,7 +1036,7 @@ class StringTest extends TestCase
     public function test_replace_vars_scope_empty_scope(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid scope provided. Allowed scopes are:");
+        $this->expectExceptionMessage('Invalid scope provided. Allowed scopes are:');
 
         $subject = 'Hello $var';
         replace_vars_scope($subject, '');
@@ -1049,7 +1050,7 @@ class StringTest extends TestCase
         $array = ['name' => 'John', 'age' => 30];
 
         // Expecting the string with HTML headings for the keys
-        $expected = "<h2>name</h2>" . PHP_EOL . "John" . PHP_EOL . "<h2>age</h2>" . PHP_EOL . "30";
+        $expected = '<h2>name</h2>' . PHP_EOL . 'John' . PHP_EOL . '<h2>age</h2>' . PHP_EOL . '30';
 
         $this->expectOutputString($expected);
         print_array_with_headings($array, false, false, 'h2');
@@ -1063,7 +1064,7 @@ class StringTest extends TestCase
         $array = ['name' => '<John>', 'age' => 30];
 
         // Expecting the string with HTML headings for the keys and escaped values
-        $expected = "<h2>name</h2>" . PHP_EOL . "&lt;John&gt;" . PHP_EOL . "<h2>age</h2>" . PHP_EOL . "30";
+        $expected = '<h2>name</h2>' . PHP_EOL . '&lt;John&gt;' . PHP_EOL . '<h2>age</h2>' . PHP_EOL . '30';
 
         $output = print_array_with_headings($array, true, true, 'h2');
         $this->assertEquals($expected, $output);
@@ -1077,7 +1078,7 @@ class StringTest extends TestCase
         $array = [];
 
         // Expecting no output for an empty array
-        $expected = "";
+        $expected = '';
 
         $output = print_array_with_headings($array, false, true, 'h2');
         $this->assertEquals($expected, $output);
@@ -1104,16 +1105,16 @@ class StringTest extends TestCase
         $array = [
             'person' => [
                 'name' => 'John',
-                'age' => 30
+                'age'  => 30,
             ],
-            'location' => 'New York'
+            'location' => 'New York',
         ];
 
         // Expecting the string with headings for both levels of the array
-        $expected = "<h2>person</h2>" . PHP_EOL
-            . "<h2>name</h2>" . PHP_EOL . "John" . PHP_EOL
-            . "<h2>age</h2>" . PHP_EOL . "30" . PHP_EOL
-            . "<h2>location</h2>" . PHP_EOL . "New York";
+        $expected = '<h2>person</h2>' . PHP_EOL
+            . '<h2>name</h2>' . PHP_EOL . 'John' . PHP_EOL
+            . '<h2>age</h2>' . PHP_EOL . '30' . PHP_EOL
+            . '<h2>location</h2>' . PHP_EOL . 'New York';
 
         $output = print_array_with_headings($array, false, true, 'h2');
         $this->assertEquals($expected, $output);
@@ -1127,7 +1128,7 @@ class StringTest extends TestCase
         $array = ['<name>' => 'John & Jane', 'age' => 30];
 
         // Expecting the string with HTML headings and special characters escaped
-        $expected = "<h2>&lt;name&gt;</h2>" . PHP_EOL . "John &amp; Jane" . PHP_EOL . "<h2>age</h2>" . PHP_EOL . "30";
+        $expected = '<h2>&lt;name&gt;</h2>' . PHP_EOL . 'John &amp; Jane' . PHP_EOL . '<h2>age</h2>' . PHP_EOL . '30';
 
         $output = print_array_with_headings($array, true, true, 'h2');
         $this->assertEquals($expected, $output);
@@ -1141,7 +1142,7 @@ class StringTest extends TestCase
         $array = ['name' => 'John', 'age' => 30];
 
         // Expecting the string without leading or trailing newlines
-        $expected = "<h2>name</h2>" . PHP_EOL . "John" . PHP_EOL . "<h2>age</h2>" . PHP_EOL . "30";
+        $expected = '<h2>name</h2>' . PHP_EOL . 'John' . PHP_EOL . '<h2>age</h2>' . PHP_EOL . '30';
 
         // Manually trim the output to simulate trimming behavior
         $output = trim(print_array_with_headings($array, false, true, 'h2'));
@@ -1156,7 +1157,7 @@ class StringTest extends TestCase
         $array = ['name' => 'John', 'age' => 30];
 
         // Expecting the string with custom h3 tags instead of h2
-        $expected = "<h3>name</h3>" . PHP_EOL . "John" . PHP_EOL . "<h3>age</h3>" . PHP_EOL . "30";
+        $expected = '<h3>name</h3>' . PHP_EOL . 'John' . PHP_EOL . '<h3>age</h3>' . PHP_EOL . '30';
 
         $output = print_array_with_headings($array, false, true, 'h3');
         $this->assertEquals($expected, $output);
@@ -1167,8 +1168,8 @@ class StringTest extends TestCase
      */
     public function test_print_h2_with_simple_array()
     {
-        $input = ['key1' => 'value1', 'key2' => 'value2'];
-        $expected = "<h2>key1</h2>" . PHP_EOL . "value1" . PHP_EOL . "<h2>key2</h2>" . PHP_EOL . "value2";
+        $input    = ['key1' => 'value1', 'key2' => 'value2'];
+        $expected = '<h2>key1</h2>' . PHP_EOL . 'value1' . PHP_EOL . '<h2>key2</h2>' . PHP_EOL . 'value2';
 
         $result = print_h2($input, false, true);
         $this->assertEquals($expected, $result);
@@ -1179,8 +1180,8 @@ class StringTest extends TestCase
      */
     public function test_print_h2_with_html_special_chars()
     {
-        $input = ['<key>' => '<value>'];
-        $expected = "<h2>&lt;key&gt;</h2>" . PHP_EOL . "&lt;value&gt;";
+        $input    = ['<key>' => '<value>'];
+        $expected = '<h2>&lt;key&gt;</h2>' . PHP_EOL . '&lt;value&gt;';
 
         $result = print_h2($input, true, true);
         $this->assertEquals($expected, $result);
@@ -1193,11 +1194,11 @@ class StringTest extends TestCase
     {
         $input = [
             'key1' => 'value1',
-            'key2' => ['nested1' => 'nestedvalue1', 'nested2' => 'nestedvalue2']
+            'key2' => ['nested1' => 'nestedvalue1', 'nested2' => 'nestedvalue2'],
         ];
-        $expected = "<h2>key1</h2>" . PHP_EOL . "value1" . PHP_EOL . "<h2>key2</h2>" . PHP_EOL .
-            "<h2>nested1</h2>" . PHP_EOL . "nestedvalue1" . PHP_EOL .
-            "<h2>nested2</h2>" . PHP_EOL . "nestedvalue2";
+        $expected = '<h2>key1</h2>' . PHP_EOL . 'value1' . PHP_EOL . '<h2>key2</h2>' . PHP_EOL .
+            '<h2>nested1</h2>' . PHP_EOL . 'nestedvalue1' . PHP_EOL .
+            '<h2>nested2</h2>' . PHP_EOL . 'nestedvalue2';
 
         $result = print_h2($input, false, true);
         $this->assertEquals($expected, $result);
@@ -1208,7 +1209,7 @@ class StringTest extends TestCase
      */
     public function test_print_h2_with_empty_array()
     {
-        $input = [];
+        $input    = [];
         $expected = '';
 
         $result = print_h2($input, false, true);
@@ -1220,8 +1221,8 @@ class StringTest extends TestCase
      */
     public function test_print_h2_with_echo()
     {
-        $input = ['key' => 'value'];
-        $expected = "<h2>key</h2>" . PHP_EOL . "value";
+        $input    = ['key' => 'value'];
+        $expected = '<h2>key</h2>' . PHP_EOL . 'value';
 
         ob_start();
         print_h2($input);
@@ -1234,8 +1235,8 @@ class StringTest extends TestCase
      */
     public function test_print_h2_with_null_values()
     {
-        $input = ['key1' => null, 'key2' => 'value2'];
-        $expected = "<h2>key1</h2>" . PHP_EOL . PHP_EOL . "<h2>key2</h2>" . PHP_EOL . "value2";
+        $input    = ['key1' => null, 'key2' => 'value2'];
+        $expected = '<h2>key1</h2>' . PHP_EOL . PHP_EOL . '<h2>key2</h2>' . PHP_EOL . 'value2';
 
         $result = print_h2($input, false, true);
         $this->assertEquals($expected, $result);
@@ -1246,8 +1247,8 @@ class StringTest extends TestCase
      */
     public function test_print_hx_with_simple_array()
     {
-        $input = ['key1' => 'value1', 'key2' => 'value2'];
-        $expected = "<h1>key1</h1>" . PHP_EOL . "value1" . PHP_EOL . "<h1>key2</h1>" . PHP_EOL . "value2";
+        $input    = ['key1' => 'value1', 'key2' => 'value2'];
+        $expected = '<h1>key1</h1>' . PHP_EOL . 'value1' . PHP_EOL . '<h1>key2</h1>' . PHP_EOL . 'value2';
 
         $result = print_hx($input, false, true);
         $this->assertEquals($expected, $result);
@@ -1258,8 +1259,8 @@ class StringTest extends TestCase
      */
     public function test_print_hx_with_html_special_chars()
     {
-        $input = ['<key>' => '<value>'];
-        $expected = "<h1>&lt;key&gt;</h1>" . PHP_EOL . "&lt;value&gt;";
+        $input    = ['<key>' => '<value>'];
+        $expected = '<h1>&lt;key&gt;</h1>' . PHP_EOL . '&lt;value&gt;';
 
         $result = print_hx($input, true, true);
         $this->assertEquals($expected, $result);
@@ -1272,12 +1273,12 @@ class StringTest extends TestCase
     {
         $input = [
             'key1' => 'value1',
-            'key2' => ['nested1' => 'nestedvalue1', 'nested2' => 'nestedvalue2']
+            'key2' => ['nested1' => 'nestedvalue1', 'nested2' => 'nestedvalue2'],
         ];
-        $expected = "<h1>key1</h1>" . PHP_EOL . "value1" . PHP_EOL .
-            "<h1>key2</h1>" . PHP_EOL .
-            "<h2>nested1</h2>" . PHP_EOL . "nestedvalue1" . PHP_EOL .
-            "<h2>nested2</h2>" . PHP_EOL . "nestedvalue2";
+        $expected = '<h1>key1</h1>' . PHP_EOL . 'value1' . PHP_EOL .
+            '<h1>key2</h1>' . PHP_EOL .
+            '<h2>nested1</h2>' . PHP_EOL . 'nestedvalue1' . PHP_EOL .
+            '<h2>nested2</h2>' . PHP_EOL . 'nestedvalue2';
 
         $result = print_hx($input, false, true);
         $this->assertEquals($expected, $result);
@@ -1295,21 +1296,21 @@ class StringTest extends TestCase
                         'l4' => [
                             'l5' => [
                                 'l6' => [
-                                    'l7' => 'deep value'
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                    'l7' => 'deep value',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
-        $expected = "<h1>l1</h1>" . PHP_EOL .
-            "<h2>l2</h2>" . PHP_EOL .
-            "<h3>l3</h3>" . PHP_EOL .
-            "<h4>l4</h4>" . PHP_EOL .
-            "<h5>l5</h5>" . PHP_EOL .
-            "<h6>l6</h6>" . PHP_EOL .
-            "<h6>l7</h6>" . PHP_EOL . "deep value";
+        $expected = '<h1>l1</h1>' . PHP_EOL .
+            '<h2>l2</h2>' . PHP_EOL .
+            '<h3>l3</h3>' . PHP_EOL .
+            '<h4>l4</h4>' . PHP_EOL .
+            '<h5>l5</h5>' . PHP_EOL .
+            '<h6>l6</h6>' . PHP_EOL .
+            '<h6>l7</h6>' . PHP_EOL . 'deep value';
 
         $result = print_hx($input, false, true);
         $this->assertEquals($expected, $result);
@@ -1320,7 +1321,7 @@ class StringTest extends TestCase
      */
     public function test_print_hx_with_empty_array()
     {
-        $input = [];
+        $input    = [];
         $expected = '';
 
         $result = print_hx($input, false, true);
@@ -1332,8 +1333,8 @@ class StringTest extends TestCase
      */
     public function test_print_hx_with_echo()
     {
-        $input = ['key' => 'value'];
-        $expected = "<h1>key</h1>" . PHP_EOL . "value";
+        $input    = ['key' => 'value'];
+        $expected = '<h1>key</h1>' . PHP_EOL . 'value';
 
         ob_start();
         print_hx($input);
@@ -1346,8 +1347,8 @@ class StringTest extends TestCase
      */
     public function test_print_hx_with_null_values()
     {
-        $input = ['key1' => null, 'key2' => 'value2'];
-        $expected = "<h1>key1</h1>" . PHP_EOL . PHP_EOL . "<h1>key2</h1>" . PHP_EOL . "value2";
+        $input    = ['key1' => null, 'key2' => 'value2'];
+        $expected = '<h1>key1</h1>' . PHP_EOL . PHP_EOL . '<h1>key2</h1>' . PHP_EOL . 'value2';
 
         $result = print_hx($input, false, true);
         $this->assertEquals($expected, $result);
@@ -1358,7 +1359,7 @@ class StringTest extends TestCase
      */
     public function test_var_dump_string_with_string()
     {
-        $result = var_dump_string("Hello, World!");
+        $result = var_dump_string('Hello, World!');
 
         $this->assertStringContainsString('string(13) "Hello, World!"', $result);
     }
@@ -1411,10 +1412,10 @@ class StringTest extends TestCase
         $result = var_dump_string([1, 2, 3]);
 
         $this->assertStringContainsString('array(1) {', $result);
-        $this->assertStringContainsString("array(3) {", $result);
-        $this->assertStringContainsString("int(1)", $result);
-        $this->assertStringContainsString("int(2)", $result);
-        $this->assertStringContainsString("int(3)", $result);
+        $this->assertStringContainsString('array(3) {', $result);
+        $this->assertStringContainsString('int(1)', $result);
+        $this->assertStringContainsString('int(2)', $result);
+        $this->assertStringContainsString('int(3)', $result);
     }
 
     /**
@@ -1422,9 +1423,9 @@ class StringTest extends TestCase
      */
     public function test_var_dump_string_with_object()
     {
-        $obj = new \stdClass();
-        $obj->name = "Test";
-        $result = var_dump_string($obj);
+        $obj       = new \stdClass();
+        $obj->name = 'Test';
+        $result    = var_dump_string($obj);
 
         $this->assertStringContainsString('array(1) {', $result);
         $this->assertStringContainsString('object(stdClass)', $result);
@@ -1437,7 +1438,7 @@ class StringTest extends TestCase
      */
     public function test_var_dump_string_with_multiple_arguments()
     {
-        $result = var_dump_string("Hello", 42, [1, 2, 3]);
+        $result = var_dump_string('Hello', 42, [1, 2, 3]);
 
         $this->assertStringContainsString('string(5) "Hello"', $result);
         $this->assertStringContainsString('int(42)', $result);
@@ -1450,7 +1451,7 @@ class StringTest extends TestCase
     public function test_var_dump_string_with_resource()
     {
         $resource = fopen('php://memory', 'r');
-        $result = var_dump_string($resource);
+        $result   = var_dump_string($resource);
         fclose($resource);
 
         $this->assertStringContainsString('resource(', $result);
@@ -1463,7 +1464,7 @@ class StringTest extends TestCase
     public function test_var_dump_string_with_large_array()
     {
         $largeArray = range(1, 10000);
-        $result = var_dump_string($largeArray);
+        $result     = var_dump_string($largeArray);
 
         $this->assertStringContainsString('array(10000)', $result);
         $this->assertStringContainsString('int(1)', $result);
@@ -1476,7 +1477,7 @@ class StringTest extends TestCase
     public function test_var_dump_string_with_nested_array()
     {
         $nestedArray = array_fill(0, 100, array_fill(0, 100, 'deep'));
-        $result = var_dump_string($nestedArray);
+        $result      = var_dump_string($nestedArray);
 
         $this->assertStringContainsString('array(100)', $result);
         $this->assertStringContainsString('string(4) "deep"', $result);
@@ -1513,8 +1514,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_basic_tags(): void
     {
         // Test a basic string with HTML tags
-        $input    = "Hello <b>world</b>!";
-        $expected = "Hello world !";
+        $input    = 'Hello <b>world</b>!';
+        $expected = 'Hello world !';
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1526,8 +1527,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_with_allowed_tags(): void
     {
         // Test allowing <b> tags and ensuring they are not stripped, but adding space before closing tag
-        $input    = "Hello <b>world</b>!";
-        $expected = "Hello <b>world </b>!";
+        $input    = 'Hello <b>world</b>!';
+        $expected = 'Hello <b>world </b>!';
         $this->assertEquals($expected, strip_tags_with_whitespace($input, '<b>'));
     }
 
@@ -1539,8 +1540,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_nested_tags(): void
     {
         // Test nested HTML tags, extra spaces may occur
-        $input    = "<div>Hello <b><i>world</i></b>!</div>";
-        $expected = "Hello  world !";
+        $input    = '<div>Hello <b><i>world</i></b>!</div>';
+        $expected = 'Hello  world !';
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1552,8 +1553,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_no_tags(): void
     {
         // Test a string without HTML tags
-        $input    = "Hello world!";
-        $expected = "Hello world!";
+        $input    = 'Hello world!';
+        $expected = 'Hello world!';
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1565,8 +1566,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_empty_string(): void
     {
         // Test an empty string
-        $input    = "";
-        $expected = "";
+        $input    = '';
+        $expected = '';
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1578,8 +1579,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_consecutive_spaces(): void
     {
         // Test a string where tag removal might introduce extra spaces
-        $input    = "Hello   <b>world</b>   !";
-        $expected = "Hello  world  !";
+        $input    = 'Hello   <b>world</b>   !';
+        $expected = 'Hello  world  !';
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1591,8 +1592,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_dirty_html(): void
     {
         // Test dirty HTML input with unclosed tags
-        $input    = "Hello <b>world!";
-        $expected = "Hello world!";
+        $input    = 'Hello <b>world!';
+        $expected = 'Hello world!';
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1604,8 +1605,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_long_string(): void
     {
         // Test a long string containing repeated HTML tags
-        $input    = str_repeat("Hello <b>world</b>! ", 1000);
-        $expected = rtrim(str_repeat("Hello world ! ", 1000));
+        $input    = str_repeat('Hello <b>world</b>! ', 1000);
+        $expected = rtrim(str_repeat('Hello world ! ', 1000));
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1617,8 +1618,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_special_characters(): void
     {
         // Test a string containing special characters and symbols
-        $input    = "Héllô <i>wørld</i> & welcome!";
-        $expected = "Héllô wørld & welcome!";
+        $input    = 'Héllô <i>wørld</i> & welcome!';
+        $expected = 'Héllô wørld & welcome!';
         $this->assertEquals($expected, strip_tags_with_whitespace($input));
     }
 
@@ -1630,8 +1631,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_self_closing_tags(): void
     {
         // Test a string containing self-closing tags like <br />
-        $input    = "Line1<br />Line2";
-        $expected = "Line1 <br />Line2";
+        $input    = 'Line1<br />Line2';
+        $expected = 'Line1 <br />Line2';
         $this->assertEquals($expected, strip_tags_with_whitespace($input, '<br>'));
     }
 
@@ -1643,8 +1644,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_allowed_tags_array(): void
     {
         // Test providing allowable tags as an array
-        $input    = "Hello <b>world</b>!";
-        $expected = "Hello <b>world </b>!";
+        $input    = 'Hello <b>world</b>!';
+        $expected = 'Hello <b>world </b>!';
         $this->assertEquals($expected, strip_tags_with_whitespace($input, ['b']));
     }
 
@@ -1656,8 +1657,8 @@ class StringTest extends TestCase
     public function test_strip_tags_with_whitespace_invalid_allowed_tags(): void
     {
         // Test with invalid allowable tags
-        $input    = "Hello <b>world</b>!";
-        $expected = "Hello world !";
+        $input    = 'Hello <b>world</b>!';
+        $expected = 'Hello world !';
         $this->assertEquals($expected, strip_tags_with_whitespace($input, '<invalid>'));
     }
 
@@ -1669,8 +1670,8 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_basic(): void
     {
         // Test a basic string with non-alphabetical characters
-        $input    = "Hello, World! 123";
-        $expected = "HelloWorld";
+        $input    = 'Hello, World! 123';
+        $expected = 'HelloWorld';
         $this->assertEquals($expected, strip_non_alpha($input));
     }
 
@@ -1682,7 +1683,7 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_alphabetical_only(): void
     {
         // Test a string with only alphabetical characters
-        $input    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        $input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         // Should not change
         $expected = $input;
         $this->assertEquals($expected, strip_non_alpha($input));
@@ -1696,8 +1697,8 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_unicode_characters(): void
     {
         // Test a string containing Unicode alphabetic characters
-        $input    = "中文 русский English";
-        $expected = "中文русскийEnglish";
+        $input    = '中文 русский English';
+        $expected = '中文русскийEnglish';
         $this->assertEquals($expected, strip_non_alpha($input, true));
     }
 
@@ -1709,8 +1710,8 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_special_characters(): void
     {
         // Test a string with special characters
-        $input    = "Hello @#*&^ World! 12345";
-        $expected = "HelloWorld";
+        $input    = 'Hello @#*&^ World! 12345';
+        $expected = 'HelloWorld';
         $this->assertEquals($expected, strip_non_alpha($input));
     }
 
@@ -1722,9 +1723,9 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_dirty_input(): void
     {
         // Test a string with HTML, numbers, and special characters
-        $input    = "This is a <strong>dirty</strong> string with 12345 numbers & symbols!";
+        $input = 'This is a <strong>dirty</strong> string with 12345 numbers & symbols!';
         // Keeps <strong> tags because they contain letters
-        $expected = "Thisisastrongdirtystrongstringwithnumberssymbols";
+        $expected = 'Thisisastrongdirtystrongstringwithnumberssymbols';
         $this->assertEquals($expected, strip_non_alpha($input));
     }
 
@@ -1736,8 +1737,8 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_empty_string(): void
     {
         // Test with an empty string
-        $input    = "";
-        $expected = "";
+        $input    = '';
+        $expected = '';
         $this->assertEquals($expected, strip_non_alpha($input));
     }
 
@@ -1750,7 +1751,7 @@ class StringTest extends TestCase
     {
         // Test a string with newlines and spaces
         $input    = "Hello\nWorld \t! ";
-        $expected = "HelloWorld";
+        $expected = 'HelloWorld';
         $this->assertEquals($expected, strip_non_alpha($input));
     }
 
@@ -1762,9 +1763,9 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_numbers_and_punctuation(): void
     {
         // Test a string with numbers and punctuation
-        $input    = "1234567890!?.";
+        $input = '1234567890!?.';
         // All non-alphabetic characters
-        $expected = "";
+        $expected = '';
         $this->assertEquals($expected, strip_non_alpha($input));
     }
 
@@ -1776,8 +1777,8 @@ class StringTest extends TestCase
     public function test_strip_non_alpha_long_string(): void
     {
         // Test a long string
-        $input    = str_repeat("Hello123World! ", 1000);
-        $expected = str_repeat("HelloWorld", 1000);
+        $input    = str_repeat('Hello123World! ', 1000);
+        $expected = str_repeat('HelloWorld', 1000);
         $this->assertEquals($expected, strip_non_alpha($input));
     }
 
@@ -1789,8 +1790,8 @@ class StringTest extends TestCase
     public function test_strip_non_digit_basic(): void
     {
         // Test a basic string with English digits and non-digit characters
-        $input    = "Phone: (123) 456-7890";
-        $expected = "1234567890";
+        $input    = 'Phone: (123) 456-7890';
+        $expected = '1234567890';
         $this->assertEquals($expected, strip_non_digit($input));
     }
 
@@ -1802,7 +1803,7 @@ class StringTest extends TestCase
     public function test_strip_non_digit_digits_only(): void
     {
         // Test a string with only digits
-        $input    = "0123456789";
+        $input = '0123456789';
         // No changes should be made
         $expected = $input;
         $this->assertEquals($expected, strip_non_digit($input));
@@ -1816,8 +1817,8 @@ class StringTest extends TestCase
     public function test_strip_non_digit_special_characters(): void
     {
         // Test a string with special characters and spaces
-        $input    = "Order #: !123 *456&789?";
-        $expected = "123456789";
+        $input    = 'Order #: !123 *456&789?';
+        $expected = '123456789';
         $this->assertEquals($expected, strip_non_digit($input));
     }
 
@@ -1830,9 +1831,9 @@ class StringTest extends TestCase
     {
         // Test with Unicode digits and non-digit characters
         // Contains Arabic digits
-        $input    = "Phone: (123) ٤٥٦-٧٨٩٠";
+        $input = 'Phone: (123) ٤٥٦-٧٨٩٠';
         // Should retain both English and Arabic digits
-        $expected = "123٤٥٦٧٨٩٠";
+        $expected = '123٤٥٦٧٨٩٠';
         $this->assertEquals($expected, strip_non_digit($input, true));
     }
 
@@ -1844,8 +1845,8 @@ class StringTest extends TestCase
     public function test_strip_non_digit_unicode_non_digits(): void
     {
         // Test a string with non-digit Unicode characters
-        $input    = "Price: ١٢٣٤٥ / £200";
-        $expected = "١٢٣٤٥200";
+        $input    = 'Price: ١٢٣٤٥ / £200';
+        $expected = '١٢٣٤٥200';
         $this->assertEquals($expected, strip_non_digit($input, true));
     }
 
@@ -1857,8 +1858,8 @@ class StringTest extends TestCase
     public function test_strip_non_digit_dirty_input(): void
     {
         // Test a dirty string with letters, numbers, and special characters
-        $input    = "Invoice #ABC1234, total: £567.89.";
-        $expected = "123456789";
+        $input    = 'Invoice #ABC1234, total: £567.89.';
+        $expected = '123456789';
         $this->assertEquals($expected, strip_non_digit($input));
     }
 
@@ -1870,9 +1871,9 @@ class StringTest extends TestCase
     public function test_strip_non_digit_empty_string(): void
     {
         // Test with an empty string
-        $input    = "";
+        $input = '';
         // Output should be empty as well
-        $expected = "";
+        $expected = '';
         $this->assertEquals($expected, strip_non_digit($input));
     }
 
@@ -1884,9 +1885,9 @@ class StringTest extends TestCase
     public function test_strip_non_digit_letters_and_punctuation(): void
     {
         // Test a string with letters and punctuation
-        $input    = "ABC-def-123!@#456";
+        $input = 'ABC-def-123!@#456';
         // Only digits should be retained
-        $expected = "123456";
+        $expected = '123456';
         $this->assertEquals($expected, strip_non_digit($input));
     }
 
@@ -1898,8 +1899,8 @@ class StringTest extends TestCase
     public function test_strip_non_digit_long_string(): void
     {
         // Test a very long string containing digits and other characters
-        $input    = str_repeat("123-ABC-456 ", 1000);
-        $expected = str_repeat("123456", 1000);
+        $input    = str_repeat('123-ABC-456 ', 1000);
+        $expected = str_repeat('123456', 1000);
         $this->assertEquals($expected, strip_non_digit($input));
     }
 
@@ -1911,8 +1912,8 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_basic(): void
     {
         // Test a string with ASCII alphanumeric characters and non-alphanumeric characters
-        $input    = "Product ID: ABC123!@#";
-        $expected = "ProductIDABC123";
+        $input    = 'Product ID: ABC123!@#';
+        $expected = 'ProductIDABC123';
         $this->assertEquals($expected, strip_non_alnum($input));
     }
 
@@ -1924,7 +1925,7 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_alnum_only(): void
     {
         // Test a string with only alphanumeric characters
-        $input    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        $input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         // Should not change
         $expected = $input;
         $this->assertEquals($expected, strip_non_alnum($input));
@@ -1938,8 +1939,8 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_special_characters(): void
     {
         // Test a string with special characters and spaces
-        $input    = "Order #: !123 *ABC&456 ?";
-        $expected = "Order123ABC456";
+        $input    = 'Order #: !123 *ABC&456 ?';
+        $expected = 'Order123ABC456';
         $this->assertEquals($expected, strip_non_alnum($input));
     }
 
@@ -1951,9 +1952,9 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_with_unicode_alnum(): void
     {
         // Test with Unicode alphanumeric characters and non-alphanumeric characters
-        $input    = "Order: ١٢٣٤٥ ABC 中文 русский";
+        $input = 'Order: ١٢٣٤٥ ABC 中文 русский';
         // Retain Unicode alphanumeric characters
-        $expected = "Order١٢٣٤٥ABC中文русский";
+        $expected = 'Order١٢٣٤٥ABC中文русский';
         $this->assertEquals($expected, strip_non_alnum($input, true));
     }
 
@@ -1965,8 +1966,8 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_unicode_non_alnum(): void
     {
         // Test a string with non-alphanumeric Unicode characters
-        $input    = "Price: ٥٠٠٠ / £200";
-        $expected = "Price٥٠٠٠200";
+        $input    = 'Price: ٥٠٠٠ / £200';
+        $expected = 'Price٥٠٠٠200';
         $this->assertEquals($expected, strip_non_alnum($input, true));
     }
 
@@ -1978,8 +1979,8 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_dirty_input(): void
     {
         // Test a dirty string with letters, numbers, and special characters
-        $input    = "Invoice #ABC1234! Total: £567.89.";
-        $expected = "InvoiceABC1234Total56789";
+        $input    = 'Invoice #ABC1234! Total: £567.89.';
+        $expected = 'InvoiceABC1234Total56789';
         $this->assertEquals($expected, strip_non_alnum($input));
     }
 
@@ -1991,9 +1992,9 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_empty_string(): void
     {
         // Test with an empty string
-        $input    = "";
+        $input = '';
         // Output should be empty as well
-        $expected = "";
+        $expected = '';
         $this->assertEquals($expected, strip_non_alnum($input));
     }
 
@@ -2005,9 +2006,9 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_letters_and_punctuation(): void
     {
         // Test a string with letters and punctuation
-        $input    = "ABC-def-123!@#";
+        $input = 'ABC-def-123!@#';
         // Only alphanumeric characters should be retained
-        $expected = "ABCdef123";
+        $expected = 'ABCdef123';
         $this->assertEquals($expected, strip_non_alnum($input));
     }
 
@@ -2019,8 +2020,8 @@ class StringTest extends TestCase
     public function test_strip_non_alnum_long_string(): void
     {
         // Test a very long string containing alphanumeric and other characters
-        $input    = str_repeat("ABC123!@# ", 1000);
-        $expected = str_repeat("ABC123", 1000);
+        $input    = str_repeat('ABC123!@# ', 1000);
+        $expected = str_repeat('ABC123', 1000);
         $this->assertEquals($expected, strip_non_alnum($input));
     }
 
@@ -2032,10 +2033,10 @@ class StringTest extends TestCase
     public function test_generate_sed_valid_input_default_delimiter(): void
     {
         // Test with valid search, replace, and filename
-        $search_string  = "foo";
-        $replace_string = "bar";
-        $filename       = "test.txt";
-        $expected       = "sed -i 's/foo/bar/g' " . $this->expected_quote . "test.txt" . $this->expected_quote;
+        $search_string  = 'foo';
+        $replace_string = 'bar';
+        $filename       = 'test.txt';
+        $expected       = "sed -i 's/foo/bar/g' " . $this->expected_quote . 'test.txt' . $this->expected_quote;
 
         $this->assertEquals($expected, generate_sed($search_string, $replace_string, $filename));
     }
@@ -2048,11 +2049,11 @@ class StringTest extends TestCase
     public function test_generate_sed_valid_input_custom_delimiter(): void
     {
         // Test with a custom delimiter
-        $search_string  = "foo";
-        $replace_string = "bar";
-        $filename       = "test.txt";
-        $delimiter      = "#";
-        $expected       = "sed -i 's#foo#bar#g' " . $this->expected_quote . "test.txt" . $this->expected_quote;
+        $search_string  = 'foo';
+        $replace_string = 'bar';
+        $filename       = 'test.txt';
+        $delimiter      = '#';
+        $expected       = "sed -i 's#foo#bar#g' " . $this->expected_quote . 'test.txt' . $this->expected_quote;
 
         $this->assertEquals($expected, generate_sed($search_string, $replace_string, $filename, $delimiter));
     }
@@ -2065,10 +2066,10 @@ class StringTest extends TestCase
     public function test_generate_sed_search_string_with_special_characters(): void
     {
         // Test search string with special characters that need escaping
-        $search_string  = "foo$[]";
-        $replace_string = "bar";
-        $filename       = "test.txt";
-        $expected       = "sed -i 's/foo\\$\\[\\]/bar/g' " . $this->expected_quote . "test.txt" . $this->expected_quote;
+        $search_string  = 'foo$[]';
+        $replace_string = 'bar';
+        $filename       = 'test.txt';
+        $expected       = "sed -i 's/foo\\$\\[\\]/bar/g' " . $this->expected_quote . 'test.txt' . $this->expected_quote;
 
         $this->assertEquals($expected, generate_sed($search_string, $replace_string, $filename));
     }
@@ -2081,10 +2082,10 @@ class StringTest extends TestCase
     public function test_generate_sed_replace_string_with_special_characters(): void
     {
         // Test replace string with special characters that need escaping
-        $search_string  = "foo";
-        $replace_string = "bar$[]";
-        $filename       = "test.txt";
-        $expected       = "sed -i 's/foo/bar\\$\\[\\]/g' " . $this->expected_quote . "test.txt" . $this->expected_quote;
+        $search_string  = 'foo';
+        $replace_string = 'bar$[]';
+        $filename       = 'test.txt';
+        $expected       = "sed -i 's/foo/bar\\$\\[\\]/g' " . $this->expected_quote . 'test.txt' . $this->expected_quote;
 
         $this->assertEquals($expected, generate_sed($search_string, $replace_string, $filename));
     }
@@ -2098,9 +2099,9 @@ class StringTest extends TestCase
     {
         // Test with an empty search string
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Search string, replace string, and filename must not be empty.");
+        $this->expectExceptionMessage('Search string, replace string, and filename must not be empty.');
 
-        generate_sed("", "bar", "test.txt");
+        generate_sed('', 'bar', 'test.txt');
     }
 
     /**
@@ -2112,9 +2113,9 @@ class StringTest extends TestCase
     {
         // Test with an empty replace string
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Search string, replace string, and filename must not be empty.");
+        $this->expectExceptionMessage('Search string, replace string, and filename must not be empty.');
 
-        generate_sed("foo", "", "test.txt");
+        generate_sed('foo', '', 'test.txt');
     }
 
     /**
@@ -2126,9 +2127,9 @@ class StringTest extends TestCase
     {
         // Test with an empty filename
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Search string, replace string, and filename must not be empty.");
+        $this->expectExceptionMessage('Search string, replace string, and filename must not be empty.');
 
-        generate_sed("foo", "bar", "");
+        generate_sed('foo', 'bar', '');
     }
 
     /**
@@ -2140,9 +2141,9 @@ class StringTest extends TestCase
     {
         // Test with an invalid delimiter
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Delimiter must be a single character.");
+        $this->expectExceptionMessage('Delimiter must be a single character.');
 
-        generate_sed("foo", "bar", "test.txt", "##");
+        generate_sed('foo', 'bar', 'test.txt', '##');
     }
 
     /**
@@ -2153,10 +2154,10 @@ class StringTest extends TestCase
     public function test_generate_sed_dirty_filename_with_spaces(): void
     {
         // Test with a filename that contains spaces
-        $search_string  = "foo";
-        $replace_string = "bar";
-        $filename       = "my test file.txt";
-        $expected       = "sed -i 's/foo/bar/g' " . $this->expected_quote . "my test file.txt" . $this->expected_quote;
+        $search_string  = 'foo';
+        $replace_string = 'bar';
+        $filename       = 'my test file.txt';
+        $expected       = "sed -i 's/foo/bar/g' " . $this->expected_quote . 'my test file.txt' . $this->expected_quote;
 
         $this->assertEquals($expected, generate_sed($search_string, $replace_string, $filename));
     }
@@ -2164,7 +2165,7 @@ class StringTest extends TestCase
     /**
      * Tests if a negative integer returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_negative_integer()
     {
@@ -2174,7 +2175,7 @@ class StringTest extends TestCase
     /**
      * Tests if a positive integer returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_positive_integer()
     {
@@ -2184,7 +2185,7 @@ class StringTest extends TestCase
     /**
      * Tests if zero returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_zero()
     {
@@ -2195,7 +2196,7 @@ class StringTest extends TestCase
      * Tests if a non-integer negative number returns false.
      * Here, a float is used to check non-integer handling.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_negative_float()
     {
@@ -2206,7 +2207,7 @@ class StringTest extends TestCase
      * Tests if a string containing a negative integer returns false.
      * This ensures the function does not treat numeric strings as integers.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_negative_integer_string()
     {
@@ -2217,7 +2218,7 @@ class StringTest extends TestCase
      * Tests if an empty value returns false.
      * Edge case where an empty string is passed.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_empty_value()
     {
@@ -2227,7 +2228,7 @@ class StringTest extends TestCase
     /**
      * Tests if a null value returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_null_value()
     {
@@ -2237,7 +2238,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean true returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_boolean_true()
     {
@@ -2247,7 +2248,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean false returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_boolean_false()
     {
@@ -2258,7 +2259,7 @@ class StringTest extends TestCase
      * Tests if an array returns false.
      * Here, an array of integers is passed.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_array()
     {
@@ -2269,7 +2270,7 @@ class StringTest extends TestCase
      * Tests if an object returns false.
      * Edge case where an object is passed instead of an integer.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_negative_with_object()
     {
@@ -2279,7 +2280,7 @@ class StringTest extends TestCase
     /**
      * Tests if a positive integer returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_positive_integer()
     {
@@ -2289,7 +2290,7 @@ class StringTest extends TestCase
     /**
      * Tests if a negative integer returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_negative_integer()
     {
@@ -2299,7 +2300,7 @@ class StringTest extends TestCase
     /**
      * Tests if zero returns true when $accept_zero is true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_zero_accept_zero_true()
     {
@@ -2309,7 +2310,7 @@ class StringTest extends TestCase
     /**
      * Tests if zero returns false when $accept_zero is false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_zero_accept_zero_false()
     {
@@ -2320,7 +2321,7 @@ class StringTest extends TestCase
      * Tests if a float value returns false.
      * A non-integer numeric value should not pass the validation.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_float()
     {
@@ -2331,7 +2332,7 @@ class StringTest extends TestCase
      * Tests if a string value returns false.
      * Numeric strings should not pass the validation.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_numeric_string()
     {
@@ -2341,7 +2342,7 @@ class StringTest extends TestCase
     /**
      * Tests if an empty value returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_empty_value()
     {
@@ -2351,7 +2352,7 @@ class StringTest extends TestCase
     /**
      * Tests if null returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_null_value()
     {
@@ -2361,7 +2362,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean true returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_boolean_true()
     {
@@ -2371,7 +2372,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean false returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_boolean_false()
     {
@@ -2381,7 +2382,7 @@ class StringTest extends TestCase
     /**
      * Tests if an array returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_array()
     {
@@ -2391,7 +2392,7 @@ class StringTest extends TestCase
     /**
      * Tests if an object returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_int_positive_with_object()
     {
@@ -2401,7 +2402,7 @@ class StringTest extends TestCase
     /**
      * Tests if an integer value returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_integer()
     {
@@ -2411,7 +2412,7 @@ class StringTest extends TestCase
     /**
      * Tests if a float value returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_float()
     {
@@ -2422,7 +2423,7 @@ class StringTest extends TestCase
      * Tests if a string numeric value returns true.
      * Numeric strings should be considered as numeric.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_numeric_string()
     {
@@ -2433,7 +2434,7 @@ class StringTest extends TestCase
      * Tests if a string with a decimal point returns true.
      * A single decimal point (.) should be considered valid.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_single_decimal_point()
     {
@@ -2444,7 +2445,7 @@ class StringTest extends TestCase
      * Tests if a string with only decimal point and no digits returns false.
      * Edge case where just '.' should be considered valid but with context could fail.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_only_decimal_point()
     {
@@ -2455,7 +2456,7 @@ class StringTest extends TestCase
      * Tests if a non-numeric string returns false.
      * Strings with letters should not be considered numeric.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_non_numeric_string()
     {
@@ -2465,7 +2466,7 @@ class StringTest extends TestCase
     /**
      * Tests if an empty string returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_empty_string()
     {
@@ -2475,7 +2476,7 @@ class StringTest extends TestCase
     /**
      * Tests if null returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_null_value()
     {
@@ -2485,7 +2486,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean true returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_boolean_true()
     {
@@ -2495,7 +2496,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean false returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_boolean_false()
     {
@@ -2506,7 +2507,7 @@ class StringTest extends TestCase
      * Tests if an array returns false.
      * Arrays should not be considered numeric.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_array()
     {
@@ -2517,7 +2518,7 @@ class StringTest extends TestCase
      * Tests if an object returns false.
      * Objects should not be considered numeric.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_numeric_decimal_with_object()
     {
@@ -2527,7 +2528,7 @@ class StringTest extends TestCase
     /**
      * Tests if an integer returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_integer()
     {
@@ -2537,7 +2538,7 @@ class StringTest extends TestCase
     /**
      * Tests if a negative integer returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_negative_integer()
     {
@@ -2547,7 +2548,7 @@ class StringTest extends TestCase
     /**
      * Tests if a float with no decimal part returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_float_no_decimal()
     {
@@ -2557,7 +2558,7 @@ class StringTest extends TestCase
     /**
      * Tests if a float with a decimal part returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_float_with_decimal()
     {
@@ -2567,7 +2568,7 @@ class StringTest extends TestCase
     /**
      * Tests if a numeric string representing a whole number returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_numeric_string_whole()
     {
@@ -2577,7 +2578,7 @@ class StringTest extends TestCase
     /**
      * Tests if a numeric string representing a float with no decimal part returns true.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_numeric_string_float_no_decimal()
     {
@@ -2587,7 +2588,7 @@ class StringTest extends TestCase
     /**
      * Tests if a numeric string representing a float with decimal part returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_numeric_string_float_with_decimal()
     {
@@ -2598,7 +2599,7 @@ class StringTest extends TestCase
      * Tests if a non-numeric string returns false.
      * This ensures that non-numeric strings are not mistakenly identified as whole numbers.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_non_numeric_string()
     {
@@ -2608,7 +2609,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean true returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_boolean_true()
     {
@@ -2618,7 +2619,7 @@ class StringTest extends TestCase
     /**
      * Tests if a boolean false returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_boolean_false()
     {
@@ -2628,7 +2629,7 @@ class StringTest extends TestCase
     /**
      * Tests if an empty string returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_empty_string()
     {
@@ -2638,7 +2639,7 @@ class StringTest extends TestCase
     /**
      * Tests if null returns false.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_null()
     {
@@ -2649,7 +2650,7 @@ class StringTest extends TestCase
      * Tests if an array returns false.
      * Arrays should not be considered valid numbers.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_array()
     {
@@ -2660,7 +2661,7 @@ class StringTest extends TestCase
      * Tests if an object returns false.
      * Objects should not be considered valid numbers.
      *
-     * @return  void
+     * @return void
      */
     public function test_is_whole_number_with_object()
     {
@@ -2670,11 +2671,11 @@ class StringTest extends TestCase
     /**
      * Tests padding on the right side of the string.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_right()
     {
-        $input = 'test';
+        $input  = 'test';
         $result = mb_str_pad($input, 8, ' ');
         $this->assertEquals('test    ', $result);
     }
@@ -2682,11 +2683,11 @@ class StringTest extends TestCase
     /**
      * Tests padding on the left side of the string.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_left()
     {
-        $input = 'test';
+        $input  = 'test';
         $result = mb_str_pad($input, 8, ' ', STR_PAD_LEFT);
         $this->assertEquals('    test', $result);
     }
@@ -2694,27 +2695,26 @@ class StringTest extends TestCase
     /**
      * Tests padding on both sides of the string.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_both()
     {
-        $input = 'test';
+        $input  = 'test';
         $result = mb_str_pad($input, 10, ' ', STR_PAD_BOTH);
 
         // Adjust the expected value to match the correct behavior
         $this->assertEquals('   test   ', $result);
     }
 
-
     /**
      * Tests when the input length is greater than or equal to the pad length.
      * In this case, no padding should be applied.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_no_padding_needed()
     {
-        $input = 'longstring';
+        $input  = 'longstring';
         $result = mb_str_pad($input, 10);
         $this->assertEquals('longstring', $result);
     }
@@ -2722,12 +2722,12 @@ class StringTest extends TestCase
     /**
      * Tests padding with a multibyte string (e.g., Unicode characters).
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_with_multibyte_characters()
     {
         // "Test" in Japanese
-        $input = 'テスト';
+        $input  = 'テスト';
         $result = mb_str_pad($input, 8, ' ', STR_PAD_RIGHT, 'UTF-8');
         $this->assertEquals('テスト  ', $result);
     }
@@ -2735,11 +2735,11 @@ class StringTest extends TestCase
     /**
      * Tests padding with a multibyte padding string.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_multibyte_pad_string()
     {
-        $input = 'test';
+        $input  = 'test';
         $result = mb_str_pad($input, 10, 'あ', STR_PAD_RIGHT, 'UTF-8');
 
         // Adjusting the expected value to reflect the correct padding behavior
@@ -2749,11 +2749,11 @@ class StringTest extends TestCase
     /**
      * Tests padding with a custom pad string longer than one character.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_custom_pad_string()
     {
-        $input = 'test';
+        $input  = 'test';
         $result = mb_str_pad($input, 10, '-+', STR_PAD_RIGHT);
         $this->assertEquals('test-+-+-+', $result);
     }
@@ -2762,11 +2762,11 @@ class StringTest extends TestCase
      * Tests padding with a length shorter than the input length.
      * No padding should be applied in this case.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_length_shorter_than_input()
     {
-        $input = 'test';
+        $input  = 'test';
         $result = mb_str_pad($input, 3);
         $this->assertEquals('test', $result);
     }
@@ -2774,11 +2774,11 @@ class StringTest extends TestCase
     /**
      * Tests padding with an empty input string.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_empty_input()
     {
-        $input = '';
+        $input  = '';
         $result = mb_str_pad($input, 5, '*');
         $this->assertEquals('*****', $result);
     }
@@ -2787,11 +2787,11 @@ class StringTest extends TestCase
      * Tests padding with a zero pad length.
      * The function should return the original string.
      *
-     * @return  void
+     * @return void
      */
     public function test_mb_str_pad_zero_pad_length()
     {
-        $input = 'test';
+        $input  = 'test';
         $result = mb_str_pad($input, 0, '*');
         $this->assertEquals('test', $result);
     }
@@ -3195,7 +3195,7 @@ class StringTest extends TestCase
      */
     public function test_string_is_english_keyboard_emoji(): void
     {
-        $this->assertFalse(string_is_english_keyboard("Hello 👋 World"));
+        $this->assertFalse(string_is_english_keyboard('Hello 👋 World'));
     }
 
     /**
@@ -3244,7 +3244,7 @@ class StringTest extends TestCase
      */
     public function test_string_is_english_keyboard_multibyte(): void
     {
-        $this->assertFalse(string_is_english_keyboard("Hello こんにちは World"));
+        $this->assertFalse(string_is_english_keyboard('Hello こんにちは World'));
     }
 
     /**
@@ -3284,7 +3284,7 @@ class StringTest extends TestCase
      */
     public function test_string_is_english_keyboard_yes_euro_no_whitespace(): void
     {
-        $this->assertTrue(string_is_english_keyboard("Hello€World", true, false));
+        $this->assertTrue(string_is_english_keyboard('Hello€World', true, false));
     }
 
     /**
@@ -3292,7 +3292,7 @@ class StringTest extends TestCase
      */
     public function test_string_is_english_keyboard_special_chars_no_whitespace(): void
     {
-        $this->assertTrue(string_is_english_keyboard("Hello£±§€World", true, false));
+        $this->assertTrue(string_is_english_keyboard('Hello£±§€World', true, false));
     }
 
     /**
@@ -3300,10 +3300,10 @@ class StringTest extends TestCase
      */
     public function test_string_is_english_keyboard_empty_string_variations(): void
     {
-        $this->assertTrue(string_is_english_keyboard("", true, true));
-        $this->assertTrue(string_is_english_keyboard("", false, true));
-        $this->assertTrue(string_is_english_keyboard("", true, false));
-        $this->assertTrue(string_is_english_keyboard("", false, false));
+        $this->assertTrue(string_is_english_keyboard('', true, true));
+        $this->assertTrue(string_is_english_keyboard('', false, true));
+        $this->assertTrue(string_is_english_keyboard('', true, false));
+        $this->assertTrue(string_is_english_keyboard('', false, false));
     }
 
     /**
@@ -3480,7 +3480,7 @@ class StringTest extends TestCase
      */
     public function test_stringval_with_array(): void
     {
-        $array = ['apple', 'banana', 'cherry'];
+        $array          = ['apple', 'banana', 'cherry'];
         $expectedOutput = print_r($array, true);
         $this->assertEquals($expectedOutput, stringval($array));
     }
@@ -3492,7 +3492,7 @@ class StringTest extends TestCase
      */
     public function test_stringval_with_object(): void
     {
-        $object = (object) ['property1' => 'value1', 'property2' => 42];
+        $object         = (object) ['property1' => 'value1', 'property2' => 42];
         $expectedOutput = var_dump_string($object);
         $this->assertEquals($expectedOutput, stringval($object));
     }
@@ -3546,7 +3546,7 @@ class StringTest extends TestCase
      */
     public function test_stringval_with_large_array(): void
     {
-        $largeArray = range(1, 1000);
+        $largeArray     = range(1, 1000);
         $expectedOutput = print_r($largeArray, true);
         $this->assertEquals($expectedOutput, stringval($largeArray));
     }
@@ -3558,8 +3558,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_simple_string(): void
     {
-        $input_string = "apple, banana, cherry";
-        $expected = ['apple', 'banana', 'cherry'];
+        $input_string = 'apple, banana, cherry';
+        $expected     = ['apple', 'banana', 'cherry'];
         $this->assertEquals($expected, explode_trim(',', $input_string));
     }
 
@@ -3591,8 +3591,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_extra_spaces(): void
     {
-        $input_string = " apple , banana ,  cherry  ";
-        $expected = ['apple', 'banana', 'cherry'];
+        $input_string = ' apple , banana ,  cherry  ';
+        $expected     = ['apple', 'banana', 'cherry'];
         $this->assertEquals($expected, explode_trim(',', $input_string));
     }
 
@@ -3603,8 +3603,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_different_separator(): void
     {
-        $input_string = "apple|banana|cherry";
-        $expected = ['apple', 'banana', 'cherry'];
+        $input_string = 'apple|banana|cherry';
+        $expected     = ['apple', 'banana', 'cherry'];
         $this->assertEquals($expected, explode_trim('|', $input_string));
     }
 
@@ -3615,8 +3615,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_limit(): void
     {
-        $input_string = "apple, banana, cherry, date";
-        $expected = ['apple', 'banana', 'cherry, date'];
+        $input_string = 'apple, banana, cherry, date';
+        $expected     = ['apple', 'banana', 'cherry, date'];
         $this->assertEquals($expected, explode_trim(',', $input_string, 3));
     }
 
@@ -3628,7 +3628,7 @@ class StringTest extends TestCase
     public function test_explode_trim_with_dirty_input(): void
     {
         $input_string = "apple\t, banana\n,  cherry  ";
-        $expected = ['apple', 'banana', 'cherry'];
+        $expected     = ['apple', 'banana', 'cherry'];
         $this->assertEquals($expected, explode_trim(',', $input_string));
     }
 
@@ -3639,8 +3639,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_single_character(): void
     {
-        $input_string = "a";
-        $expected = ['a'];
+        $input_string = 'a';
+        $expected     = ['a'];
         $this->assertEquals($expected, explode_trim(',', $input_string));
     }
 
@@ -3651,8 +3651,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_multi_character_separator(): void
     {
-        $input_string = "apple--banana--cherry";
-        $expected = ['apple', 'banana', 'cherry'];
+        $input_string = 'apple--banana--cherry';
+        $expected     = ['apple', 'banana', 'cherry'];
         $this->assertEquals($expected, explode_trim('--', $input_string));
     }
 
@@ -3663,8 +3663,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_special_characters(): void
     {
-        $input_string = "apple@banana#cherry";
-        $expected = ['apple@banana#cherry'];
+        $input_string = 'apple@banana#cherry';
+        $expected     = ['apple@banana#cherry'];
         $this->assertEquals($expected, explode_trim(',', $input_string));
     }
 
@@ -3675,8 +3675,8 @@ class StringTest extends TestCase
      */
     public function test_explode_trim_with_no_spaces(): void
     {
-        $input_string = "apple,banana,cherry";
-        $expected = ['apple', 'banana', 'cherry'];
+        $input_string = 'apple,banana,cherry';
+        $expected     = ['apple', 'banana', 'cherry'];
         $this->assertEquals($expected, explode_trim(',', $input_string));
     }
 
@@ -3687,8 +3687,8 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_punctuation(): void
     {
-        $input_string = "!Hello, World!";
-        $expected = "Hello, World";
+        $input_string = '!Hello, World!';
+        $expected     = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_characters($input_string));
     }
 
@@ -3699,7 +3699,7 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_no_punctuation(): void
     {
-        $input_string = "Hello, World";
+        $input_string = 'Hello, World';
         $this->assertEquals($input_string, strip_boundary_characters($input_string));
     }
 
@@ -3710,8 +3710,8 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_spaces(): void
     {
-        $input_string = "  Hello, World  ";
-        $expected = "Hello, World";
+        $input_string = '  Hello, World  ';
+        $expected     = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_characters($input_string, 'Z'));
     }
 
@@ -3722,9 +3722,9 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_letters(): void
     {
-        $input_string = "aHello, Worldb";
+        $input_string = 'aHello, Worldb';
         // All letters 'a' and 'b' are stripped from the boundaries, leaving only punctuation and spaces.
-        $expected = ", ";
+        $expected = ', ';
         $this->assertEquals($expected, strip_boundary_characters($input_string, 'L'));
     }
 
@@ -3735,8 +3735,8 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_numbers(): void
     {
-        $input_string = "123Hello, World456";
-        $expected = "Hello, World";
+        $input_string = '123Hello, World456';
+        $expected     = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_characters($input_string, 'N'));
     }
 
@@ -3760,8 +3760,8 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_multi_character_property(): void
     {
-        $input_string = "--Hello, World--";
-        $expected = "Hello, World";
+        $input_string = '--Hello, World--';
+        $expected     = 'Hello, World';
         // Strip dashes (punctuation, dash)
         $this->assertEquals($expected, strip_boundary_characters($input_string, 'Pd'));
     }
@@ -3775,7 +3775,7 @@ class StringTest extends TestCase
     {
         $input_string = "\t      Hello, World\n";
         // All leading and trailing whitespace characters (spaces, tabs, newlines) should be stripped.
-        $expected = "Hello, World";
+        $expected = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_characters($input_string, 'Z'));
     }
 
@@ -3786,8 +3786,8 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_empty_string(): void
     {
-        $input_string = "";
-        $this->assertEquals("", strip_boundary_characters($input_string));
+        $input_string = '';
+        $this->assertEquals('', strip_boundary_characters($input_string));
     }
 
     /**
@@ -3797,8 +3797,8 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_characters_with_only_punctuation(): void
     {
-        $input_string = "!!!";
-        $expected = "";
+        $input_string = '!!!';
+        $expected     = '';
         $this->assertEquals($expected, strip_boundary_characters($input_string));
     }
 
@@ -3809,9 +3809,9 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_punctuation_with_punctuation(): void
     {
-        $input_string = "!Hello, World!";
+        $input_string = '!Hello, World!';
         // Punctuation should be removed from both sides
-        $expected = "Hello, World";
+        $expected = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_punctuation($input_string));
     }
 
@@ -3822,9 +3822,9 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_punctuation_with_no_punctuation(): void
     {
-        $input_string = "Hello, World";
+        $input_string = 'Hello, World';
         // No punctuation at the boundaries, so nothing should change
-        $expected = "Hello, World";
+        $expected = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_punctuation($input_string));
     }
 
@@ -3835,9 +3835,9 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_punctuation_with_start_punctuation(): void
     {
-        $input_string = "!Hello, World";
+        $input_string = '!Hello, World';
         // Punctuation should be removed from the start
-        $expected = "Hello, World";
+        $expected = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_punctuation($input_string));
     }
 
@@ -3848,9 +3848,9 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_punctuation_with_end_punctuation(): void
     {
-        $input_string = "Hello, World!";
+        $input_string = 'Hello, World!';
         // Punctuation should be removed from the end
-        $expected = "Hello, World";
+        $expected = 'Hello, World';
         $this->assertEquals($expected, strip_boundary_punctuation($input_string));
     }
 
@@ -3861,124 +3861,124 @@ class StringTest extends TestCase
      */
     public function test_strip_boundary_punctuation_with_only_punctuation(): void
     {
-        $input_string = "!!!";
+        $input_string = '!!!';
         // All punctuation should be removed, leaving an empty string
-        $expected = "";
+        $expected = '';
         $this->assertEquals($expected, strip_boundary_punctuation($input_string));
     }
 
     /**
      * Tests splitting a regular string with single spaces.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_regular_string(): void
     {
-        $input = "This is a test string";
+        $input    = 'This is a test string';
         $expected = ['This', 'is', 'a', 'test', 'string'];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting a string with multiple spaces between words.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_multiple_spaces(): void
     {
-        $input = "This   is   a   test";
+        $input    = 'This   is   a   test';
         $expected = ['This', 'is', 'a', 'test'];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting a string with various whitespace characters like tabs and newlines.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_various_whitespace(): void
     {
-        $input = "This\tis\na   test";
+        $input    = "This\tis\na   test";
         $expected = ['This', 'is', 'a', 'test'];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting a string with leading and trailing spaces.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_leading_trailing_spaces(): void
     {
-        $input = "   This is a test   ";
+        $input    = '   This is a test   ';
         $expected = ['This', 'is', 'a', 'test'];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting an empty string.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_empty_string(): void
     {
-        $input = "";
+        $input    = '';
         $expected = [];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting a string that only contains spaces.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_only_spaces(): void
     {
-        $input = "     ";
+        $input    = '     ';
         $expected = [];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting a string with mixed whitespace and empty input (dirty case).
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_mixed_whitespace(): void
     {
-        $input = "\t   \n  ";
+        $input    = "\t   \n  ";
         $expected = [];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting a string with no spaces.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_no_spaces(): void
     {
-        $input = "NoSpacesHere";
+        $input    = 'NoSpacesHere';
         $expected = ['NoSpacesHere'];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
      * Tests splitting a string with non-breaking spaces.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_non_breaking_spaces(): void
     {
-        $input = "This\xC2\xA0is\xC2\xA0a\xC2\xA0test";
+        $input    = "This\xC2\xA0is\xC2\xA0a\xC2\xA0test";
         $expected = ['This', 'is', 'a', 'test'];
         $this->assertSame($expected, preg_split_whitespace($input));
     }
 
     /**
-     * Tests that non-breaking spaces are treated as regular characters 
+     * Tests that non-breaking spaces are treated as regular characters
      * and not split when $includeNonBreakingSpace is false.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_non_breaking_spaces_treated_as_regular(): void
@@ -3992,7 +3992,7 @@ class StringTest extends TestCase
     /**
      * Tests that normal spaces are still split, but non-breaking spaces
      * remain intact when $includeNonBreakingSpace is false.
-     * 
+     *
      * @return void
      */
     public function test_preg_split_whitespace_multiple_spaces_with_non_breaking_spaces_excluded(): void
@@ -4008,8 +4008,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_basic_word_splitting_with_punctuation(): void
     {
-        $input = "Hello, world! How are you?";
-        $expected = ["Hello", ",", "world", "!", "How", "are", "you", "?"];
+        $input    = 'Hello, world! How are you?';
+        $expected = ['Hello', ',', 'world', '!', 'How', 'are', 'you', '?'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4018,8 +4018,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_numbers_and_special_characters(): void
     {
-        $input = "Test123 $45.67 *underscore*";
-        $expected = ["Test123", "$", "45", ".", "67", "*", "underscore", "*"];
+        $input    = 'Test123 $45.67 *underscore*';
+        $expected = ['Test123', '$', '45', '.', '67', '*', 'underscore', '*'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4028,8 +4028,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_contractions_and_possessives(): void
     {
-        $input = "I can't believe it's John's dog";
-        $expected = ["I", "can", "'", "t", "believe", "it", "'", "s", "John", "'", "s", "dog"];
+        $input    = "I can't believe it's John's dog";
+        $expected = ['I', 'can', "'", 't', 'believe', 'it', "'", 's', 'John', "'", 's', 'dog'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4038,8 +4038,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_only_non_word_characters(): void
     {
-        $input = "  .,;:!?  ";
-        $expected = [".,;:!?"];
+        $input    = '  .,;:!?  ';
+        $expected = ['.,;:!?'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4048,8 +4048,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_unicode_characters(): void
     {
-        $input = "こんにちは world Café";
-        $expected = ["こんにちは", "world", "Café"];
+        $input    = 'こんにちは world Café';
+        $expected = ['こんにちは', 'world', 'Café'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4058,8 +4058,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_hyphenated_and_slashed_words(): void
     {
-        $input = "well-known example and/or test-case";
-        $expected = ["well", "-", "known", "example", "and", "/", "or", "test", "-", "case"];
+        $input    = 'well-known example and/or test-case';
+        $expected = ['well', '-', 'known', 'example', 'and', '/', 'or', 'test', '-', 'case'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4068,8 +4068,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_multiple_spaces_and_tabs(): void
     {
-        $input = "Hello   world\t\ttest";
-        $expected = ["Hello", "world", "test"];
+        $input    = "Hello   world\t\ttest";
+        $expected = ['Hello', 'world', 'test'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4078,8 +4078,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_leading_and_trailing_spaces(): void
     {
-        $input = "  Hello world  ";
-        $expected = ["Hello", "world"];
+        $input    = '  Hello world  ';
+        $expected = ['Hello', 'world'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4088,7 +4088,7 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_empty_input(): void
     {
-        $input = "";
+        $input    = '';
         $expected = [];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
@@ -4098,8 +4098,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_mixed_ascii_and_non_ascii(): void
     {
-        $input = "Hello мир Café au lait";
-        $expected = ["Hello", "мир", "Café", "au", "lait"];
+        $input    = 'Hello мир Café au lait';
+        $expected = ['Hello', 'мир', 'Café', 'au', 'lait'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4108,8 +4108,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_emoji_and_unicode_symbols(): void
     {
-        $input = "Hello 👋 world! ☕ time";
-        $expected = ["Hello", "👋", "world", "! ☕", "time"];
+        $input    = 'Hello 👋 world! ☕ time';
+        $expected = ['Hello', '👋', 'world', '! ☕', 'time'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4118,8 +4118,8 @@ class StringTest extends TestCase
      */
     public function test_preg_split_word_boundary_various_unicode_symbols_and_punctuation(): void
     {
-        $input = "Hello🌍world!🎉 How's it going?👀";
-        $expected = ["Hello", "🌍", "world", "!🎉", "How", "'", "s", "it", "going", "?👀"];
+        $input    = "Hello🌍world!🎉 How's it going?👀";
+        $expected = ['Hello', '🌍', 'world', '!🎉', 'How', "'", 's', 'it', 'going', '?👀'];
         $this->assertEquals($expected, preg_split_word_boundary($input));
     }
 
@@ -4130,7 +4130,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_regular_sentence(): void
     {
-        $input = "This is a test.";
+        $input    = 'This is a test.';
         $expected = ['This', 'is', 'a', 'test'];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4142,7 +4142,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_with_punctuation(): void
     {
-        $input = "Hello! How are you?";
+        $input    = 'Hello! How are you?';
         $expected = ['Hello', 'How', 'are', 'you'];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4167,7 +4167,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_unique_words(): void
     {
-        $input = "Test test Test!";
+        $input = 'Test test Test!';
         // Case-sensitive unique words
         $expected = ['Test', 'test'];
         $this->assertSame($expected, string_to_words($input, true));
@@ -4180,7 +4180,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_not_unique_words(): void
     {
-        $input = "Test test Test!";
+        $input    = 'Test test Test!';
         $expected = ['Test', 'test', 'Test'];
         $this->assertSame($expected, string_to_words($input, false));
     }
@@ -4192,7 +4192,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_empty_string(): void
     {
-        $input = "";
+        $input    = '';
         $expected = [];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4204,7 +4204,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_whitespace_only(): void
     {
-        $input = "     ";
+        $input    = '     ';
         $expected = [];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4216,7 +4216,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_leading_trailing_whitespace(): void
     {
-        $input = "   Hello World   ";
+        $input    = '   Hello World   ';
         $expected = ['Hello', 'World'];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4228,7 +4228,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_mixed_whitespace(): void
     {
-        $input = "Hello\tWorld\nHow are you?";
+        $input    = "Hello\tWorld\nHow are you?";
         $expected = ['Hello', 'World', 'How', 'are', 'you'];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4240,7 +4240,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_special_characters(): void
     {
-        $input = "Hello, @world! #test";
+        $input    = 'Hello, @world! #test';
         $expected = ['Hello', 'world', 'test'];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4252,7 +4252,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_numbers_and_punctuation(): void
     {
-        $input = "The price is $10.99!";
+        $input = 'The price is $10.99!';
         // Treating $10.99 as a single word
         $expected = ['The', 'price', 'is', '$10.99'];
         $this->assertSame($expected, string_to_words($input));
@@ -4265,7 +4265,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_only_punctuation(): void
     {
-        $input = ".,!?";
+        $input    = '.,!?';
         $expected = [];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4277,7 +4277,7 @@ class StringTest extends TestCase
      */
     public function test_string_to_words_non_breaking_spaces(): void
     {
-        $input = "Hello\xC2\xA0World\xC2\xA0!";
+        $input    = "Hello\xC2\xA0World\xC2\xA0!";
         $expected = ['Hello', 'World'];
         $this->assertSame($expected, string_to_words($input));
     }
@@ -4288,10 +4288,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_standard_case()
     {
         // Input string with standard stop words
-        $input    = "This is a test of the stop word removal system.";
+        $input = 'This is a test of the stop word removal system.';
 
         // Expected output after stop words are removed
-        $expected = "test stop word removal system.";
+        $expected = 'test stop word removal system.';
 
         // Assert that the function removes stop words correctly
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4304,10 +4304,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_no_stop_words()
     {
         // Input string with no stop words
-        $input    = "Unique text with no stop words.";
+        $input = 'Unique text with no stop words.';
 
         // Expected output should be the same
-        $expected = "Unique text stop words.";
+        $expected = 'Unique text stop words.';
 
         // Assert that the function doesn't modify the string when no stop words are present
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4320,10 +4320,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_case_sensitive()
     {
         // Input string with mixed case stop words
-        $input    = "This IS a TEST Of the stop WORD Removal system.";
+        $input = 'This IS a TEST Of the stop WORD Removal system.';
 
         // Expected output after stop words are removed
-        $expected = "TEST stop WORD Removal system.";
+        $expected = 'TEST stop WORD Removal system.';
 
         // Assert that the function removes stop words case-insensitively but preserves the case of other words
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4336,10 +4336,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_removes_extra_whitespace()
     {
         // Input string with extra spaces between words
-        $input    = "This   is   a  test    of  stop   word removal.";
+        $input = 'This   is   a  test    of  stop   word removal.';
 
         // Expected output with no extra spaces and stop words removed
-        $expected = "test stop word removal.";
+        $expected = 'test stop word removal.';
 
         // Assert that the function removes extra whitespace after stop words are removed
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4351,7 +4351,7 @@ class StringTest extends TestCase
     public function test_remove_stop_words_with_punctuation()
     {
         // Input string with punctuation
-        $input    = "Well, this is a test, isn't it?";
+        $input = "Well, this is a test, isn't it?";
 
         // Expected output with stop words removed but punctuation retained
         $expected = "Well, test, isn't ?";
@@ -4367,10 +4367,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_dirty_input()
     {
         // Input string with mixed whitespace and inconsistent casing
-        $input    = "  This     IS a    teSt of    the    stop WORD   Removal   SYSTEM. ";
+        $input = '  This     IS a    teSt of    the    stop WORD   Removal   SYSTEM. ';
 
         // Expected output with cleaned text and stop words removed
-        $expected = "teSt stop WORD Removal SYSTEM.";
+        $expected = 'teSt stop WORD Removal SYSTEM.';
 
         // Assert that the function handles dirty input and cleans up the string
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4382,10 +4382,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_handles_numbers()
     {
         // Input string with numbers
-        $input    = "The 3 stop words in this 2 sentence should be removed.";
+        $input = 'The 3 stop words in this 2 sentence should be removed.';
 
         // Expected output with stop words removed but numbers retained
-        $expected = "3 stop words 2 sentence removed.";
+        $expected = '3 stop words 2 sentence removed.';
 
         // Assert that numbers are not affected by stop word removal
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4398,10 +4398,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_with_boundaries()
     {
         // Input string with stop words at the boundaries
-        $input    = "And this is a test.";
+        $input = 'And this is a test.';
 
         // Expected output after stop words are removed
-        $expected = "test.";
+        $expected = 'test.';
 
         // Assert that the function handles stop words at the boundaries correctly
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4414,10 +4414,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_no_partial_matches()
     {
         // Input string with words that partially match stop words
-        $input    = "Candid candidate was candid about the candy.";
+        $input = 'Candid candidate was candid about the candy.';
 
         // Expected output with stop words removed but partial matches retained
-        $expected = "Candid candidate candid candy.";
+        $expected = 'Candid candidate candid candy.';
 
         // Assert that partial matches of stop words are not removed
         $this->assertEquals($expected, remove_stop_words($input));
@@ -4430,10 +4430,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_removes_stop_words()
     {
         // Input string with stop words
-        $input    = "This is a test of the stop word removal system.";
+        $input = 'This is a test of the stop word removal system.';
 
         // Expected output after stop words are removed
-        $expected = ["test", "stop", "word", "removal", "system"];
+        $expected = ['test', 'stop', 'word', 'removal', 'system'];
 
         // Assert that the function works as expected
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4446,7 +4446,7 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_handles_empty_string()
     {
         // Input string is empty
-        $input    = "";
+        $input = '';
 
         // Expected output should be an empty array
         $expected = [];
@@ -4462,10 +4462,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_no_stop_words()
     {
         // Input string with no stop words
-        $input    = "Unique text with no common stop words.";
+        $input = 'Unique text with no common stop words.';
 
         // Expected output should be the same, minus stop words
-        $expected = ["Unique", "text", "common", "stop", "words"];
+        $expected = ['Unique', 'text', 'common', 'stop', 'words'];
 
         // Assert that the function retains non-stop words
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4478,7 +4478,7 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_all_stop_words()
     {
         // Input string with only stop words
-        $input    = "the and or but so for nor yet";
+        $input = 'the and or but so for nor yet';
 
         // Expected output should be an empty array
         $expected = [];
@@ -4494,10 +4494,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_handles_punctuation()
     {
         // Input string with punctuation
-        $input    = "Well, this is a test, isn't it?";
+        $input = "Well, this is a test, isn't it?";
 
         // Expected output after stop words are removed
-        $expected = ["Well", "test", "isn't"];
+        $expected = ['Well', 'test', "isn't"];
 
         // Assert that the function handles punctuation correctly
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4510,10 +4510,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_case_insensitive()
     {
         // Input string with mixed case stop words
-        $input    = "This IS a TEST Of the stop WORD Removal system.";
+        $input = 'This IS a TEST Of the stop WORD Removal system.';
 
         // Expected output after stop words are removed
-        $expected = ["TEST", "stop", "WORD", "Removal", "system"];
+        $expected = ['TEST', 'stop', 'WORD', 'Removal', 'system'];
 
         // Assert that the function removes stop words case-insensitively
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4526,10 +4526,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_removes_extra_whitespace()
     {
         // Input string with extra whitespace between words
-        $input    = "This   is   a  test    of  stop   word removal.";
+        $input = 'This   is   a  test    of  stop   word removal.';
 
         // Expected output with no extra spaces
-        $expected = ["test", "stop", "word", "removal"];
+        $expected = ['test', 'stop', 'word', 'removal'];
 
         // Assert that the function removes extra whitespace
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4542,10 +4542,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_handles_dirty_input()
     {
         // Input string with dirty input (mixed case and extra spaces)
-        $input    = "  This     IS a    teSt of    the    stop WORD   Removal   SYSTEM. ";
+        $input = '  This     IS a    teSt of    the    stop WORD   Removal   SYSTEM. ';
 
         // Expected output after cleaning up
-        $expected = ["teSt", "stop", "WORD", "Removal", "SYSTEM"];
+        $expected = ['teSt', 'stop', 'WORD', 'Removal', 'SYSTEM'];
 
         // Assert that the function handles dirty input correctly
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4558,10 +4558,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_handles_numbers()
     {
         // Input string with numbers and stop words
-        $input    = "The 3 stop words in this 2 sentence should be removed.";
+        $input = 'The 3 stop words in this 2 sentence should be removed.';
 
         // Expected output with numbers retained
-        $expected = ["3", "stop", "words", "2", "sentence", "removed"];
+        $expected = ['3', 'stop', 'words', '2', 'sentence', 'removed'];
 
         // Assert that the function retains numbers correctly
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4574,10 +4574,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_handles_boundary_stop_words()
     {
         // Input string with stop words at the beginning and end
-        $input    = "And this is a test.";
+        $input = 'And this is a test.';
 
         // Expected output with stop words removed from the boundaries
-        $expected = ["test"];
+        $expected = ['test'];
 
         // Assert that the function removes stop words at boundaries correctly
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4590,10 +4590,10 @@ class StringTest extends TestCase
     public function test_remove_stop_words_to_array_no_partial_stop_word_removal()
     {
         // Input string with partial stop word matches
-        $input    = "Candid candidate was candid about the candy.";
+        $input = 'Candid candidate was candid about the candy.';
 
         // Expected output should retain partial matches
-        $expected = ["Candid", "candidate", "candid", "candy"];
+        $expected = ['Candid', 'candidate', 'candid', 'candy'];
 
         // Assert that the function does not remove partial matches
         $this->assertEquals($expected, remove_stop_words_to_array($input));
@@ -4604,8 +4604,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_basic_functionality()
     {
-        $input = "This is a test of the stop word removal system.";
-        $expected = ["test", "stop", "word", "removal", "system"];
+        $input    = 'This is a test of the stop word removal system.';
+        $expected = ['test', 'stop', 'word', 'removal', 'system'];
         $this->assertEquals($expected, filter_stop_words($input));
     }
 
@@ -4614,7 +4614,7 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_empty_string()
     {
-        $this->assertEquals([], filter_stop_words(""));
+        $this->assertEquals([], filter_stop_words(''));
     }
 
     /**
@@ -4622,7 +4622,7 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_only_stop_words()
     {
-        $input = "the and or but so for nor yet";
+        $input = 'the and or but so for nor yet';
         $this->assertEquals([], filter_stop_words($input));
     }
 
@@ -4631,8 +4631,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_no_stop_words()
     {
-        $input = "Unique text with no common stop words";
-        $expected = ["Unique", "text", "common", "stop", "words"];
+        $input    = 'Unique text with no common stop words';
+        $expected = ['Unique', 'text', 'common', 'stop', 'words'];
         $this->assertEquals($expected, filter_stop_words($input));
     }
 
@@ -4641,8 +4641,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_mixed_case()
     {
-        $input = "This IS a TEST Of the stop WORD Removal system.";
-        $expected = ["TEST", "stop", "WORD", "Removal", "system"];
+        $input    = 'This IS a TEST Of the stop WORD Removal system.';
+        $expected = ['TEST', 'stop', 'WORD', 'Removal', 'system'];
         $this->assertEquals($expected, filter_stop_words($input));
     }
 
@@ -4651,8 +4651,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_extra_whitespace()
     {
-        $input = "  This     IS a    teSt of    the    stop WORD   Removal   SYSTEM. ";
-        $expected = ["teSt", "stop", "WORD", "Removal", "SYSTEM"];
+        $input    = '  This     IS a    teSt of    the    stop WORD   Removal   SYSTEM. ';
+        $expected = ['teSt', 'stop', 'WORD', 'Removal', 'SYSTEM'];
         $this->assertEquals($expected, filter_stop_words($input));
     }
 
@@ -4661,8 +4661,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_with_numbers()
     {
-        $input = "The 3 stop words in this 2 sentence should be removed.";
-        $expected = ["3", "stop", "words", "2", "sentence", "removed"];
+        $input    = 'The 3 stop words in this 2 sentence should be removed.';
+        $expected = ['3', 'stop', 'words', '2', 'sentence', 'removed'];
         $this->assertEquals($expected, filter_stop_words($input));
     }
 
@@ -4671,8 +4671,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_with_punctuation()
     {
-        $input = "Well, this is a test, isn't it?";
-        $expected = ["Well", "test", "isn't"];
+        $input    = "Well, this is a test, isn't it?";
+        $expected = ['Well', 'test', "isn't"];
         $this->assertEquals($expected, filter_stop_words($input));
     }
 
@@ -4681,8 +4681,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_unique_words()
     {
-        $input = "This is a test of the stop word removal system. This is another test.";
-        $expected = ["test", "stop", "word", "removal", "system", "another"];
+        $input    = 'This is a test of the stop word removal system. This is another test.';
+        $expected = ['test', 'stop', 'word', 'removal', 'system', 'another'];
         $this->assertEquals($expected, filter_stop_words($input, true));
     }
 
@@ -4691,8 +4691,8 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_non_english_characters()
     {
-        $input = "Thé quïck brøwn føx jumps øver the lazy døg";
-        $expected = ["Thé", "quïck", "brøwn", "føx", "jumps", "øver", "lazy", "døg"];
+        $input    = 'Thé quïck brøwn føx jumps øver the lazy døg';
+        $expected = ['Thé', 'quïck', 'brøwn', 'føx', 'jumps', 'øver', 'lazy', 'døg'];
         $this->assertEquals($expected, filter_stop_words($input));
     }
 
@@ -4701,10 +4701,10 @@ class StringTest extends TestCase
      */
     public function test_filter_stop_words_long_input()
     {
-        $input = str_repeat("This is a test of the stop word removal system. ", 1000);
+        $input  = str_repeat('This is a test of the stop word removal system. ', 1000);
         $result = filter_stop_words($input);
         $this->assertCount(5000, $result);
-        $this->assertEquals(["test", "stop", "word", "removal", "system"], array_unique($result));
+        $this->assertEquals(['test', 'stop', 'word', 'removal', 'system'], array_unique($result));
     }
 
     /**
@@ -4712,7 +4712,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_basic()
     {
-        $names = ['hello-world', 'test'];
+        $names  = ['hello-world', 'test'];
         $result = get_post_name_incremented('hello-world', $names);
         $this->assertEquals('hello-world-2', $result);
     }
@@ -4722,7 +4722,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_multiple()
     {
-        $names = ['hello-world', 'hello-world-2', 'hello-world-3'];
+        $names  = ['hello-world', 'hello-world-2', 'hello-world-3'];
         $result = get_post_name_incremented('hello-world', $names);
         $this->assertEquals('hello-world-4', $result);
     }
@@ -4732,7 +4732,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_empty_array()
     {
-        $names = [];
+        $names  = [];
         $result = get_post_name_incremented('test', $names);
         $this->assertEquals('test', $result);
     }
@@ -4742,7 +4742,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_modify_array()
     {
-        $names = ['test'];
+        $names  = ['test'];
         $result = get_post_name_incremented('test', $names, true);
         $this->assertEquals('test-2', $result);
         $this->assertContains('test-2', $names);
@@ -4753,7 +4753,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_do_not_modify_array()
     {
-        $names = ['test'];
+        $names  = ['test'];
         $result = get_post_name_incremented('test', $names, false);
         $this->assertEquals('test-2', $result);
         $this->assertNotContains('test-2', $names);
@@ -4764,7 +4764,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_non_ascii()
     {
-        $names = ['こんにちは世界', 'こんにちは世界-2'];
+        $names  = ['こんにちは世界', 'こんにちは世界-2'];
         $result = get_post_name_incremented('こんにちは世界', $names);
         $this->assertEquals('こんにちは世界-3', $result);
     }
@@ -4774,7 +4774,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_mixed_case()
     {
-        $names = ['Hello-World', 'hello-world'];
+        $names  = ['Hello-World', 'hello-world'];
         $result = get_post_name_incremented('hello-world', $names);
         $this->assertEquals('hello-world-2', $result);
     }
@@ -4784,7 +4784,7 @@ class StringTest extends TestCase
      */
     public function test_get_post_name_incremented_large_number()
     {
-        $names = ['test', 'test-2', 'test-3', 'test-4', 'test-5', 'test-6', 'test-7', 'test-8', 'test-9', 'test-10'];
+        $names  = ['test', 'test-2', 'test-3', 'test-4', 'test-5', 'test-6', 'test-7', 'test-8', 'test-9', 'test-10'];
         $result = get_post_name_incremented('test', $names);
         $this->assertEquals('test-11', $result);
     }
@@ -4806,8 +4806,8 @@ class StringTest extends TestCase
     public function test_get_post_name_incremented_long_string()
     {
         $long_string = str_repeat('a', 255);
-        $names = [$long_string];
-        $result = get_post_name_incremented($long_string, $names);
+        $names       = [$long_string];
+        $result      = get_post_name_incremented($long_string, $names);
         $this->assertEquals($long_string . '-2', $result);
     }
 
@@ -4816,9 +4816,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_basic()
     {
-        $input = "The quick brown fox jumps over the lazy dog";
+        $input  = 'The quick brown fox jumps over the lazy dog';
         $result = wordwrap_first_line($input, 20);
-        $this->assertEquals("The quick brown fox", $result);
+        $this->assertEquals('The quick brown fox', $result);
     }
 
     /**
@@ -4826,9 +4826,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_short_input()
     {
-        $input = "Short";
+        $input  = 'Short';
         $result = wordwrap_first_line($input, 10);
-        $this->assertEquals("Short", $result);
+        $this->assertEquals('Short', $result);
     }
 
     /**
@@ -4836,9 +4836,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_long_word()
     {
-        $input = "Supercalifragilisticexpialidocious is a very long word";
+        $input  = 'Supercalifragilisticexpialidocious is a very long word';
         $result = wordwrap_first_line($input, 15);
-        $this->assertEquals("Supercalifragilisticexpialidocious", $result);
+        $this->assertEquals('Supercalifragilisticexpialidocious', $result);
     }
 
     /**
@@ -4846,9 +4846,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_cut_long_words()
     {
-        $input = "Supercalifragilisticexpialidocious is a very long word";
+        $input  = 'Supercalifragilisticexpialidocious is a very long word';
         $result = wordwrap_first_line($input, 15, "\n", true);
-        $this->assertEquals("Supercalifragil", $result);
+        $this->assertEquals('Supercalifragil', $result);
     }
 
     /**
@@ -4856,9 +4856,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_custom_break()
     {
-        $input = "The quick brown fox jumps over the lazy dog";
-        $result = wordwrap_first_line($input, 20, "|");
-        $this->assertEquals("The quick brown fox", $result);
+        $input  = 'The quick brown fox jumps over the lazy dog';
+        $result = wordwrap_first_line($input, 20, '|');
+        $this->assertEquals('The quick brown fox', $result);
     }
 
     /**
@@ -4866,9 +4866,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_multiple_spaces()
     {
-        $input = "The   quick   brown   fox   jumps";
+        $input  = 'The   quick   brown   fox   jumps';
         $result = wordwrap_first_line($input, 20);
-        $this->assertEquals("The   quick   brown ", $result);
+        $this->assertEquals('The   quick   brown ', $result);
     }
 
     /**
@@ -4876,9 +4876,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_trim_spaces()
     {
-        $input = "   The quick brown fox   ";
+        $input  = '   The quick brown fox   ';
         $result = wordwrap_first_line($input, 20);
-        $this->assertEquals("   The quick brown", $result);
+        $this->assertEquals('   The quick brown', $result);
     }
 
     /**
@@ -4886,9 +4886,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_newlines_in_input()
     {
-        $input = "The quick\nbrown fox\njumps over";
+        $input  = "The quick\nbrown fox\njumps over";
         $result = wordwrap_first_line($input, 20);
-        $this->assertEquals("The quick", $result);
+        $this->assertEquals('The quick', $result);
     }
 
     /**
@@ -4896,8 +4896,8 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_empty_string()
     {
-        $result = wordwrap_first_line("", 20);
-        $this->assertEquals("", $result);
+        $result = wordwrap_first_line('', 20);
+        $this->assertEquals('', $result);
     }
 
     /**
@@ -4905,9 +4905,9 @@ class StringTest extends TestCase
      */
     public function test_wordwrap_first_line_width_one()
     {
-        $input = "Hello";
+        $input  = 'Hello';
         $result = wordwrap_first_line($input, 1);
-        $this->assertEquals("Hello", $result);
+        $this->assertEquals('Hello', $result);
     }
 
     /**
@@ -4916,7 +4916,7 @@ class StringTest extends TestCase
     public function test_wordwrap_first_line_invalid_width_zero()
     {
         $this->expectException(\InvalidArgumentException::class);
-        wordwrap_first_line("Test", 0);
+        wordwrap_first_line('Test', 0);
     }
 
     /**
@@ -4925,7 +4925,7 @@ class StringTest extends TestCase
     public function test_wordwrap_first_line_invalid_width_negative()
     {
         $this->expectException(\InvalidArgumentException::class);
-        wordwrap_first_line("Test", -5);
+        wordwrap_first_line('Test', -5);
     }
 
     /**
@@ -4960,9 +4960,9 @@ class StringTest extends TestCase
      */
     public function test_var_export_inline_object()
     {
-        $obj = new \stdClass();
+        $obj       = new \stdClass();
         $obj->prop = 'value';
-        $result = var_export_inline($obj, true);
+        $result    = var_export_inline($obj, true);
         $this->assertEquals("(object) array( 'prop' => 'value', )", $result);
     }
 
@@ -4972,7 +4972,7 @@ class StringTest extends TestCase
     public function test_var_export_inline_null()
     {
         $result = var_export_inline(null, true);
-        $this->assertEquals("NULL", $result);
+        $this->assertEquals('NULL', $result);
     }
 
     /**
@@ -4980,8 +4980,8 @@ class StringTest extends TestCase
      */
     public function test_var_export_inline_boolean()
     {
-        $this->assertEquals("true", var_export_inline(true, true));
-        $this->assertEquals("false", var_export_inline(false, true));
+        $this->assertEquals('true', var_export_inline(true, true));
+        $this->assertEquals('false', var_export_inline(false, true));
     }
 
     /**
@@ -4990,7 +4990,7 @@ class StringTest extends TestCase
     public function test_var_export_inline_float()
     {
         $result = var_export_inline(3.14159, true);
-        $this->assertEquals("3.14159", $result);
+        $this->assertEquals('3.14159', $result);
     }
 
     /**
@@ -4999,8 +4999,8 @@ class StringTest extends TestCase
     public function test_var_export_inline_resource()
     {
         $resource = fopen('php://memory', 'r');
-        $result = var_export_inline($resource, true);
-        $this->assertEquals("NULL", $result);
+        $result   = var_export_inline($resource, true);
+        $this->assertEquals('NULL', $result);
         fclose($resource);
     }
 
@@ -5013,7 +5013,7 @@ class StringTest extends TestCase
             return 'test';
         };
         $result = var_export_inline($closure, true);
-        $this->assertStringContainsString("Closure", $result);
+        $this->assertStringContainsString('Closure', $result);
     }
 
     /**
@@ -5031,7 +5031,7 @@ class StringTest extends TestCase
     public function test_var_export_inline_output()
     {
         ob_start();
-        var_export_inline("Test Output");
+        var_export_inline('Test Output');
         $output = ob_get_clean();
         $this->assertEquals("'Test Output'", $output);
     }
@@ -5042,9 +5042,9 @@ class StringTest extends TestCase
     public function test_var_export_inline_large_array()
     {
         $largeArray = range(1, 1000);
-        $result = var_export_inline($largeArray, true);
-        $this->assertStringStartsWith("array (", $result);
-        $this->assertStringEndsWith(", )", $result);
+        $result     = var_export_inline($largeArray, true);
+        $this->assertStringStartsWith('array (', $result);
+        $this->assertStringEndsWith(', )', $result);
         // Arbitrary length check
         $this->assertGreaterThan(5000, strlen($result));
     }
@@ -5123,7 +5123,7 @@ class StringTest extends TestCase
 
     /**
      * Test input with an unrecognized unit.
-     * 
+     *
      * Expect an InvalidArgumentException to be thrown.
      */
     public function test_convert_to_bytes_unrecognized_unit()
@@ -5135,7 +5135,7 @@ class StringTest extends TestCase
 
     /**
      * Test input with an invalid string format.
-     * 
+     *
      * Expect an InvalidArgumentException to be thrown.
      */
     public function test_convert_to_bytes_invalid_string_format()
@@ -5180,7 +5180,7 @@ class StringTest extends TestCase
 
     /**
      * Test an empty string.
-     * 
+     *
      * Expect an InvalidArgumentException to be thrown.
      */
     public function test_convert_to_bytes_empty_string()
@@ -5426,7 +5426,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_valid_css()
     {
-        $input = 'color: red; font-size: 16px;';
+        $input    = 'color: red; font-size: 16px;';
         $expected = 'color: red; font-size: 16px';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5436,7 +5436,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_multiple_properties()
     {
-        $input = 'margin: 10px 20px 30px 40px; padding: 5px;';
+        $input    = 'margin: 10px 20px 30px 40px; padding: 5px;';
         $expected = 'margin: 10px 20px 30px 40px; padding: 5px';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5446,7 +5446,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_remove_url()
     {
-        $input = 'background: url("image.jpg");';
+        $input    = 'background: url("image.jpg");';
         $expected = '';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5456,7 +5456,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_preserve_variables()
     {
-        $input = '--custom-color: #ff0000; color: var(--custom-color);';
+        $input    = '--custom-color: #ff0000; color: var(--custom-color);';
         $expected = '--custom-color: #ff0000; color: var(--custom-color)';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5466,7 +5466,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_complex_values()
     {
-        $input = 'transform: translate(50px, 100px) rotate(45deg);';
+        $input    = 'transform: translate(50px, 100px) rotate(45deg);';
         $expected = 'transform: translate(50px, 100px) rotate(45deg)';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5476,7 +5476,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_calc_function()
     {
-        $input = 'width: calc(100% - 20px);';
+        $input    = 'width: calc(100% - 20px);';
         $expected = 'width: calc(100% - 20px)';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5486,7 +5486,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_vendor_prefixes()
     {
-        $input = '-webkit-transform: scale(1.1); -moz-transform: scale(1.1);';
+        $input    = '-webkit-transform: scale(1.1); -moz-transform: scale(1.1);';
         $expected = '-webkit-transform: scale(1.1); -moz-transform: scale(1.1)';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5506,7 +5506,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_remove_javascript()
     {
-        $input = 'color: red; javascript:alert(1);';
+        $input    = 'color: red; javascript:alert(1);';
         $expected = 'color: red';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5516,7 +5516,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_remove_expression()
     {
-        $input = 'width: expression(alert(1));';
+        $input    = 'width: expression(alert(1));';
         $expected = '';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5526,7 +5526,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_remove_import()
     {
-        $input = 'color: red; @import url("malicious.css");';
+        $input    = 'color: red; @import url("malicious.css");';
         $expected = 'color: red';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5536,7 +5536,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_html_entities()
     {
-        $input = 'color: "&lt;script&gt;alert(1)&lt;/script&gt;";';
+        $input    = 'color: "&lt;script&gt;alert(1)&lt;/script&gt;";';
         $expected = 'color: lt';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5546,7 +5546,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_remove_data_url()
     {
-        $input = 'background-image: url(data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect width="100" height="100" fill="%23ff0000"%3E%3C/rect%3E%3C/svg%3E);';
+        $input    = 'background-image: url(data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect width="100" height="100" fill="%23ff0000"%3E%3C/rect%3E%3C/svg%3E);';
         $expected = '';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5556,7 +5556,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_unclosed_function()
     {
-        $input = 'color: rgb(255, 0, 0;';
+        $input    = 'color: rgb(255, 0, 0;';
         $expected = 'color: rgb(255, 0, 0';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5575,7 +5575,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_unusual_spacing()
     {
-        $input = '  color   :   red   ;   font-size   :   16px   ;  ';
+        $input    = '  color   :   red   ;   font-size   :   16px   ;  ';
         $expected = 'color: red; font-size: 16px';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5585,7 +5585,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_uppercase()
     {
-        $input = 'COLOR: RED; FONT-SIZE: 16PX;';
+        $input    = 'COLOR: RED; FONT-SIZE: 16PX;';
         $expected = 'COLOR: RED; FONT-SIZE: 16PX';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5595,7 +5595,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_remove_comments()
     {
-        $input = 'color: red; /* comment */ font-size: 16px;';
+        $input    = 'color: red; /* comment */ font-size: 16px;';
         $expected = 'color: red; font-size: 16px';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5605,7 +5605,7 @@ class StringTest extends TestCase
      */
     public function test_sanitize_style_attribute_nested_functions()
     {
-        $input = 'background-image: linear-gradient(to right, rgb(255, 0, 0), #00ff00);';
+        $input    = 'background-image: linear-gradient(to right, rgb(255, 0, 0), #00ff00);';
         $expected = 'background-image: linear-gradient(to right, rgb(255, 0, 0), #00ff00)';
         $this->assertEquals($expected, sanitize_style_attribute($input));
     }
@@ -5703,7 +5703,7 @@ class StringTest extends TestCase
      */
     public function test_show_escape_sequences_very_long_string()
     {
-        $input = str_repeat('a', 1000) . "\n" . str_repeat('b', 1000);
+        $input    = str_repeat('a', 1000) . "\n" . str_repeat('b', 1000);
         $expected = str_repeat('a', 1000) . '\\n' . str_repeat('b', 1000);
         $this->assertEquals($expected, show_escape_sequences($input));
     }
@@ -5754,7 +5754,7 @@ class StringTest extends TestCase
      */
     public function test_show_escape_sequences_all_ascii_control_characters()
     {
-        $input = implode('', array_map('chr', range(0, 31)));
+        $input    = implode('', array_map('chr', range(0, 31)));
         $expected = '\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\v\\f\\r\\x0E\\x0F' .
             '\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1A\\e\\x1C\\x1D\\x1E\\x1F';
         $this->assertEquals($expected, show_escape_sequences($input));
@@ -5773,7 +5773,7 @@ class StringTest extends TestCase
      */
     public function test_show_escape_sequences_string_with_escaped_tab()
     {
-        $this->assertEquals('Escaped\\\\tTab', show_escape_sequences("Escaped\\tTab"));
+        $this->assertEquals('Escaped\\\\tTab', show_escape_sequences('Escaped\\tTab'));
     }
 
     /**
@@ -5805,7 +5805,7 @@ class StringTest extends TestCase
      */
     public function test_show_escape_sequences_mixed_ascii_and_non_ascii()
     {
-        $this->assertEquals('Hello, \\u{4E16}\\u{754C}!', show_escape_sequences("Hello, 世界!"));
+        $this->assertEquals('Hello, \\u{4E16}\\u{754C}!', show_escape_sequences('Hello, 世界!'));
     }
 
     /**
@@ -5868,7 +5868,7 @@ class StringTest extends TestCase
      */
     public function test_print_r_inline_prints_single_line_when_return_is_false()
     {
-        $this->expectOutputString("Array ( [foo] => bar [baz] => qux )" . PHP_EOL);
+        $this->expectOutputString('Array ( [foo] => bar [baz] => qux )' . PHP_EOL);
 
         $input = ['foo' => 'bar', 'baz' => 'qux'];
 
@@ -5883,8 +5883,8 @@ class StringTest extends TestCase
         $input = [
             'foo' => [
                 'bar' => 'baz',
-                'qux' => 'quux'
-            ]
+                'qux' => 'quux',
+            ],
         ];
 
         $result = print_r_inline($input, true);
@@ -5979,10 +5979,10 @@ class StringTest extends TestCase
     {
         $input = [
             'string' => 'test',
-            'int' => 42,
-            'float' => 3.14,
-            'array' => ['foo' => 'bar'],
-            'bool' => true
+            'int'    => 42,
+            'float'  => 3.14,
+            'array'  => ['foo' => 'bar'],
+            'bool'   => true,
         ];
 
         $result = print_r_inline($input, true);
@@ -6011,7 +6011,7 @@ class StringTest extends TestCase
     public function test_print_r_inline_compacts_dirty_input()
     {
         $input = [
-            'string' => "this is   a string\nwith multiple   spaces\tand newlines"
+            'string' => "this is   a string\nwith multiple   spaces\tand newlines",
         ];
 
         $result = print_r_inline($input, true);
@@ -6029,9 +6029,9 @@ class StringTest extends TestCase
         $input = [
             'level1' => [
                 'level2' => [
-                    'level3' => 'deep value'
-                ]
-            ]
+                    'level3' => 'deep value',
+                ],
+            ],
         ];
 
         $result = print_r_inline($input, true);
@@ -6092,7 +6092,7 @@ class StringTest extends TestCase
     // Test string with multibyte characters
     public function test_pad_string_multibyte_characters()
     {
-        $input = 'こんにちは';
+        $input  = 'こんにちは';
         $result = pad_string($input, 10, 'left');
         $this->assertEquals('こんにちは', $result);
     }
@@ -6198,7 +6198,7 @@ class StringTest extends TestCase
     {
         $input = [
             ['apple', 'banana', 'cherry'],
-            ['date', 'elderberry', 'fig']
+            ['date', 'elderberry', 'fig'],
         ];
         $expected = [5, 10, 6];
         $this->assertEquals($expected, calculate_column_widths($input));
@@ -6217,7 +6217,7 @@ class StringTest extends TestCase
      */
     public function test_calculate_column_widths_single_row()
     {
-        $input = [['a', 'bb', 'ccc']];
+        $input    = [['a', 'bb', 'ccc']];
         $expected = [1, 2, 3];
         $this->assertEquals($expected, calculate_column_widths($input));
     }
@@ -6229,7 +6229,7 @@ class StringTest extends TestCase
     {
         $input = [
             ['a', 'bb', 'ccc'],
-            ['dddd', 'eeeee']
+            ['dddd', 'eeeee'],
         ];
         $expected = [4, 5, 3];
         $this->assertEquals($expected, calculate_column_widths($input));
@@ -6242,7 +6242,7 @@ class StringTest extends TestCase
     {
         $input = [
             ['こんにちは', 'hello', '你好'],
-            ['世界', 'world', '世界']
+            ['世界', 'world', '世界'],
         ];
         $expected = [10, 5, 4];
         $this->assertEquals($expected, calculate_column_widths($input));
@@ -6255,7 +6255,7 @@ class StringTest extends TestCase
     {
         $input = [
             [1, 22, 333],
-            [4444, 55555, 666666]
+            [4444, 55555, 666666],
         ];
         $expected = [4, 5, 6];
         $this->assertEquals($expected, calculate_column_widths($input));
@@ -6268,7 +6268,7 @@ class StringTest extends TestCase
     {
         $input = [
             ['a', 2, null],
-            [true, 'hello', 3.14]
+            [true, 'hello', 3.14],
         ];
         $expected = [1, 5, 4];
         $this->assertEquals($expected, calculate_column_widths($input));
@@ -6281,7 +6281,7 @@ class StringTest extends TestCase
     {
         $input = [
             ['short', str_repeat('a', 1000), 'medium'],
-            ['tiny', 'small', str_repeat('b', 500)]
+            ['tiny', 'small', str_repeat('b', 500)],
         ];
         $expected = [5, 1000, 500];
         $this->assertEquals($expected, calculate_column_widths($input));
@@ -6304,7 +6304,7 @@ class StringTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         calculate_column_widths([
             ['valid', 'array'],
-            'not an array'
+            'not an array',
         ]);
     }
 
@@ -6315,7 +6315,7 @@ class StringTest extends TestCase
     {
         $input = [
             [true, false, null],
-            [null, true, false]
+            [null, true, false],
         ];
         $expected = [1, 1, 0];
         $this->assertEquals($expected, calculate_column_widths($input));
@@ -6326,7 +6326,7 @@ class StringTest extends TestCase
      */
     public function test_align_line_basic_left_alignment()
     {
-        $line = ['short', 'medium', 'long text'];
+        $line          = ['short', 'medium', 'long text'];
         $column_widths = [5, 6, 9];
 
         $result = align_line($line, $column_widths);
@@ -6339,7 +6339,7 @@ class StringTest extends TestCase
      */
     public function test_align_line_basic_right_alignment()
     {
-        $line = ['short', 'medium', 'long text'];
+        $line          = ['short', 'medium', 'long text'];
         $column_widths = [5, 6, 9];
 
         $result = align_line($line, $column_widths, 'right');
@@ -6352,7 +6352,7 @@ class StringTest extends TestCase
      */
     public function test_align_line_left_align_first_right_others()
     {
-        $line = ['first', 'second', 'third'];
+        $line          = ['first', 'second', 'third'];
         $column_widths = [5, 6, 5];
 
         $result = align_line($line, $column_widths, 'right', true);
@@ -6365,7 +6365,7 @@ class StringTest extends TestCase
      */
     public function test_align_line_custom_padding_function()
     {
-        $line = ['a', 'b', 'c'];
+        $line          = ['a', 'b', 'c'];
         $column_widths = [3, 3, 3];
 
         $custom_pad = function ($str, $width, $alignment) {
@@ -6392,7 +6392,7 @@ class StringTest extends TestCase
      */
     public function test_align_line_mismatched_column_widths()
     {
-        $line = ['short', 'medium'];
+        $line          = ['short', 'medium'];
         $column_widths = [5, 6, 9];
 
         $result = align_line($line, $column_widths);
@@ -6405,7 +6405,7 @@ class StringTest extends TestCase
      */
     public function test_align_line_multibyte_characters()
     {
-        $line = ['こんにちは', 'world', '🌍'];
+        $line          = ['こんにちは', 'world', '🌍'];
         $column_widths = [10, 5, 2];
 
         $result = align_line($line, $column_widths);
@@ -6428,7 +6428,7 @@ class StringTest extends TestCase
      */
     public function test_align_line_long_text_exceeding_width()
     {
-        $line = ['short', 'very long text', 'medium'];
+        $line          = ['short', 'very long text', 'medium'];
         $column_widths = [5, 10, 6];
 
         $result = align_line($line, $column_widths);
@@ -6441,8 +6441,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_basic_alignment()
     {
-        $input = "Name,Age\nJohn,30\nJane Doe,25";
-        $expected = "Name     Age" . PHP_EOL . "John     30 " . PHP_EOL . "Jane Doe 25 ";
+        $input    = "Name,Age\nJohn,30\nJane Doe,25";
+        $expected = 'Name     Age' . PHP_EOL . 'John     30 ' . PHP_EOL . 'Jane Doe 25 ';
 
         $result = align_csv_columns($input);
 
@@ -6454,8 +6454,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_custom_separator()
     {
-        $input = "Name\tAge\nJohn\t30\nJane Doe\t25";
-        $expected = "Name     Age" . PHP_EOL . "John     30 " . PHP_EOL . "Jane Doe 25 ";
+        $input    = "Name\tAge\nJohn\t30\nJane Doe\t25";
+        $expected = 'Name     Age' . PHP_EOL . 'John     30 ' . PHP_EOL . 'Jane Doe 25 ';
 
         $result = align_csv_columns($input, "\t");
 
@@ -6467,8 +6467,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_left_alignment()
     {
-        $input = "Name\tAge\nJohn\t30\nJane Doe\t25";
-        $expected = "Name     Age" . PHP_EOL . "John     30 " . PHP_EOL . "Jane Doe 25 ";
+        $input    = "Name\tAge\nJohn\t30\nJane Doe\t25";
+        $expected = 'Name     Age' . PHP_EOL . 'John     30 ' . PHP_EOL . 'Jane Doe 25 ';
 
         $result = align_csv_columns($input, "\t", '"', '\\', 'left');
 
@@ -6480,8 +6480,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_left_align_first_default_true()
     {
-        $input = "Name,Age\nJohn,30\nJane Doe,25";
-        $expected = "Name     Age" . PHP_EOL . "John     30 " . PHP_EOL . "Jane Doe 25 ";
+        $input    = "Name,Age\nJohn,30\nJane Doe,25";
+        $expected = 'Name     Age' . PHP_EOL . 'John     30 ' . PHP_EOL . 'Jane Doe 25 ';
 
         $result = align_csv_columns($input);
 
@@ -6493,8 +6493,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_left_align_first_false()
     {
-        $input = "Name\tAge\nJohn\t30\nJane Doe\t25";
-        $expected = "    Name Age" . PHP_EOL . "    John  30" . PHP_EOL . "Jane Doe  25";
+        $input    = "Name\tAge\nJohn\t30\nJane Doe\t25";
+        $expected = '    Name Age' . PHP_EOL . '    John  30' . PHP_EOL . 'Jane Doe  25';
 
         $result = align_csv_columns($input, "\t", '"', '\\', 'right', false);
 
@@ -6506,8 +6506,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_multibyte_characters()
     {
-        $input = "Name\tAge\n山田\t30\n田中さん\t25";
-        $expected = "Name     Age" . PHP_EOL . "山田     30 " . PHP_EOL . "田中さん 25 ";
+        $input    = "Name\tAge\n山田\t30\n田中さん\t25";
+        $expected = 'Name     Age' . PHP_EOL . '山田     30 ' . PHP_EOL . '田中さん 25 ';
 
         $result = align_csv_columns($input, "\t");
 
@@ -6519,8 +6519,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_uneven_columns()
     {
-        $input = "Name\tAge\tCity\nJohn\t30\nJane Doe\t25\tNew York";
-        $expected = "Name     Age City    " . PHP_EOL . "John     30 " . PHP_EOL . "Jane Doe 25  New York";
+        $input    = "Name\tAge\tCity\nJohn\t30\nJane Doe\t25\tNew York";
+        $expected = 'Name     Age City    ' . PHP_EOL . 'John     30 ' . PHP_EOL . 'Jane Doe 25  New York';
 
         $result = align_csv_columns($input, "\t");
 
@@ -6532,8 +6532,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_escaped_delimiters()
     {
-        $input = "Name\tDescription\nJohn\t\"Developer, Senior\"\nJane\t\"Manager, IT\"";
-        $expected = "Name Description      " . PHP_EOL . "John Developer, Senior" . PHP_EOL . "Jane Manager, IT      ";
+        $input    = "Name\tDescription\nJohn\t\"Developer, Senior\"\nJane\t\"Manager, IT\"";
+        $expected = 'Name Description      ' . PHP_EOL . 'John Developer, Senior' . PHP_EOL . 'Jane Manager, IT      ';
 
         $result = align_csv_columns($input, "\t");
 
@@ -6545,8 +6545,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_custom_escape()
     {
-        $input = "Name\tDescription\nJohn\t\"Developer, Senior\"\nJane\t\"Manager, \\\"IT\\\"\"";
-        $expected = "Name Description      " . PHP_EOL . "John Developer, Senior" . PHP_EOL . "Jane Manager, \\\"IT\\\"  ";
+        $input    = "Name\tDescription\nJohn\t\"Developer, Senior\"\nJane\t\"Manager, \\\"IT\\\"\"";
+        $expected = 'Name Description      ' . PHP_EOL . 'John Developer, Senior' . PHP_EOL . 'Jane Manager, \\"IT\\"  ';
 
         $result = align_csv_columns($input, "\t", '"', '\\');
 
@@ -6558,11 +6558,11 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_very_long_input()
     {
-        $input = str_repeat("Name\tAge\nJohn\t30\nJane Doe\t25\n", 100);
+        $input  = str_repeat("Name\tAge\nJohn\t30\nJane Doe\t25\n", 100);
         $result = align_csv_columns($input, "\t");
 
-        $expected_start = "Name     Age" . PHP_EOL . "John     30 " . PHP_EOL . "Jane Doe 25 " . PHP_EOL;
-        $expected_end = "Name     Age" . PHP_EOL . "John     30 " . PHP_EOL . "Jane Doe 25 ";
+        $expected_start = 'Name     Age' . PHP_EOL . 'John     30 ' . PHP_EOL . 'Jane Doe 25 ' . PHP_EOL;
+        $expected_end   = 'Name     Age' . PHP_EOL . 'John     30 ' . PHP_EOL . 'Jane Doe 25 ';
 
         $this->assertStringStartsWith($expected_start, $result);
         $this->assertStringEndsWith($expected_end, $result);
@@ -6573,8 +6573,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_without_use_width()
     {
-        $input = "Name\tAge\n山田\t30\n田中さん\t25";
-        $expected = "Name Age" . PHP_EOL . "  山田  30" . PHP_EOL . "田中さん  25";
+        $input    = "Name\tAge\n山田\t30\n田中さん\t25";
+        $expected = 'Name Age' . PHP_EOL . '  山田  30' . PHP_EOL . '田中さん  25';
 
         $result = align_csv_columns($input, "\t", '"', '\\', 'right', false, false);
 
@@ -6586,8 +6586,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_center_alignment()
     {
-        $input = "Name\tAge\nJohn\t30\nJane Doe\t25";
-        $expected = "Name     Age" . PHP_EOL . "  John   30 " . PHP_EOL . "Jane Doe 25 ";
+        $input    = "Name\tAge\nJohn\t30\nJane Doe\t25";
+        $expected = 'Name     Age' . PHP_EOL . '  John   30 ' . PHP_EOL . 'Jane Doe 25 ';
 
         $result = align_csv_columns($input, "\t", '"', '\\', 'center');
 
@@ -6599,8 +6599,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_right_alignment_left_align_first_true()
     {
-        $input = "Name\tAge\nJohn\t30\nJane Doe\t25";
-        $expected = "Name     Age" . PHP_EOL . "    John  30" . PHP_EOL . "Jane Doe  25";
+        $input    = "Name\tAge\nJohn\t30\nJane Doe\t25";
+        $expected = 'Name     Age' . PHP_EOL . '    John  30' . PHP_EOL . 'Jane Doe  25';
 
         $result = align_csv_columns($input, "\t", '"', '\\', 'right', true);
 
@@ -6612,8 +6612,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_empty_input()
     {
-        $input = "";
-        $expected = "";
+        $input    = '';
+        $expected = '';
 
         $result = align_csv_columns($input);
 
@@ -6625,8 +6625,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_single_line_input()
     {
-        $input = "Name,Age,City";
-        $expected = "Name Age City";
+        $input    = 'Name,Age,City';
+        $expected = 'Name Age City';
 
         $result = align_csv_columns($input);
 
@@ -6638,8 +6638,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_single_column_input()
     {
-        $input = "Name\nJohn\nJane Doe";
-        $expected = "Name    " . PHP_EOL . "John    " . PHP_EOL . "Jane Doe";
+        $input    = "Name\nJohn\nJane Doe";
+        $expected = 'Name    ' . PHP_EOL . 'John    ' . PHP_EOL . 'Jane Doe';
 
         $result = align_csv_columns($input);
 
@@ -6651,8 +6651,8 @@ class StringTest extends TestCase
      */
     public function test_align_csv_columns_center_alignment_multibyte()
     {
-        $input = "Name\tAge\n山田\t30\n田中さん\t25";
-        $expected = "Name     Age" . PHP_EOL . "  山田   30 " . PHP_EOL . "田中さん 25 ";
+        $input    = "Name\tAge\n山田\t30\n田中さん\t25";
+        $expected = 'Name     Age' . PHP_EOL . '  山田   30 ' . PHP_EOL . '田中さん 25 ';
 
         $result = align_csv_columns($input, "\t", '"', '\\', 'center');
 
@@ -6667,9 +6667,9 @@ class StringTest extends TestCase
     public function test_mysql_cli_command_basic_case()
     {
         // Define input parameters
-        $user = 'root';
+        $user     = 'root';
         $password = 'password123';
-        $query = 'SELECT * FROM users';
+        $query    = 'SELECT * FROM users';
         $database = 'test_db';
 
         // Expected command output
@@ -6693,9 +6693,9 @@ class StringTest extends TestCase
     public function test_mysql_cli_command_without_database()
     {
         // Define input parameters
-        $user = 'admin';
+        $user     = 'admin';
         $password = 'adminpass';
-        $query = 'SHOW TABLES';
+        $query    = 'SHOW TABLES';
 
         // Expected command output
         $expected = 'mysql -u ' . $this->expected_quote . 'admin' . $this->expected_quote .
@@ -6717,9 +6717,9 @@ class StringTest extends TestCase
     public function test_mysql_cli_command_no_escaping()
     {
         // Define input parameters
-        $user = 'user';
+        $user     = 'user';
         $password = 'pass';
-        $query = 'DELETE FROM users';
+        $query    = 'DELETE FROM users';
 
         // Expected command output without shell escaping
         $expected = 'mysql -u user -ppass -e DELETE FROM users';
@@ -6781,9 +6781,9 @@ class StringTest extends TestCase
     public function test_mysql_cli_command_dirty_inputs()
     {
         // Define input parameters with leading/trailing whitespace
-        $user = '  root ';
+        $user     = '  root ';
         $password = '  pass123 ';
-        $query = '  SELECT * FROM users  ';
+        $query    = '  SELECT * FROM users  ';
         $database = '  dirty_db  ';
 
         // Expected command output (whitespace should be escaped as part of the input)
@@ -6807,9 +6807,9 @@ class StringTest extends TestCase
     public function test_mysql_cli_command_special_characters()
     {
         // Define input parameters with special characters
-        $user = 'root$';
+        $user     = 'root$';
         $password = 'pa$$w0rd';
-        $query = 'SELECT * FROM `users` WHERE name="O\'Reilly"';
+        $query    = 'SELECT * FROM `users` WHERE name="O\'Reilly"';
 
         // Adjust expected output based on the platform (Windows vs. WSL/Linux)
         if (stripos(PHP_OS, 'WIN') !== false) {
@@ -6835,13 +6835,13 @@ class StringTest extends TestCase
     public function test_mysql_cli_command_long_query()
     {
         // Define input parameters with a long query
-        $user = 'root';
+        $user     = 'root';
         $password = 'password123';
-        $query = str_repeat('SELECT * FROM users; ', 100);
+        $query    = str_repeat('SELECT * FROM users; ', 100);
 
         // Expected command output
         $expected_query = escapeshellarg($query);
-        $expected = sprintf('mysql -u ' . $this->expected_quote . 'root' . $this->expected_quote .
+        $expected       = sprintf('mysql -u ' . $this->expected_quote . 'root' . $this->expected_quote .
             ' -p' . $this->expected_quote . 'password123' . $this->expected_quote .
             ' -e %s', $expected_query);
 

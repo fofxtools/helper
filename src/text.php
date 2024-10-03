@@ -18,17 +18,18 @@ namespace FOfX\Helper;
 /**
  * Separates a string into non-overlapping chunks, of lengths 1 to $max_length.
  *
- * @param    string                     $input       The input string to be separated into chunks.
- * @param    int                        $max_length  The maximum length of each chunk.
- * @return   array                                   An array of chunks with varying lengths.
+ * @param string $input      The input string to be separated into chunks.
+ * @param int    $max_length The maximum length of each chunk.
  *
- * @throws   \InvalidArgumentException               If the input is empty or $max_length is less than 1.
+ * @throws \InvalidArgumentException If the input is empty or $max_length is less than 1.
  *
- * @example  
+ * @return array An array of chunks with varying lengths.
+ *
+ * @example
  *     $string = "The cow jumped over the moon";
  *     $chunks = Helper\text_chunks($string, 3);
  *     print_r($chunks);
- *     
+ *
  *     // Output:
  *     Array
  *     (
@@ -66,12 +67,12 @@ function text_chunks(string $input, int $max_length = 3): array
         throw new \InvalidArgumentException('Maximum length must be at least 1.');
     }
 
-    $words = explode(' ', $input);
+    $words           = explode(' ', $input);
     $chunked_strings = [];
 
     for ($i = 1; $i <= $max_length; $i++) {
-        $chunks = array_chunk($words, $i);
-        $formatted_chunks = array_map(fn($chunk) => implode(' ', $chunk), $chunks);
+        $chunks            = array_chunk($words, $i);
+        $formatted_chunks  = array_map(fn ($chunk) => implode(' ', $chunk), $chunks);
         $chunked_strings[] = $formatted_chunks;
     }
 
@@ -82,13 +83,14 @@ function text_chunks(string $input, int $max_length = 3): array
  * Separates an array into overlapping chunks of max length $size.
  * The input array can have any numeric or non-numeric keys.
  *
- * @param    array                      $array  The input array to be chunked.
- * @param    int                        $size   The maximum size of each chunk.
- * @return   array                              An array of overlapping chunks.
+ * @param array $array The input array to be chunked.
+ * @param int   $size  The maximum size of each chunk.
  *
- * @throws   \InvalidArgumentException          If $size is less than 1.
+ * @throws \InvalidArgumentException If $size is less than 1.
  *
- * @example  
+ * @return array An array of overlapping chunks.
+ *
+ * @example
  *     $string = "The cow jumped over the moon";
  *     $array  = explode(" ", $string);
  *     $chunks = Helper\array_chunk_overlapping($array, 3);
@@ -131,16 +133,16 @@ function array_chunk_overlapping(array $array, int $size): array
     }
 
     // Convert array to a reindexed array of values to avoid issues with non-sequential keys
-    $array = array_values($array);
-    $array_count  = count($array);
+    $array       = array_values($array);
+    $array_count = count($array);
 
     // Return empty if array is empty
-    if ($array_count  === 0) {
+    if ($array_count === 0) {
         return [];
     }
 
     // Restrict $size based on array size
-    $size = min($array_count, $size);
+    $size   = min($array_count, $size);
     $chunks = [];
 
     // Use array_slice to create overlapping chunks
@@ -154,14 +156,15 @@ function array_chunk_overlapping(array $array, int $size): array
 /**
  * Uses array_chunk_overlapping() to chunk an array and returns glued text.
  *
- * @param    array   $array  The input array to be chunked.
- * @param    int     $size   The maximum size of each chunk.
- * @param    string  $glue   The string to use between elements when joining chunks.
- * @return   array           An array of overlapping text chunks, where each chunk is glued.
+ * @param array  $array The input array to be chunked.
+ * @param int    $size  The maximum size of each chunk.
+ * @param string $glue  The string to use between elements when joining chunks.
+ *
+ * @return array An array of overlapping text chunks, where each chunk is glued.
  *
  * @see      array_chunk_overlapping
  *
- * @example  
+ * @example
  *     $string = "The cow jumped over the moon";
  *     $array  = explode(" ", $string);
  *     $chunks = Helper\text_chunk_overlapping($array, 3);
@@ -182,7 +185,7 @@ function text_chunk_overlapping(array $array, int $size, string $glue = ' '): ar
     $chunks = array_chunk_overlapping($array, $size);
 
     // Use array_map to glue each chunk using implode
-    $glued_chunks = array_map(fn($chunk) => implode($glue, $chunk), $chunks);
+    $glued_chunks = array_map(fn ($chunk) => implode($glue, $chunk), $chunks);
 
     return $glued_chunks;
 }
@@ -190,13 +193,14 @@ function text_chunk_overlapping(array $array, int $size, string $glue = ' '): ar
 /**
  * Creates multiple arrays of size 1 to $size.
  *
- * @param    array  $array  The input array to be chunked.
- * @param    int    $size   The maximum size of each chunk.
- * @return   array          An array of arrays, each containing chunks of increasing size.
+ * @param array $array The input array to be chunked.
+ * @param int   $size  The maximum size of each chunk.
+ *
+ * @return array An array of arrays, each containing chunks of increasing size.
  *
  * @see      array_chunk_overlapping
  *
- * @example  
+ * @example
  *     $string = "The cow jumped over the moon";
  *     $array = explode(" ", $string);
  *     $chunks = Helper\array_chunk_multi($array, 3);
@@ -244,7 +248,7 @@ function array_chunk_multi(array $array, int $size): array
     }
 
     $chunks_by_size = [];
-    $array_length = count($array);
+    $array_length   = count($array);
 
     // Generate chunks of increasing size, up to the length of the array
     for ($i = 1; $i <= min($size, $array_length); $i++) {
@@ -257,14 +261,15 @@ function array_chunk_multi(array $array, int $size): array
 /**
  * Uses array_chunk_multi(), but returns glued text.
  *
- * @param    array   $array  The input array to be chunked.
- * @param    int     $size   The maximum size of each chunk.
- * @param    string  $glue   The string to use between elements when joining chunks.
- * @return   array           An array of arrays, each containing glued text chunks.
+ * @param array  $array The input array to be chunked.
+ * @param int    $size  The maximum size of each chunk.
+ * @param string $glue  The string to use between elements when joining chunks.
+ *
+ * @return array An array of arrays, each containing glued text chunks.
  *
  * @see      array_chunk_multi
  *
- * @example  
+ * @example
  *     $string = "The cow jumped over the moon";
  *     $array = explode(" ", $string);
  *     $chunks = Helper\text_chunk_multi($array, 3);

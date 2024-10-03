@@ -3,7 +3,6 @@
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;
-use FOfX\Helper\Capture;
 
 /**
  * Test case for the Capture class
@@ -31,7 +30,7 @@ class CaptureTest extends TestCase
         $this->capture->captureBuffer('print_r', true, [1, 2, 3], true);
 
         $expected = "Array\n(\n    [0] => 1\n    [1] => 2\n    [2] => 3\n)\n";
-        $actual = $this->capture->getOutputs()['print_r'];
+        $actual   = $this->capture->getOutputs()['print_r'];
 
         $this->assertStringContainsString($expected, $actual);
     }
@@ -44,8 +43,8 @@ class CaptureTest extends TestCase
         $code = 'echo "Hello, World!";';
         $this->capture->captureEval($code);
 
-        $expected = "Hello, World!";
-        $actual = $this->capture->getOutputs()[$code];
+        $expected = 'Hello, World!';
+        $actual   = $this->capture->getOutputs()[$code];
 
         $this->assertEquals($expected, $actual);
     }
@@ -55,12 +54,12 @@ class CaptureTest extends TestCase
      */
     public function testCaptureEvalWithVariables(): void
     {
-        $code = 'echo $message;';
+        $code      = 'echo $message;';
         $variables = ['message' => 'Hello from variable!'];
         $this->capture->captureEval($code, $variables);
 
-        $expected = "Hello from variable!";
-        $actual = $this->capture->getOutputs()[$code];
+        $expected = 'Hello from variable!';
+        $actual   = $this->capture->getOutputs()[$code];
 
         $this->assertEquals($expected, $actual);
     }
@@ -85,7 +84,7 @@ class CaptureTest extends TestCase
     {
         $this->capture->captureEval('echo "Test H2 Output";');
 
-        $expected = "<h2>echo \"Test H2 Output\";</h2>" . PHP_EOL . "Test H2 Output";
+        $expected = '<h2>echo "Test H2 Output";</h2>' . PHP_EOL . 'Test H2 Output';
 
         $this->expectOutputString($expected);
         $this->capture->printH2();
@@ -100,8 +99,8 @@ class CaptureTest extends TestCase
         $this->capture->captureEval('echo "Output 2";');
 
         $expected = [
-            'echo "Output 1";' => "Output 1",
-            'echo "Output 2";' => "Output 2"
+            'echo "Output 1";' => 'Output 1',
+            'echo "Output 2";' => 'Output 2',
         ];
 
         $this->assertEquals($expected, $this->capture->getOutputs());
@@ -133,6 +132,7 @@ class CaptureTest extends TestCase
 
         set_error_handler(function ($errno, $errstr) use (&$warningOccurred) {
             $warningOccurred = true;
+
             return true;
         }, E_WARNING);
 
@@ -142,8 +142,8 @@ class CaptureTest extends TestCase
             $outputs = $this->capture->getOutputs();
 
             $this->assertArrayHasKey($code, $outputs);
-            $this->assertTrue($warningOccurred, "A warning should have occurred");
-            $this->assertEmpty($outputs[$code], "The output should be empty");
+            $this->assertTrue($warningOccurred, 'A warning should have occurred');
+            $this->assertEmpty($outputs[$code], 'The output should be empty');
         } finally {
             restore_error_handler();
         }

@@ -17,17 +17,17 @@ namespace FOfX\Helper;
 class Numbers
 {
     /**
-     * @var  array|null    The dictionary mapping numbers to words.
+     * @var array|null The dictionary mapping numbers to words.
      */
     private ?array $dictionary = null;
 
     /**
      * Retrieves the number dictionary for conversion.
-     * 
+     *
      * This method uses a property to cache the dictionary,
      * optimizing performance for repeated calls.
      *
-     * @return  array    The dictionary mapping numbers to words.
+     * @return array The dictionary mapping numbers to words.
      */
     private function getNumberDictionary(): array
     {
@@ -67,7 +67,7 @@ class Numbers
                 1000000000          => 'billion',
                 1000000000000       => 'trillion',
                 1000000000000000    => 'quadrillion',
-                1000000000000000000 => 'quintillion'
+                1000000000000000000 => 'quintillion',
             ];
         }
 
@@ -77,12 +77,13 @@ class Numbers
     /**
      * Converts an integer number to its word representation.
      *
-     * @param   int     $number       The integer to convert.
-     * @param   string  $hyphen       String used to join tens and units.
-     * @param   string  $conjunction  String used between words for numbers.
-     * @param   string  $separator    String used to separate groups of numbers.
-     * @param   string  $minus        String used for negative numbers.
-     * @return  string                The integer number in words.
+     * @param int    $number      The integer to convert.
+     * @param string $hyphen      String used to join tens and units.
+     * @param string $conjunction String used between words for numbers.
+     * @param string $separator   String used to separate groups of numbers.
+     * @param string $minus       String used for negative numbers.
+     *
+     * @return string The integer number in words.
      */
     public function convertIntegerToWords(
         int $number,
@@ -106,24 +107,24 @@ class Numbers
         if ($number < 21) {
             $string = $dictionary[$number];
         } elseif ($number < 100) {
-            $tens = ((int)($number / 10)) * 10;
-            $units = $number % 10;
+            $tens   = ((int)($number / 10)) * 10;
+            $units  = $number % 10;
             $string = $dictionary[$tens];
             if ($units) {
                 $string .= $hyphen . $dictionary[$units];
             }
         } elseif ($number < 1000) {
-            $hundreds = (int)($number / 100);
+            $hundreds  = (int)($number / 100);
             $remainder = $number % 100;
-            $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
+            $string    = $dictionary[$hundreds] . ' ' . $dictionary[100];
             if ($remainder) {
                 $string .= $conjunction . $this->convertIntegerToWords($remainder, $hyphen, $conjunction, $separator, $minus);
             }
         } else {
-            $baseUnit = pow(1000, floor(log($number, 1000)));
+            $baseUnit     = pow(1000, floor(log($number, 1000)));
             $numBaseUnits = (int)($number / $baseUnit);
-            $remainder = $number % $baseUnit;
-            $string = $this->convertIntegerToWords($numBaseUnits, $hyphen, $conjunction, $separator, $minus) . ' ' . $dictionary[$baseUnit];
+            $remainder    = $number % $baseUnit;
+            $string       = $this->convertIntegerToWords($numBaseUnits, $hyphen, $conjunction, $separator, $minus) . ' ' . $dictionary[$baseUnit];
             if ($remainder) {
                 $string .= $separator . $this->convertIntegerToWords($remainder, $hyphen, $conjunction, $separator, $minus);
             }
@@ -135,16 +136,17 @@ class Numbers
     /**
      * Converts a float number to its word representation.
      *
-     * @param   float       $number          The float to convert.
-     * @param   string      $hyphen          String used to join tens and units.
-     * @param   string      $conjunction     String used between words for numbers.
-     * @param   string      $separator       String used to separate groups of numbers.
-     * @param   string      $minus           String used for negative numbers.
-     * @param   string      $point           String used for decimal point.
-     * @param   int|null    $decimal_places  Number of decimal places to consider (null for all).
-     * @return  string                       The float number in words.
+     * @param float    $number         The float to convert.
+     * @param string   $hyphen         String used to join tens and units.
+     * @param string   $conjunction    String used between words for numbers.
+     * @param string   $separator      String used to separate groups of numbers.
+     * @param string   $minus          String used for negative numbers.
+     * @param string   $point          String used for decimal point.
+     * @param int|null $decimal_places Number of decimal places to consider (null for all).
      *
-     * @throws  \Exception                   If the number is represented in scientific notation.
+     * @throws \Exception If the number is represented in scientific notation.
+     *
+     * @return string The float number in words.
      */
     public function convertFloatToWords(
         float $number,
@@ -157,16 +159,16 @@ class Numbers
     ): string {
         // Throw an exception if number is in scientific notation
         if (stripos((string)$number, 'e') !== false) {
-            throw new \Exception("Scientific notation is not supported.");
+            throw new \Exception('Scientific notation is not supported.');
         }
 
         // Handle negative numbers
-        $sign = $number < 0 ? $minus : '';
+        $sign   = $number < 0 ? $minus : '';
         $number = abs($number);
 
         // Split the number into integer and fractional parts
-        $parts = explode('.', (string)$number);
-        $integerPart = (int)$parts[0];
+        $parts          = explode('.', (string)$number);
+        $integerPart    = (int)$parts[0];
         $fractionalPart = isset($parts[1]) ? $parts[1] : '';
 
         // Apply decimal limit if specified
@@ -192,19 +194,20 @@ class Numbers
 
     /**
      * Converts a number to its word representation.
-     * 
+     *
      * Can be used instead of NumberFormatter::SPELLOUT.
      *
-     * @param   int|float   $number          The number to convert to words.
-     * @param   string      $hyphen          String used to join tens and units.
-     * @param   string      $conjunction     String used between words for numbers.
-     * @param   string      $separator       String used to separate groups of numbers.
-     * @param   string      $minus           String used for negative numbers.
-     * @param   string      $decimal         String used for decimal points.
-     * @param   int|null    $decimal_places  Number of decimal places to consider (null for all).
-     * @return  string                       The number in words.
+     * @param int|float $number         The number to convert to words.
+     * @param string    $hyphen         String used to join tens and units.
+     * @param string    $conjunction    String used between words for numbers.
+     * @param string    $separator      String used to separate groups of numbers.
+     * @param string    $minus          String used for negative numbers.
+     * @param string    $decimal        String used for decimal points.
+     * @param int|null  $decimal_places Number of decimal places to consider (null for all).
      *
-     * @throws  \Exception                   If the number is represented in scientific notation.
+     * @throws \Exception If the number is represented in scientific notation.
+     *
+     * @return string The number in words.
      */
     public function numberToWords(
         int|float $number,
@@ -217,7 +220,7 @@ class Numbers
     ): string {
         // Throw an exception if number is in scientific notation
         if (stripos((string)$number, 'e') !== false) {
-            throw new \Exception("Scientific notation is not supported.");
+            throw new \Exception('Scientific notation is not supported.');
         }
 
         if (is_int($number)) {

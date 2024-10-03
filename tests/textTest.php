@@ -13,27 +13,27 @@ class TextTest extends TestCase
      */
     public function test_text_chunks_standard_input(): void
     {
-        $string = "The cow jumped over the moon";
+        $string     = 'The cow jumped over the moon';
         $max_length = 3;
 
         $expected = [
             [
-                "The",
-                "cow",
-                "jumped",
-                "over",
-                "the",
-                "moon"
+                'The',
+                'cow',
+                'jumped',
+                'over',
+                'the',
+                'moon',
             ],
             [
-                "The cow",
-                "jumped over",
-                "the moon"
+                'The cow',
+                'jumped over',
+                'the moon',
             ],
             [
-                "The cow jumped",
-                "over the moon"
-            ]
+                'The cow jumped',
+                'over the moon',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunks($string, $max_length));
@@ -49,7 +49,7 @@ class TextTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Input string cannot be empty.');
 
-        $string = "";
+        $string     = '';
         $max_length = 3;
         text_chunks($string, $max_length);
     }
@@ -61,18 +61,18 @@ class TextTest extends TestCase
      */
     public function test_text_chunks_max_length_one(): void
     {
-        $string = "The cow jumped over the moon";
+        $string     = 'The cow jumped over the moon';
         $max_length = 1;
 
         $expected = [
             [
-                "The",
-                "cow",
-                "jumped",
-                "over",
-                "the",
-                "moon"
-            ]
+                'The',
+                'cow',
+                'jumped',
+                'over',
+                'the',
+                'moon',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunks($string, $max_length));
@@ -85,23 +85,23 @@ class TextTest extends TestCase
      */
     public function test_text_chunks_with_special_characters(): void
     {
-        $string = "The cow! jumped@ over# the$ moon%";
+        $string     = 'The cow! jumped@ over# the$ moon%';
         $max_length = 2;
 
         $expected = [
             [
-                "The",
-                "cow!",
-                "jumped@",
-                "over#",
-                "the$",
-                "moon%"
+                'The',
+                'cow!',
+                'jumped@',
+                'over#',
+                'the$',
+                'moon%',
             ],
             [
-                "The cow!",
-                "jumped@ over#",
-                "the$ moon%"
-            ]
+                'The cow!',
+                'jumped@ over#',
+                'the$ moon%',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunks($string, $max_length));
@@ -115,7 +115,7 @@ class TextTest extends TestCase
     public function test_text_chunks_long_input(): void
     {
         // 1000 words
-        $string = str_repeat("word ", 1000);
+        $string     = str_repeat('word ', 1000);
         $max_length = 3;
 
         // Only checking that the function returns an array and doesn't crash
@@ -133,7 +133,7 @@ class TextTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Maximum length must be at least 1.');
 
-        $string = "The cow jumped over the moon";
+        $string     = 'The cow jumped over the moon';
         $max_length = -1;
         text_chunks($string, $max_length);
     }
@@ -145,27 +145,27 @@ class TextTest extends TestCase
      */
     public function test_text_chunks_with_extra_spaces(): void
     {
-        $string = "  The   cow   jumped    over   the    moon  ";
+        $string     = '  The   cow   jumped    over   the    moon  ';
         $max_length = 3;
 
         $expected = [
             [
-                "The",
-                "cow",
-                "jumped",
-                "over",
-                "the",
-                "moon"
+                'The',
+                'cow',
+                'jumped',
+                'over',
+                'the',
+                'moon',
             ],
             [
-                "The cow",
-                "jumped over",
-                "the moon"
+                'The cow',
+                'jumped over',
+                'the moon',
             ],
             [
-                "The cow jumped",
-                "over the moon"
-            ]
+                'The cow jumped',
+                'over the moon',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunks(trim(preg_replace('/\s+/', ' ', $string)), $max_length));
@@ -178,14 +178,14 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_standard_input(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
 
         $expected = [
-            ["The", "cow", "jumped"],
-            ["cow", "jumped", "over"],
-            ["jumped", "over", "the"],
-            ["over", "the", "moon"]
+            ['The', 'cow', 'jumped'],
+            ['cow', 'jumped', 'over'],
+            ['jumped', 'over', 'the'],
+            ['over', 'the', 'moon'],
         ];
 
         $this->assertEquals($expected, array_chunk_overlapping($array, $size));
@@ -213,16 +213,16 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_size_one(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 1;
 
         $expected = [
-            ["The"],
-            ["cow"],
-            ["jumped"],
-            ["over"],
-            ["the"],
-            ["moon"]
+            ['The'],
+            ['cow'],
+            ['jumped'],
+            ['over'],
+            ['the'],
+            ['moon'],
         ];
 
         $this->assertEquals($expected, array_chunk_overlapping($array, $size));
@@ -235,11 +235,11 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_size_greater_than_array_length(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = 5;
 
         $expected = [
-            ["The", "cow", "jumped"]
+            ['The', 'cow', 'jumped'],
         ];
 
         $this->assertEquals($expected, array_chunk_overlapping($array, $size));
@@ -252,14 +252,14 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_with_special_characters(): void
     {
-        $array = ["The", "cow!", "jumped@", "over#", "the$", "moon%"];
+        $array = ['The', 'cow!', 'jumped@', 'over#', 'the$', 'moon%'];
         $size  = 3;
 
         $expected = [
-            ["The", "cow!", "jumped@"],
-            ["cow!", "jumped@", "over#"],
-            ["jumped@", "over#", "the$"],
-            ["over#", "the$", "moon%"]
+            ['The', 'cow!', 'jumped@'],
+            ['cow!', 'jumped@', 'over#'],
+            ['jumped@', 'over#', 'the$'],
+            ['over#', 'the$', 'moon%'],
         ];
 
         $this->assertEquals($expected, array_chunk_overlapping($array, $size));
@@ -273,7 +273,7 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_negative_size(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = -1;
 
         $this->expectException(\InvalidArgumentException::class);
@@ -289,7 +289,7 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_zero_size(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = 0;
 
         $this->expectException(\InvalidArgumentException::class);
@@ -304,11 +304,11 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_size_equal_to_array_length(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 6;
 
         $expected = [
-            ["The", "cow", "jumped", "over", "the", "moon"]
+            ['The', 'cow', 'jumped', 'over', 'the', 'moon'],
         ];
 
         $this->assertEquals($expected, array_chunk_overlapping($array, $size));
@@ -321,11 +321,11 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_overlapping_large_size_small_array(): void
     {
-        $array = ["The", "cow"];
+        $array = ['The', 'cow'];
         $size  = 100;
 
         $expected = [
-            ["The", "cow"]
+            ['The', 'cow'],
         ];
 
         $this->assertEquals($expected, array_chunk_overlapping($array, $size));
@@ -338,15 +338,15 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_overlapping_standard_input(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
-            "The cow jumped",
-            "cow jumped over",
-            "jumped over the",
-            "over the moon"
+            'The cow jumped',
+            'cow jumped over',
+            'jumped over the',
+            'over the moon',
         ];
 
         $this->assertEquals($expected, text_chunk_overlapping($array, $size, $glue));
@@ -361,7 +361,7 @@ class TextTest extends TestCase
     {
         $array = [];
         $size  = 3;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [];
 
@@ -375,17 +375,17 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_overlapping_size_one(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 1;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
-            "The",
-            "cow",
-            "jumped",
-            "over",
-            "the",
-            "moon"
+            'The',
+            'cow',
+            'jumped',
+            'over',
+            'the',
+            'moon',
         ];
 
         $this->assertEquals($expected, text_chunk_overlapping($array, $size, $glue));
@@ -398,12 +398,12 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_overlapping_size_greater_than_array_length(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = 5;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
-            "The cow jumped"
+            'The cow jumped',
         ];
 
         $this->assertEquals($expected, text_chunk_overlapping($array, $size, $glue));
@@ -416,15 +416,15 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_overlapping_custom_glue(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
-        $glue  = "-";
+        $glue  = '-';
 
         $expected = [
-            "The-cow-jumped",
-            "cow-jumped-over",
-            "jumped-over-the",
-            "over-the-moon"
+            'The-cow-jumped',
+            'cow-jumped-over',
+            'jumped-over-the',
+            'over-the-moon',
         ];
 
         $this->assertEquals($expected, text_chunk_overlapping($array, $size, $glue));
@@ -437,15 +437,15 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_overlapping_with_special_characters(): void
     {
-        $array = ["The", "cow!", "jumped@", "over#", "the$", "moon%"];
+        $array = ['The', 'cow!', 'jumped@', 'over#', 'the$', 'moon%'];
         $size  = 3;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
-            "The cow! jumped@",
-            "cow! jumped@ over#",
-            "jumped@ over# the$",
-            "over# the$ moon%"
+            'The cow! jumped@',
+            'cow! jumped@ over#',
+            'jumped@ over# the$',
+            'over# the$ moon%',
         ];
 
         $this->assertEquals($expected, text_chunk_overlapping($array, $size, $glue));
@@ -458,15 +458,15 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_overlapping_empty_glue(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
-        $glue  = "";
+        $glue  = '';
 
         $expected = [
-            "Thecowjumped",
-            "cowjumpedover",
-            "jumpedoverthe",
-            "overthemoon"
+            'Thecowjumped',
+            'cowjumpedover',
+            'jumpedoverthe',
+            'overthemoon',
         ];
 
         $this->assertEquals($expected, text_chunk_overlapping($array, $size, $glue));
@@ -479,12 +479,12 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_overlapping_large_size_small_array(): void
     {
-        $array = ["The", "cow"];
+        $array = ['The', 'cow'];
         $size  = 100;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
-            "The cow"
+            'The cow',
         ];
 
         $this->assertEquals($expected, text_chunk_overlapping($array, $size, $glue));
@@ -497,31 +497,31 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_standard_input(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
 
         $expected = [
             [
-                ["The"],
-                ["cow"],
-                ["jumped"],
-                ["over"],
-                ["the"],
-                ["moon"]
+                ['The'],
+                ['cow'],
+                ['jumped'],
+                ['over'],
+                ['the'],
+                ['moon'],
             ],
             [
-                ["The", "cow"],
-                ["cow", "jumped"],
-                ["jumped", "over"],
-                ["over", "the"],
-                ["the", "moon"]
+                ['The', 'cow'],
+                ['cow', 'jumped'],
+                ['jumped', 'over'],
+                ['over', 'the'],
+                ['the', 'moon'],
             ],
             [
-                ["The", "cow", "jumped"],
-                ["cow", "jumped", "over"],
-                ["jumped", "over", "the"],
-                ["over", "the", "moon"]
-            ]
+                ['The', 'cow', 'jumped'],
+                ['cow', 'jumped', 'over'],
+                ['jumped', 'over', 'the'],
+                ['over', 'the', 'moon'],
+            ],
         ];
 
         $this->assertEquals($expected, array_chunk_multi($array, $size));
@@ -550,18 +550,18 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_size_one(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 1;
 
         $expected = [
             [
-                ["The"],
-                ["cow"],
-                ["jumped"],
-                ["over"],
-                ["the"],
-                ["moon"]
-            ]
+                ['The'],
+                ['cow'],
+                ['jumped'],
+                ['over'],
+                ['the'],
+                ['moon'],
+            ],
         ];
 
         $this->assertEquals($expected, array_chunk_multi($array, $size));
@@ -574,22 +574,22 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_size_greater_than_array_length(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = 5;
 
         $expected = [
             [
-                ["The"],
-                ["cow"],
-                ["jumped"]
+                ['The'],
+                ['cow'],
+                ['jumped'],
             ],
             [
-                ["The", "cow"],
-                ["cow", "jumped"]
+                ['The', 'cow'],
+                ['cow', 'jumped'],
             ],
             [
-                ["The", "cow", "jumped"]
-            ]
+                ['The', 'cow', 'jumped'],
+            ],
         ];
 
         $this->assertEquals($expected, array_chunk_multi($array, $size));
@@ -602,31 +602,31 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_with_special_characters(): void
     {
-        $array = ["The", "cow!", "jumped@", "over#", "the$", "moon%"];
+        $array = ['The', 'cow!', 'jumped@', 'over#', 'the$', 'moon%'];
         $size  = 3;
 
         $expected = [
             [
-                ["The"],
-                ["cow!"],
-                ["jumped@"],
-                ["over#"],
-                ["the$"],
-                ["moon%"]
+                ['The'],
+                ['cow!'],
+                ['jumped@'],
+                ['over#'],
+                ['the$'],
+                ['moon%'],
             ],
             [
-                ["The", "cow!"],
-                ["cow!", "jumped@"],
-                ["jumped@", "over#"],
-                ["over#", "the$"],
-                ["the$", "moon%"]
+                ['The', 'cow!'],
+                ['cow!', 'jumped@'],
+                ['jumped@', 'over#'],
+                ['over#', 'the$'],
+                ['the$', 'moon%'],
             ],
             [
-                ["The", "cow!", "jumped@"],
-                ["cow!", "jumped@", "over#"],
-                ["jumped@", "over#", "the$"],
-                ["over#", "the$", "moon%"]
-            ]
+                ['The', 'cow!', 'jumped@'],
+                ['cow!', 'jumped@', 'over#'],
+                ['jumped@', 'over#', 'the$'],
+                ['over#', 'the$', 'moon%'],
+            ],
         ];
 
         $this->assertEquals($expected, array_chunk_multi($array, $size));
@@ -640,7 +640,7 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_zero_size(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = 0;
 
         $this->expectException(\InvalidArgumentException::class);
@@ -656,7 +656,7 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_negative_size(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = -1;
 
         $this->expectException(\InvalidArgumentException::class);
@@ -671,12 +671,12 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_single_element_array(): void
     {
-        $array = ["The"];
+        $array = ['The'];
         $size  = 3;
 
         // The expected result should only contain the single element without extra arrays
         $expected = [
-            [["The"]]
+            [['The']],
         ];
 
         $this->assertEquals($expected, array_chunk_multi($array, $size));
@@ -689,13 +689,13 @@ class TextTest extends TestCase
      */
     public function test_array_chunk_multi_large_size_small_array(): void
     {
-        $array = ["The", "cow"];
+        $array = ['The', 'cow'];
         $size  = 10;
 
         // Only the valid chunks should be returned
         $expected = [
-            [["The"], ["cow"]],
-            [["The", "cow"]]
+            [['The'], ['cow']],
+            [['The', 'cow']],
         ];
 
         $this->assertEquals($expected, array_chunk_multi($array, $size));
@@ -708,32 +708,32 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_multi_standard_input(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
             [
-                "The",
-                "cow",
-                "jumped",
-                "over",
-                "the",
-                "moon"
+                'The',
+                'cow',
+                'jumped',
+                'over',
+                'the',
+                'moon',
             ],
             [
-                "The cow",
-                "cow jumped",
-                "jumped over",
-                "over the",
-                "the moon"
+                'The cow',
+                'cow jumped',
+                'jumped over',
+                'over the',
+                'the moon',
             ],
             [
-                "The cow jumped",
-                "cow jumped over",
-                "jumped over the",
-                "over the moon"
-            ]
+                'The cow jumped',
+                'cow jumped over',
+                'jumped over the',
+                'over the moon',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunk_multi($array, $size, $glue));
@@ -748,7 +748,7 @@ class TextTest extends TestCase
     {
         $array = [];
         $size  = 3;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [];
 
@@ -762,12 +762,12 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_multi_size_one(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 1;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
-            ["The", "cow", "jumped", "over", "the", "moon"]
+            ['The', 'cow', 'jumped', 'over', 'the', 'moon'],
         ];
 
         $this->assertEquals($expected, text_chunk_multi($array, $size, $glue));
@@ -780,23 +780,23 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_multi_size_greater_than_array_length(): void
     {
-        $array = ["The", "cow", "jumped"];
+        $array = ['The', 'cow', 'jumped'];
         $size  = 5;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
             [
-                "The",
-                "cow",
-                "jumped"
+                'The',
+                'cow',
+                'jumped',
             ],
             [
-                "The cow",
-                "cow jumped"
+                'The cow',
+                'cow jumped',
             ],
             [
-                "The cow jumped"
-            ]
+                'The cow jumped',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunk_multi($array, $size, $glue));
@@ -809,32 +809,32 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_multi_custom_glue(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
-        $glue  = "-";
+        $glue  = '-';
 
         $expected = [
             [
-                "The",
-                "cow",
-                "jumped",
-                "over",
-                "the",
-                "moon"
+                'The',
+                'cow',
+                'jumped',
+                'over',
+                'the',
+                'moon',
             ],
             [
-                "The-cow",
-                "cow-jumped",
-                "jumped-over",
-                "over-the",
-                "the-moon"
+                'The-cow',
+                'cow-jumped',
+                'jumped-over',
+                'over-the',
+                'the-moon',
             ],
             [
-                "The-cow-jumped",
-                "cow-jumped-over",
-                "jumped-over-the",
-                "over-the-moon"
-            ]
+                'The-cow-jumped',
+                'cow-jumped-over',
+                'jumped-over-the',
+                'over-the-moon',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunk_multi($array, $size, $glue));
@@ -847,32 +847,32 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_multi_with_special_characters(): void
     {
-        $array = ["The", "cow!", "jumped@", "over#", "the$", "moon%"];
+        $array = ['The', 'cow!', 'jumped@', 'over#', 'the$', 'moon%'];
         $size  = 3;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
             [
-                "The",
-                "cow!",
-                "jumped@",
-                "over#",
-                "the$",
-                "moon%"
+                'The',
+                'cow!',
+                'jumped@',
+                'over#',
+                'the$',
+                'moon%',
             ],
             [
-                "The cow!",
-                "cow! jumped@",
-                "jumped@ over#",
-                "over# the$",
-                "the$ moon%"
+                'The cow!',
+                'cow! jumped@',
+                'jumped@ over#',
+                'over# the$',
+                'the$ moon%',
             ],
             [
-                "The cow! jumped@",
-                "cow! jumped@ over#",
-                "jumped@ over# the$",
-                "over# the$ moon%"
-            ]
+                'The cow! jumped@',
+                'cow! jumped@ over#',
+                'jumped@ over# the$',
+                'over# the$ moon%',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunk_multi($array, $size, $glue));
@@ -885,32 +885,32 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_multi_empty_glue(): void
     {
-        $array = ["The", "cow", "jumped", "over", "the", "moon"];
+        $array = ['The', 'cow', 'jumped', 'over', 'the', 'moon'];
         $size  = 3;
-        $glue  = "";
+        $glue  = '';
 
         $expected = [
             [
-                "The",
-                "cow",
-                "jumped",
-                "over",
-                "the",
-                "moon"
+                'The',
+                'cow',
+                'jumped',
+                'over',
+                'the',
+                'moon',
             ],
             [
-                "Thecow",
-                "cowjumped",
-                "jumpedover",
-                "overthe",
-                "themoon"
+                'Thecow',
+                'cowjumped',
+                'jumpedover',
+                'overthe',
+                'themoon',
             ],
             [
-                "Thecowjumped",
-                "cowjumpedover",
-                "jumpedoverthe",
-                "overthemoon"
-            ]
+                'Thecowjumped',
+                'cowjumpedover',
+                'jumpedoverthe',
+                'overthemoon',
+            ],
         ];
 
         $this->assertEquals($expected, text_chunk_multi($array, $size, $glue));
@@ -923,13 +923,13 @@ class TextTest extends TestCase
      */
     public function test_text_chunk_multi_large_size_small_array(): void
     {
-        $array = ["The", "cow"];
+        $array = ['The', 'cow'];
         $size  = 10;
-        $glue  = " ";
+        $glue  = ' ';
 
         $expected = [
-            ["The", "cow"],
-            ["The cow"]
+            ['The', 'cow'],
+            ['The cow'],
         ];
 
         $this->assertEquals($expected, text_chunk_multi($array, $size, $glue));

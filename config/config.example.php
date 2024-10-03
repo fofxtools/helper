@@ -2,13 +2,13 @@
 
 return
     ['helper' => [
-        'defaultTimezone' => '',
-        'checkIPs' => '',
-        'proxyIPs' => '',
-        'autoStartTracker' => ''
+        'defaultTimezone'  => '',
+        'checkIPs'         => '',
+        'proxyIPs'         => '',
+        'autoStartTracker' => '',
     ], 'mysql' => [
-        'host' => '',
+        'host'     => '',
         'database' => '',
         'username' => '',
-        'password' => ''
+        'password' => '',
     ]];

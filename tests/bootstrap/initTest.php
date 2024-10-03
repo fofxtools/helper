@@ -3,7 +3,6 @@
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;
-use FOfX\Helper\Tracker;
 
 class InitTest extends TestCase
 {
@@ -19,7 +18,7 @@ class InitTest extends TestCase
         Tracker::reset();
 
         // Create a temporary config file in the project root
-        $this->tempConfigFile = $this->originalCwd . DIRECTORY_SEPARATOR . 'temp_config_' . uniqid() . '.php';
+        $this->tempConfigFile         = $this->originalCwd . DIRECTORY_SEPARATOR . 'temp_config_' . uniqid() . '.php';
         $this->tempConfigRelativePath = basename($this->tempConfigFile);
     }
 
@@ -39,7 +38,7 @@ class InitTest extends TestCase
 
     private function createMockConfig(bool $autoStartTracker): void
     {
-        $configContent = "<?php\nreturn ['helper' => ['autoStartTracker' => " . ($autoStartTracker ? 'true' : 'false') . "]];";
+        $configContent = "<?php\nreturn ['helper' => ['autoStartTracker' => " . ($autoStartTracker ? 'true' : 'false') . ']];';
         file_put_contents($this->tempConfigFile, $configContent);
     }
 

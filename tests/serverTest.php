@@ -9,7 +9,7 @@ class ServerTest extends TestCase
     /**
      * These tests modify the $_SERVER and $_ENV superglobals, so store the original values
      * to restore them after each test
-     * 
+     *
      * @var array
      */
     private $originalServer;
@@ -35,7 +35,7 @@ class ServerTest extends TestCase
 
         // Store original values
         $this->originalServer = $_SERVER;
-        $this->originalEnv = $_ENV;
+        $this->originalEnv    = $_ENV;
 
         // Determine the expected quote style based on the operating system
         $this->expected_quote = (PHP_OS_FAMILY === 'Windows') ? '"' : "'";
@@ -48,7 +48,7 @@ class ServerTest extends TestCase
     {
         // Restore original values
         $_SERVER = $this->originalServer;
-        $_ENV = $this->originalEnv;
+        $_ENV    = $this->originalEnv;
 
         parent::tearDown();
     }
@@ -206,9 +206,9 @@ class ServerTest extends TestCase
     public function test_get_remote_addr_prioritizes_http_client_ip_over_others()
     {
         // Set multiple IP headers
-        $_SERVER['HTTP_CLIENT_IP'] = '203.0.113.1';
+        $_SERVER['HTTP_CLIENT_IP']       = '203.0.113.1';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '192.168.0.1';
-        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['REMOTE_ADDR']          = '10.0.0.1';
 
         // Call the function
         $result = get_remote_addr();
@@ -218,7 +218,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that the function returns the HTTP_X_FORWARDED_HOST 
+     * Test that the function returns the HTTP_X_FORWARDED_HOST
      * when $use_forwarded_host is true and it is present.
      *
      * @return void
@@ -240,7 +240,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that the function returns the HTTP_HOST 
+     * Test that the function returns the HTTP_HOST
      * when it is present and $use_forwarded_host is false.
      *
      * @return void
@@ -262,7 +262,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that the function returns SERVER_NAME 
+     * Test that the function returns SERVER_NAME
      * when HTTP_HOST is not set.
      *
      * @return void
@@ -284,7 +284,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that the function defaults to 'localhost' 
+     * Test that the function defaults to 'localhost'
      * when no valid host information is provided.
      *
      * @return void
@@ -304,7 +304,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that the function throws an exception 
+     * Test that the function throws an exception
      * when an invalid host is provided.
      *
      * @return void
@@ -322,7 +322,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that the function throws an exception 
+     * Test that the function throws an exception
      * when an invalid forwarded host is provided.
      *
      * @return void
@@ -344,7 +344,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that multiple hosts in HTTP_X_FORWARDED_HOST 
+     * Test that multiple hosts in HTTP_X_FORWARDED_HOST
      * returns the first one.
      *
      * @return void
@@ -366,7 +366,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test that a host with a port is correctly returned 
+     * Test that a host with a port is correctly returned
      * and validated.
      *
      * @return void
@@ -389,7 +389,7 @@ class ServerTest extends TestCase
     public function test_get_user_home_directory_windows(): void
     {
         $_SERVER['HOMEDRIVE'] = 'C:';
-        $_SERVER['HOMEPATH'] = '\Users\TestUser';
+        $_SERVER['HOMEPATH']  = '\Users\TestUser';
 
         $this->assertEquals('C:\Users\TestUser', get_user_home_directory('Windows'));
     }
@@ -403,7 +403,7 @@ class ServerTest extends TestCase
             $expectedHome = posix_getpwuid(posix_getuid())['dir'];
         } else {
             $_SERVER['HOME'] = '/home/testuser';
-            $expectedHome = '/home/testuser';
+            $expectedHome    = '/home/testuser';
         }
 
         $this->assertEquals($expectedHome, get_user_home_directory('Linux'));
@@ -415,7 +415,7 @@ class ServerTest extends TestCase
     public function test_get_windows_home_directory_with_homedrive_and_homepath(): void
     {
         $_SERVER['HOMEDRIVE'] = 'D:';
-        $_SERVER['HOMEPATH'] = '\Users\JohnDoe';
+        $_SERVER['HOMEPATH']  = '\Users\JohnDoe';
 
         $this->assertEquals('D:\Users\JohnDoe', get_windows_home_directory('Windows'));
     }
@@ -438,7 +438,7 @@ class ServerTest extends TestCase
     public function test_get_windows_home_directory_on_non_windows(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("get_windows_home_directory() can only be called on Windows systems.");
+        $this->expectExceptionMessage('get_windows_home_directory() can only be called on Windows systems.');
 
         get_windows_home_directory('Linux');
     }
@@ -452,7 +452,7 @@ class ServerTest extends TestCase
             $expectedHome = posix_getpwuid(posix_getuid())['dir'];
         } else {
             $_SERVER['HOME'] = '/home/janedoe';
-            $expectedHome = '/home/janedoe';
+            $expectedHome    = '/home/janedoe';
         }
 
         $this->assertEquals($expectedHome, get_unix_home_directory('Linux'));
@@ -464,7 +464,7 @@ class ServerTest extends TestCase
     public function test_get_unix_home_directory_on_windows(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("get_unix_home_directory() can only be called on Unix-like systems.");
+        $this->expectExceptionMessage('get_unix_home_directory() can only be called on Unix-like systems.');
 
         get_unix_home_directory('Windows');
     }
@@ -474,8 +474,8 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_valid_url()
     {
-        $url = "https://www.example.com/subfolder1/subfolder2/index.php?string=abc&num=123";
-        $expected = "index.php";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/index.php?string=abc&num=123';
+        $expected = 'index.php';
 
         $this->assertSame($expected, url_filename($url));
     }
@@ -485,8 +485,8 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_url_without_query_parameters()
     {
-        $url = "https://www.example.com/subfolder1/subfolder2/index.php";
-        $expected = "index.php";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/index.php';
+        $expected = 'index.php';
 
         $this->assertSame($expected, url_filename($url));
     }
@@ -496,7 +496,7 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_url_that_ends_in_directory()
     {
-        $url = "https://www.example.com/subfolder1/subfolder2/";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/';
         $expected = '';
 
         $this->assertSame($expected, url_filename($url));
@@ -507,8 +507,8 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_dirty_url()
     {
-        $url = "  https://www.example.com////subfolder///file.txt    ";
-        $expected = "file.txt";
+        $url      = '  https://www.example.com////subfolder///file.txt    ';
+        $expected = 'file.txt';
 
         $this->assertSame($expected, url_filename(trim($url)));
     }
@@ -518,8 +518,8 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_special_characters_in_filename()
     {
-        $url = "https://www.example.com/path/to/file-with_special-characters!.php";
-        $expected = "file-with_special-characters!.php";
+        $url      = 'https://www.example.com/path/to/file-with_special-characters!.php';
+        $expected = 'file-with_special-characters!.php';
 
         $this->assertSame($expected, url_filename($url));
     }
@@ -529,7 +529,7 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_invalid_url_missing_scheme()
     {
-        $url = "www.example.com/index.php";
+        $url      = 'www.example.com/index.php';
         $expected = null;
 
         $this->assertNull(url_filename($url));
@@ -540,7 +540,7 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_invalid_url_structure()
     {
-        $url = "https:///invalid-url";
+        $url      = 'https:///invalid-url';
         $expected = null;
 
         $this->assertNull(url_filename($url));
@@ -551,7 +551,7 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_url_with_no_path()
     {
-        $url = "https://www.example.com";
+        $url      = 'https://www.example.com';
         $expected = '';
 
         $this->assertSame($expected, url_filename($url));
@@ -562,7 +562,7 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_empty_url()
     {
-        $url = "";
+        $url      = '';
         $expected = null;
 
         $this->assertNull(url_filename($url));
@@ -573,8 +573,8 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_very_long_url()
     {
-        $url = "https://www.example.com/" . str_repeat("folder/", 100) . "file.php";
-        $expected = "file.php";
+        $url      = 'https://www.example.com/' . str_repeat('folder/', 100) . 'file.php';
+        $expected = 'file.php';
 
         $this->assertSame($expected, url_filename($url));
     }
@@ -584,8 +584,8 @@ class ServerTest extends TestCase
      */
     public function test_url_filename_with_url_that_ends_in_file_without_extension()
     {
-        $url = "https://www.example.com/path/to/file";
-        $expected = "file";
+        $url      = 'https://www.example.com/path/to/file';
+        $expected = 'file';
 
         $this->assertSame($expected, url_filename($url));
     }
@@ -595,8 +595,8 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_valid_url()
     {
-        $url      = "https://www.example.com/subfolder1/subfolder2/index.php?string=abc&num=123";
-        $expected = "php";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/index.php?string=abc&num=123';
+        $expected = 'php';
 
         $this->assertSame($expected, url_file_extension($url));
     }
@@ -606,8 +606,8 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_url_without_query_parameters()
     {
-        $url      = "https://www.example.com/subfolder1/subfolder2/file.txt";
-        $expected = "txt";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/file.txt';
+        $expected = 'txt';
 
         $this->assertSame($expected, url_file_extension($url));
     }
@@ -617,7 +617,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_url_ending_in_directory()
     {
-        $url      = "https://www.example.com/subfolder1/subfolder2/";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -628,8 +628,8 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_dirty_url()
     {
-        $url      = "  https://www.example.com/subfolder1/subfolder2////file.txt  ";
-        $expected = "txt";
+        $url      = '  https://www.example.com/subfolder1/subfolder2////file.txt  ';
+        $expected = 'txt';
 
         $this->assertSame($expected, url_file_extension(trim($url)));
     }
@@ -639,7 +639,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_url_without_extension()
     {
-        $url      = "https://www.example.com/subfolder1/subfolder2/file";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/file';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -650,8 +650,8 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_special_characters_in_filename()
     {
-        $url      = "https://www.example.com/subfolder1/subfolder2/file-with_special-characters!.jpeg";
-        $expected = "jpeg";
+        $url      = 'https://www.example.com/subfolder1/subfolder2/file-with_special-characters!.jpeg';
+        $expected = 'jpeg';
 
         $this->assertSame($expected, url_file_extension($url));
     }
@@ -661,7 +661,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_invalid_url_missing_scheme()
     {
-        $url      = "www.example.com/subfolder1/file.php";
+        $url      = 'www.example.com/subfolder1/file.php';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -672,7 +672,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_invalid_url_structure()
     {
-        $url      = "https:///invalid-url";
+        $url      = 'https:///invalid-url';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -683,7 +683,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_url_with_no_path()
     {
-        $url      = "https://www.example.com";
+        $url      = 'https://www.example.com';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -694,7 +694,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_empty_url()
     {
-        $url      = "";
+        $url      = '';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -705,8 +705,8 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_very_long_url()
     {
-        $url      = "https://www.example.com/" . str_repeat("folder/", 100) . "file.html";
-        $expected = "html";
+        $url      = 'https://www.example.com/' . str_repeat('folder/', 100) . 'file.html';
+        $expected = 'html';
 
         $this->assertSame($expected, url_file_extension($url));
     }
@@ -716,7 +716,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_url_and_query_string_but_no_extension()
     {
-        $url      = "https://www.example.com/path/file?param=value";
+        $url      = 'https://www.example.com/path/file?param=value';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -727,7 +727,7 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_url_that_ends_in_file_without_extension()
     {
-        $url      = "https://www.example.com/path/to/file";
+        $url      = 'https://www.example.com/path/to/file';
         $expected = null;
 
         $this->assertNull(url_file_extension($url));
@@ -738,8 +738,8 @@ class ServerTest extends TestCase
      */
     public function test_url_file_extension_with_file_with_multiple_dots_in_name()
     {
-        $url      = "https://www.example.com/path/file.name.with.dots.tar.gz";
-        $expected = "gz";
+        $url      = 'https://www.example.com/path/file.name.with.dots.tar.gz';
+        $expected = 'gz';
 
         $this->assertSame($expected, url_file_extension($url));
     }
@@ -759,12 +759,12 @@ class ServerTest extends TestCase
             };
 
             // Call get_network_stats and assert the expected result for Windows
-            $result = get_network_stats(false, $mockExecutor);
+            $result   = get_network_stats(false, $mockExecutor);
             $expected = [
                 'Bytes' => [
                     'Receive'  => '12',
-                    'Transmit' => '34'
-                ]
+                    'Transmit' => '34',
+                ],
             ];
 
             $this->assertSame($expected, $result);
@@ -778,12 +778,12 @@ class ServerTest extends TestCase
             };
 
             // Call get_network_stats and assert the expected result for Linux
-            $result = get_network_stats(false, $mockExecutor);
+            $result   = get_network_stats(false, $mockExecutor);
             $expected = [
                 'lo' => [
                     'Receive'  => '12345',
-                    'Transmit' => '54321'
-                ]
+                    'Transmit' => '54321',
+                ],
             ];
 
             $this->assertSame($expected, $result);
@@ -808,12 +808,12 @@ class ServerTest extends TestCase
         };
 
         // Call get_network_stats and assert the expected result for Windows
-        $result = get_network_stats(false, $mockExecutor);
+        $result   = get_network_stats(false, $mockExecutor);
         $expected = [
             'Bytes' => [
                 'Receive'  => '12',
-                'Transmit' => '34'
-            ]
+                'Transmit' => '34',
+            ],
         ];
 
         $this->assertSame($expected, $result);
@@ -837,12 +837,12 @@ class ServerTest extends TestCase
         };
 
         // Call get_network_stats and assert the expected result for Linux
-        $result = get_network_stats(false, $mockExecutor);
+        $result   = get_network_stats(false, $mockExecutor);
         $expected = [
             'lo' => [
                 'Receive'  => '12345',
-                'Transmit' => '54321'
-            ]
+                'Transmit' => '54321',
+            ],
         ];
 
         $this->assertSame($expected, $result);
@@ -896,12 +896,12 @@ class ServerTest extends TestCase
             };
 
             // Call get_network_stats with a PID and assert the expected result for Linux
-            $result = get_network_stats(123, $mockExecutor);
+            $result   = get_network_stats(123, $mockExecutor);
             $expected = [
                 'eth0' => [
                     'Receive'  => '67890',
-                    'Transmit' => '98765'
-                ]
+                    'Transmit' => '98765',
+                ],
             ];
 
             $this->assertSame($expected, $result);
@@ -921,7 +921,7 @@ class ServerTest extends TestCase
             $this->expectException(\TypeError::class);
 
             // Call get_network_stats with an invalid PID
-             // @phpstan-ignore-next-line
+            // @phpstan-ignore-next-line
             get_network_stats('invalid_pid');
         } else {
             $this->markTestSkipped('This test is only applicable to Linux.');
@@ -946,12 +946,12 @@ class ServerTest extends TestCase
         };
 
         // Call get_windows_network_stats and assert the expected result
-        $result = get_windows_network_stats($mockExecutor);
+        $result   = get_windows_network_stats($mockExecutor);
         $expected = [
             'Bytes' => [
                 'Receive'  => '12',
                 'Transmit' => '34',
-            ]
+            ],
         ];
 
         $this->assertSame($expected, $result);
@@ -1015,12 +1015,12 @@ class ServerTest extends TestCase
         };
 
         // Call get_linux_network_stats and assert the expected result
-        $result = get_linux_network_stats(false, $mockExecutor);
+        $result   = get_linux_network_stats(false, $mockExecutor);
         $expected = [
             'lo' => [
                 'Receive'  => '12345',
                 'Transmit' => '54321',
-            ]
+            ],
         ];
 
         $this->assertSame($expected, $result);
@@ -1084,12 +1084,12 @@ class ServerTest extends TestCase
         };
 
         // Call get_linux_network_stats with a PID and assert the expected result
-        $result = get_linux_network_stats(123, $mockExecutor);
+        $result   = get_linux_network_stats(123, $mockExecutor);
         $expected = [
             'eth0' => [
                 'Receive'  => '67890',
                 'Transmit' => '98765',
-            ]
+            ],
         ];
 
         $this->assertSame($expected, $result);
@@ -1108,7 +1108,7 @@ class ServerTest extends TestCase
         $this->expectException(\TypeError::class);
 
         // Call get_linux_network_stats with an invalid PID
-         // @phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         get_linux_network_stats('invalid_pid');
     }
 
@@ -1242,8 +1242,8 @@ class ServerTest extends TestCase
     {
         // Simulate server environment
         $_SERVER['SCRIPT_FILENAME'] = '/path/to/script.php';
-        $_SERVER['PHP_SELF'] = '/index.php';
-        $_SERVER['DOCUMENT_ROOT'] = '/path/to';
+        $_SERVER['PHP_SELF']        = '/index.php';
+        $_SERVER['DOCUMENT_ROOT']   = '/path/to';
 
         // Capture output
         ob_start();

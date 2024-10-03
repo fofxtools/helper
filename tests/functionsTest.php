@@ -17,8 +17,8 @@ class FunctionsTest extends TestCase
     protected function setUp(): void
     {
         $this->originalPhpunitTestEnv = getenv('PHPUNIT_TEST');
-        $this->originalCwd = getcwd();
-        $this->tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'config_test_' . uniqid();
+        $this->originalCwd            = getcwd();
+        $this->tempDir                = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'config_test_' . uniqid();
         mkdir($this->tempDir);
         chdir($this->tempDir);
     }
@@ -40,6 +40,7 @@ class FunctionsTest extends TestCase
 
     /**
      * Utility function to recursively remove a directory.
+     *
      * @param string $dir The directory to remove.
      */
     private function recursiveRemoveDirectory($dir)
@@ -47,7 +48,7 @@ class FunctionsTest extends TestCase
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
+                if ($object != '.' && $object != '..') {
                     if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
                         $this->recursiveRemoveDirectory($dir . DIRECTORY_SEPARATOR . $object);
                     } else {

@@ -419,7 +419,7 @@ class DatetimeTest extends TestCase
      */
     public function test_limit_sleep_with_valid_input()
     {
-        $limit = 20.0;
+        $limit  = 20.0;
         $period = 1.0;
 
         // Calculate the expected sleep time
@@ -482,7 +482,7 @@ class DatetimeTest extends TestCase
      */
     public function test_limit_sleep_with_large_limit()
     {
-        $limit = 1000.0;
+        $limit  = 1000.0;
         $period = 1.0;
 
         // Calculate the expected sleep time
@@ -514,7 +514,7 @@ class DatetimeTest extends TestCase
      */
     public function test_limit_sleep_with_small_limit()
     {
-        $limit = 20.0;
+        $limit  = 20.0;
         $period = 1.0;
 
         // Calculate the expected sleep time
@@ -579,7 +579,7 @@ class DatetimeTest extends TestCase
     public function test_datetime_diff_with_positive_difference()
     {
         $startDate = new \DateTime('2023-01-01 00:00:00.000000');
-        $endDate = new \DateTime('2023-01-01 00:00:01.500000');
+        $endDate   = new \DateTime('2023-01-01 00:00:01.500000');
 
         // The expected difference is 1.5 seconds
         $expectedDifference = 1.5;
@@ -599,7 +599,7 @@ class DatetimeTest extends TestCase
     public function test_datetime_diff_with_negative_difference()
     {
         $startDate = new \DateTime('2023-01-01 00:00:01.500000');
-        $endDate = new \DateTime('2023-01-01 00:00:00.000000');
+        $endDate   = new \DateTime('2023-01-01 00:00:00.000000');
 
         // The expected difference is -1.5 seconds when not using absolute value
         $expectedDifference = -1.5;
@@ -618,7 +618,7 @@ class DatetimeTest extends TestCase
     public function test_datetime_diff_with_absolute_difference()
     {
         $startDate = new \DateTime('2023-01-01 00:00:01.500000');
-        $endDate = new \DateTime('2023-01-01 00:00:00.000000');
+        $endDate   = new \DateTime('2023-01-01 00:00:00.000000');
 
         // The expected absolute difference is 1.5 seconds
         $expectedDifference = 1.5;
@@ -655,7 +655,7 @@ class DatetimeTest extends TestCase
     public function test_datetime_diff_with_microsecond_difference()
     {
         $startDate = new \DateTime('2023-01-01 00:00:00.000000');
-        $endDate = new \DateTime('2023-01-01 00:00:00.000500');
+        $endDate   = new \DateTime('2023-01-01 00:00:00.000500');
 
         // The expected difference is 0.0005 seconds
         $expectedDifference = 0.0005;
@@ -674,7 +674,7 @@ class DatetimeTest extends TestCase
     public function test_datetime_diff_with_start_date_after_end_date()
     {
         $startDate = new \DateTime('2023-01-01 00:00:02.000000');
-        $endDate = new \DateTime('2023-01-01 00:00:01.000000');
+        $endDate   = new \DateTime('2023-01-01 00:00:01.000000');
 
         // The expected absolute difference is 1 second
         $expectedDifference = 1.0;
@@ -692,8 +692,8 @@ class DatetimeTest extends TestCase
      */
     public function test_normalized_date_diff_with_valid_dates()
     {
-        $start_date = "2023-01-01 00:00:00";
-        $end_date = "2023-01-01 12:00:00";
+        $start_date = '2023-01-01 00:00:00';
+        $end_date   = '2023-01-01 12:00:00';
 
         // The expected difference is 12 hours, or 43200 seconds
         $expected_difference = 43200.0;
@@ -711,8 +711,8 @@ class DatetimeTest extends TestCase
      */
     public function test_normalized_date_diff_with_absolute_difference()
     {
-        $start_date = "2023-01-01 12:00:00";
-        $end_date = "2023-01-01 00:00:00";
+        $start_date = '2023-01-01 12:00:00';
+        $end_date   = '2023-01-01 00:00:00';
 
         // The expected absolute difference is 12 hours, or 43200 seconds
         $expected_difference = 43200.0;
@@ -730,8 +730,8 @@ class DatetimeTest extends TestCase
      */
     public function test_normalized_date_diff_with_days_conversion()
     {
-        $start_date = "2023-01-01 00:00:00";
-        $end_date = "2023-01-02 00:00:00";
+        $start_date = '2023-01-01 00:00:00';
+        $end_date   = '2023-01-02 00:00:00';
 
         // The expected difference is 1 day
         $expected_difference_in_days = 1.0;
@@ -751,7 +751,7 @@ class DatetimeTest extends TestCase
         $this->expectException(\Exception::class);
 
         // Call the function with an invalid date string
-        normalized_date_diff("invalid-date", "2023-01-01 12:00:00");
+        normalized_date_diff('invalid-date', '2023-01-01 12:00:00');
     }
 
     /**
@@ -759,8 +759,8 @@ class DatetimeTest extends TestCase
      */
     public function test_normalized_date_diff_with_different_timezones()
     {
-        $start_date = "2023-01-01 00:00:00 UTC";
-        $end_date = "2023-01-01 12:00:00 Asia/Tokyo";
+        $start_date = '2023-01-01 00:00:00 UTC';
+        $end_date   = '2023-01-01 12:00:00 Asia/Tokyo';
 
         // The expected difference, accounting for the timezone difference, is 3 hours, or 10800 seconds
         $expected_difference = 10800.0;
@@ -777,7 +777,7 @@ class DatetimeTest extends TestCase
      */
     public function test_normalized_date_diff_with_identical_dates()
     {
-        $date = "2023-01-01 00:00:00";
+        $date = '2023-01-01 00:00:00';
 
         // The expected difference is 0 seconds
         $expected_difference = 0.0;

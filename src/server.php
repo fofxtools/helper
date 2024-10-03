@@ -22,13 +22,13 @@ namespace FOfX\Helper;
  * 1. HTTP_CLIENT_IP
  * 2. HTTP_X_FORWARDED_FOR
  * 3. REMOTE_ADDR
- * 
+ *
  * If none are found, it defaults to '127.0.0.1'.
  * If the IP is invalid, an exception is thrown.
  *
- * @return  string                       The valid IP address of the client
+ * @throws \UnexpectedValueException If the IP address is invalid
  *
- * @throws  \UnexpectedValueException    If the IP address is invalid
+ * @return string The valid IP address of the client
  */
 function get_remote_addr(): string
 {
@@ -36,7 +36,7 @@ function get_remote_addr(): string
     $ip_headers = [
         'HTTP_CLIENT_IP',
         'HTTP_X_FORWARDED_FOR',
-        'REMOTE_ADDR'
+        'REMOTE_ADDR',
     ];
 
     $remote_addr = null;
@@ -48,7 +48,7 @@ function get_remote_addr(): string
 
             // If multiple IPs, take the first one
             if (strpos($remote_addr, ',') !== false) {
-                $ip_array = explode(',', $remote_addr);
+                $ip_array    = explode(',', $remote_addr);
                 $remote_addr = trim($ip_array[0]);
             }
 
@@ -63,7 +63,7 @@ function get_remote_addr(): string
 
     // Validate the IP address
     if (!filter_var($remote_addr, FILTER_VALIDATE_IP)) {
-        throw new \UnexpectedValueException("Invalid IP address provided.");
+        throw new \UnexpectedValueException('Invalid IP address provided.');
     }
 
     return $remote_addr;
@@ -78,9 +78,11 @@ function get_remote_addr(): string
  * 3. SERVER_NAME
  * 4. 'localhost' (as a last resort default)
  *
- * @param   bool                       $use_forwarded_host  Whether to prioritize HTTP_X_FORWARDED_HOST if available (default: false)
- * @return  string                                          The HTTP host
- * @throws  \UnexpectedValueException                       If the host is invalid
+ * @param bool $use_forwarded_host Whether to prioritize HTTP_X_FORWARDED_HOST if available (default: false)
+ *
+ * @throws \UnexpectedValueException If the host is invalid
+ *
+ * @return string The HTTP host
  */
 function get_http_host(bool $use_forwarded_host = false): string
 {
@@ -88,7 +90,7 @@ function get_http_host(bool $use_forwarded_host = false): string
 
     if ($use_forwarded_host && !empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
         $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
-        $host = trim($hosts[0]);
+        $host  = trim($hosts[0]);
     } elseif (!empty($_SERVER['HTTP_HOST'])) {
         $host = $_SERVER['HTTP_HOST'];
     } elseif (!empty($_SERVER['SERVER_NAME'])) {
@@ -102,7 +104,7 @@ function get_http_host(bool $use_forwarded_host = false): string
 
     // Validate the host
     $host_parts = explode(':', $host);
-    $domain = $host_parts[0];
+    $domain     = $host_parts[0];
     if (!filter_var($domain, FILTER_VALIDATE_DOMAIN, ['flags' => FILTER_FLAG_HOSTNAME])) {
         throw new \UnexpectedValueException("Invalid host provided: $host");
     }
@@ -121,8 +123,9 @@ function get_http_host(bool $use_forwarded_host = false): string
  * @link    https://stackoverflow.com/questions/1894917/how-to-get-the-home-directory-from-a-php-cli-script
  * @link    https://stackoverflow.com/questions/20535474/php-get-user-home-directory-for-virtual-hosting
  *
- * @param   string|null       $osFamily  The OS family to use (for testing purposes).
- * @return  string                       The home directory of the current user.
+ * @param string|null $osFamily The OS family to use (for testing purposes).
+ *
+ * @return string The home directory of the current user.
  */
 function get_user_home_directory(?string $osFamily = null): string
 {
@@ -138,16 +141,18 @@ function get_user_home_directory(?string $osFamily = null): string
 /**
  * Retrieve the home directory for Windows systems.
  *
- * @param   string|null        $osFamily  The OS family to use (for testing purposes).
- * @return  string
- * @throws  \RuntimeException             If called on a non-Windows system or unable to determine the home directory.
+ * @param string|null $osFamily The OS family to use (for testing purposes).
+ *
+ * @throws \RuntimeException If called on a non-Windows system or unable to determine the home directory.
+ *
+ * @return string
  */
 function get_windows_home_directory(?string $osFamily = null): string
 {
     $osFamily = $osFamily ?? PHP_OS_FAMILY;
 
     if ($osFamily !== 'Windows') {
-        throw new \RuntimeException("get_windows_home_directory() can only be called on Windows systems.");
+        throw new \RuntimeException('get_windows_home_directory() can only be called on Windows systems.');
     }
 
     if (isset($_SERVER['HOMEDRIVE'], $_SERVER['HOMEPATH'])) {
@@ -163,26 +168,27 @@ function get_windows_home_directory(?string $osFamily = null): string
         return trim($home);
     }
 
-    throw new \RuntimeException("Unable to determine home directory on Windows.");
+    throw new \RuntimeException('Unable to determine home directory on Windows.');
 }
 
 /**
  * Retrieve the home directory for Unix-like systems.
- * 
- * @param   string|null        $osFamily  The OS family to use (for testing purposes).
- *                                        $_SERVER['HOME'] is undefined from the browser, so use exec("echo ~") instead.
- *                                        $_SERVER['HOME'] and exec("echo ~") will not work on CyberPanel, I believe due to OpenLiteSpeed.
- *                                        So use posix_getpwuid(posix_getuid()) and $user['dir'] instead.
  *
- * @return  string
- * @throws  \RuntimeException             If called on a Windows system or unable to determine the home directory.
+ * @param string|null $osFamily The OS family to use (for testing purposes).
+ *                              $_SERVER['HOME'] is undefined from the browser, so use exec("echo ~") instead.
+ *                              $_SERVER['HOME'] and exec("echo ~") will not work on CyberPanel, I believe due to OpenLiteSpeed.
+ *                              So use posix_getpwuid(posix_getuid()) and $user['dir'] instead.
+ *
+ * @throws \RuntimeException If called on a Windows system or unable to determine the home directory.
+ *
+ * @return string
  */
 function get_unix_home_directory(?string $osFamily = null): string
 {
     $osFamily = $osFamily ?? PHP_OS_FAMILY;
 
     if ($osFamily === 'Windows') {
-        throw new \RuntimeException("get_unix_home_directory() can only be called on Unix-like systems.");
+        throw new \RuntimeException('get_unix_home_directory() can only be called on Unix-like systems.');
     }
 
     if (function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
@@ -201,18 +207,19 @@ function get_unix_home_directory(?string $osFamily = null): string
         return trim($home);
     }
 
-    throw new \RuntimeException("Unable to determine home directory on Unix-like system.");
+    throw new \RuntimeException('Unable to determine home directory on Unix-like system.');
 }
 
 /**
  * Get the filename from a valid URL.
- * 
- * @link     https://stackoverflow.com/questions/7852296/get-only-filename-from-url-in-php-without-any-variable-values-which-exist-in-the
- * 
- * @param    string       $url  The URL to parse.
- * @return   string|null        The filename, or null if the URL is invalid.
  *
- * @example  
+ * @link     https://stackoverflow.com/questions/7852296/get-only-filename-from-url-in-php-without-any-variable-values-which-exist-in-the
+ *
+ * @param string $url The URL to parse.
+ *
+ * @return string|null The filename, or null if the URL is invalid.
+ *
+ * @example
  * echo Helper\url_filename("https://www.example.com/subfolder1/subfolder2/index.php?string=abc&num=123") . PHP_EOL;
  * // Returns index.php
  */
@@ -237,13 +244,14 @@ function url_filename(string $url): ?string
 
 /**
  * Get the file extension from a valid URL.
- * 
- * @link     https://stackoverflow.com/questions/173868/how-to-get-a-files-extension-in-php
- * 
- * @param    string       $url  The URL to extract the file extension from.
- * @return   string|null        The file extension, or null if no extension is found.
  *
- * @example  
+ * @link     https://stackoverflow.com/questions/173868/how-to-get-a-files-extension-in-php
+ *
+ * @param string $url The URL to extract the file extension from.
+ *
+ * @return string|null The file extension, or null if no extension is found.
+ *
+ * @example
  * echo Helper\url_file_extension("https://www.example.com/subfolder1/subfolder2/index.php?string=abc&num=123") . PHP_EOL;
  * // Returns php
  */
@@ -271,14 +279,16 @@ function url_file_extension(string $url): ?string
 
 /**
  * Get network statistics for Windows or Linux.
- * 
- * @param   int|false                  $pid              Optional process ID for Linux.
- * @param   ?callable                  $commandExecutor  A callable that executes the shell command. For testing.
- *                                                       Defaults to shell_exec.
- * @return  array                                        An associative array with network interfaces as keys, and their stats.
  *
- * @throws  \RuntimeException                            If unable to fetch network statistics.
- * @throws  \InvalidArgumentException                    If an invalid process ID is provided.
+ * @param int|false $pid             Optional process ID for Linux.
+ * @param ?callable $commandExecutor A callable that executes the shell command. For testing.
+ *                                   Defaults to shell_exec.
+ *
+ * @throws \RuntimeException         If unable to fetch network statistics.
+ * @throws \InvalidArgumentException If an invalid process ID is provided.
+ *
+ * @return array An associative array with network interfaces as keys, and their stats.
+ *
  * @see     get_windows_network_stats
  * @see     get_linux_network_stats
  */
@@ -296,20 +306,21 @@ function get_network_stats(int|false $pid = false, ?callable $commandExecutor = 
 
 /**
  * Get network statistics for Windows using netstat.
- * 
- * @param   ?callable          $commandExecutor  A callable that executes the shell command. For testing.
- * @return  array                                An associative array of network stats.
  *
- * @throws  \RuntimeException                    If unable to retrieve network statistics.
+ * @param ?callable $commandExecutor A callable that executes the shell command. For testing.
+ *
+ * @throws \RuntimeException If unable to retrieve network statistics.
+ *
+ * @return array An associative array of network stats.
  */
 function get_windows_network_stats(?callable $commandExecutor = null): array
 {
     // Default to 'shell_exec' if no callable is provided
     $commandExecutor = $commandExecutor ?? 'shell_exec';
 
-    $output = $commandExecutor("netstat -e");
+    $output = $commandExecutor('netstat -e');
     if ($output === false) {
-        throw new \RuntimeException("Failed to retrieve network statistics for Windows.");
+        throw new \RuntimeException('Failed to retrieve network statistics for Windows.');
     }
 
     $lines = explode("\n", $output);
@@ -324,6 +335,7 @@ function get_windows_network_stats(?callable $commandExecutor = null): array
                     'Transmit' => $split[2],
                 ];
             }
+
             break;
         }
     }
@@ -333,24 +345,25 @@ function get_windows_network_stats(?callable $commandExecutor = null): array
 
 /**
  * Get network statistics for Linux using /proc/net/dev.
- * 
- * @param   int|false                  $pid              Optional process ID.
- * @param   ?callable                  $commandExecutor  A callable that executes the shell command. For testing.
- * @return  array                                        An associative array of network stats.
  *
- * @throws  \InvalidArgumentException                    If an invalid process ID is provided.
- * @throws  \RuntimeException                            If unable to retrieve network statistics.
+ * @param int|false $pid             Optional process ID.
+ * @param ?callable $commandExecutor A callable that executes the shell command. For testing.
+ *
+ * @throws \InvalidArgumentException If an invalid process ID is provided.
+ * @throws \RuntimeException         If unable to retrieve network statistics.
+ *
+ * @return array An associative array of network stats.
  */
 function get_linux_network_stats(int|false $pid = false, ?callable $commandExecutor = null): array
 {
     // Default to 'shell_exec' if no callable is provided
     $commandExecutor = $commandExecutor ?? 'shell_exec';
 
-    $file = $pid ? "/proc/$pid/net/dev" : "/proc/net/dev";
+    $file   = $pid ? "/proc/$pid/net/dev" : '/proc/net/dev';
     $output = $commandExecutor("cat $file");
 
     if ($output === false) {
-        throw new \RuntimeException("Failed to retrieve network statistics for Linux.");
+        throw new \RuntimeException('Failed to retrieve network statistics for Linux.');
     }
 
     $lines = explode("\n", $output);
@@ -358,7 +371,7 @@ function get_linux_network_stats(int|false $pid = false, ?callable $commandExecu
 
     foreach ($lines as $line) {
         if (strpos($line, ':') !== false) {
-            $split = preg_split('/\s+/', trim($line));
+            $split     = preg_split('/\s+/', trim($line));
             $interface = str_replace(':', '', $split[0]);
             // The 1st and 9th elements are the Receive and Transmit bytes
             if (isset($split[1], $split[9])) {
@@ -381,10 +394,10 @@ function get_linux_network_stats(int|false $pid = false, ?callable $commandExecu
  * - Path information (dirname(__FILE__), getcwd(), etc.).
  * - Server variables ($_SERVER, $_SESSION, $_COOKIE, etc.).
  * - Counts and lengths of global arrays.
- * 
+ *
  * This function should only be used in development environments, as it may expose sensitive data.
  *
- * @return  void
+ * @return void
  *
  * @see     print_php_constants
  * @see     print_server_variables
@@ -428,34 +441,34 @@ function get_diagnostics(): void
 /**
  * Prints basic PHP system constants for diagnostic purposes.
  *
- * @return  void
+ * @return void
  */
 function print_php_constants(): void
 {
-    echo "__LINE__ : " . __LINE__ . PHP_EOL;
-    echo "__FILE__ : " . __FILE__ . PHP_EOL;
-    echo "__DIR__ : " . __DIR__ . PHP_EOL;
-    echo "__FUNCTION__ : " . __FUNCTION__ . PHP_EOL;
+    echo '__LINE__ : ' . __LINE__ . PHP_EOL;
+    echo '__FILE__ : ' . __FILE__ . PHP_EOL;
+    echo '__DIR__ : ' . __DIR__ . PHP_EOL;
+    echo '__FUNCTION__ : ' . __FUNCTION__ . PHP_EOL;
 
     // Check if within a class or trait context
-    echo "__CLASS__ : " . (defined('__CLASS__') ? __CLASS__ : 'N/A') . PHP_EOL;
-    echo "__TRAIT__ : " . (defined('__TRAIT__') ? __TRAIT__ : 'N/A') . PHP_EOL;
+    echo '__CLASS__ : ' . (defined('__CLASS__') ? __CLASS__ : 'N/A') . PHP_EOL;
+    echo '__TRAIT__ : ' . (defined('__TRAIT__') ? __TRAIT__ : 'N/A') . PHP_EOL;
 
-    echo "__METHOD__ : " . __METHOD__ . PHP_EOL;
-    echo "__NAMESPACE__ : " . __NAMESPACE__ . PHP_EOL;
+    echo '__METHOD__ : ' . __METHOD__ . PHP_EOL;
+    echo '__NAMESPACE__ : ' . __NAMESPACE__ . PHP_EOL;
 }
 
 /**
  * Prints file system path information.
  *
- * @return  void
+ * @return void
  */
 function print_path_info(): void
 {
     $paths = [
-        "dirname('.')" => dirname('.'),
+        "dirname('.')"      => dirname('.'),
         'dirname(__FILE__)' => dirname(__FILE__),
-        'getcwd()' => getcwd(),
+        'getcwd()'          => getcwd(),
     ];
 
     foreach ($paths as $label => $path) {
@@ -466,12 +479,12 @@ function print_path_info(): void
 /**
  * Prints server-specific diagnostic information.
  *
- * @return  void
+ * @return void
  */
 function print_server_variables(): void
 {
-    echo "get_remote_addr(): " . get_remote_addr() . PHP_EOL;
-    echo "get_http_host(): " . get_http_host() . PHP_EOL;
+    echo 'get_remote_addr(): ' . get_remote_addr() . PHP_EOL;
+    echo 'get_http_host(): ' . get_http_host() . PHP_EOL;
     echo "\$_SERVER['SCRIPT_FILENAME']: " . $_SERVER['SCRIPT_FILENAME'] . PHP_EOL;
     echo "\$_SERVER['PHP_SELF']: " . $_SERVER['PHP_SELF'] . PHP_EOL;
     echo "\$_SERVER['DOCUMENT_ROOT']: " . $_SERVER['DOCUMENT_ROOT'] . PHP_EOL;
@@ -483,9 +496,10 @@ function print_server_variables(): void
 /**
  * Prints the count and length of recursively imploded values in a global array.
  *
- * @param   string  $name  The name of the array to print information about
- * @param   array   $arr   The array to analyze
- * @return  void
+ * @param string $name The name of the array to print information about
+ * @param array  $arr  The array to analyze
+ *
+ * @return void
  *
  * @see     recursive_implode
  */
@@ -501,14 +515,15 @@ function print_array_info(string $name, array $arr): void
  * This function properly escapes special characters, including double quotes,
  * so that the argument is passed correctly to Windows CLI commands.
  *
- * @param   string  $arg  The argument to escape.
- * @return  string        The escaped argument.
+ * @param string $arg The argument to escape.
+ *
+ * @return string The escaped argument.
  */
 function escapeshellarg_windows(string $arg): string
 {
     // Enclose the argument in double quotes
-    $escaped = '"';
-    $length = strlen($arg);
+    $escaped         = '"';
+    $length          = strlen($arg);
     $num_backslashes = 0;
 
     for ($i = 0; $i < $length; $i++) {
@@ -539,6 +554,7 @@ function escapeshellarg_windows(string $arg): string
     }
 
     $escaped .= '"';
+
     return $escaped;
 }
 
@@ -546,11 +562,12 @@ function escapeshellarg_windows(string $arg): string
  * Escapes a string to be used as a shell argument, handling platform-specific differences.
  *
  * This wrapper function ensures that shell arguments are properly escaped based on the operating system.
- * On Windows, it uses a custom escaping function to handle special characters and quotes 
+ * On Windows, it uses a custom escaping function to handle special characters and quotes
  * (`escapeshellarg_windows`), while on Unix-like systems, it uses the native `escapeshellarg` function.
  *
- * @param   string  $arg  The argument to escape.
- * @return  string        The escaped argument, suitable for safe usage in shell commands.
+ * @param string $arg The argument to escape.
+ *
+ * @return string The escaped argument, suitable for safe usage in shell commands.
  */
 function escapeshellarg_crossplatform(string $arg): string
 {

@@ -37,21 +37,21 @@ class BufferTest extends TestCase
         $this->assertEquals(
             rtrim($expected),
             rtrim($result),
-            "The main content of the captured buffer should match the expected output."
+            'The main content of the captured buffer should match the expected output.'
         );
 
         // Check that the result starts with the expected content
         $this->assertStringStartsWith(
             $expected,
             $result,
-            "The captured buffer should start with the expected output."
+            'The captured buffer should start with the expected output.'
         );
 
         // Check that the result only contains additional whitespace after the expected content
         $this->assertMatchesRegularExpression(
             '/^' . preg_quote($expected, '/') . '\s*$/s',
             $result,
-            "The captured buffer should only contain additional whitespace after the expected content."
+            'The captured buffer should only contain additional whitespace after the expected content.'
         );
     }
 
@@ -73,8 +73,8 @@ class BufferTest extends TestCase
     public function test_capture_eval_without_return_value()
     {
         // Arrange
-        $code = 'echo "Hello, World!";';
-        $expected = "Hello, World!";
+        $code     = 'echo "Hello, World!";';
+        $expected = 'Hello, World!';
 
         // Act
         $result = capture_eval($code, get_defined_vars());
@@ -82,7 +82,6 @@ class BufferTest extends TestCase
         // Assert
         $this->assertEquals($expected, $result);
     }
-
 
     /**
      * Test capture_eval function with capturing return value
@@ -99,9 +98,9 @@ class BufferTest extends TestCase
         // Split the result into lines, trimming each line
         $resultLines = array_map('trim', explode("\n", str_replace("\r\n", "\n", $result)));
 
-        $this->assertCount(2, $resultLines, "The result should contain two lines");
-        $this->assertEquals("World", $resultLines[0], "The first line should be the return value 'World'");
-        $this->assertEquals("Hello", $resultLines[1], "The second line should be the echoed 'Hello'");
+        $this->assertCount(2, $resultLines, 'The result should contain two lines');
+        $this->assertEquals('World', $resultLines[0], "The first line should be the return value 'World'");
+        $this->assertEquals('Hello', $resultLines[1], "The second line should be the echoed 'Hello'");
     }
 
     /**

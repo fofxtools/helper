@@ -9,7 +9,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 
-return $config->setRules([
+return $config->setFinder($finder)->setRules([
     '@PSR12'            => true,
     'array_indentation' => true,
     'array_syntax'      => ['syntax' => 'short'],
@@ -70,11 +70,11 @@ return $config->setRules([
     // 'normalize_index_brace' => true,
     'object_operator_without_whitespace' => true,
     // 'php_unit_fqcn_annotation' => true,
-    'phpdoc_align'                  => ['align' => 'vertical'],
-    'phpdoc_annotation_without_dot' => true,
-    'phpdoc_indent'                 => true,
-    'phpdoc_inline_tag_normalizer'  => true,
-    'phpdoc_no_access'              => true,
+    'phpdoc_align' => ['align' => 'vertical'],
+    // 'phpdoc_annotation_without_dot' => true,
+    'phpdoc_indent'                => true,
+    'phpdoc_inline_tag_normalizer' => true,
+    'phpdoc_no_access'             => true,
     // 'phpdoc_no_alias_tag' => true,
     // 'phpdoc_no_empty_return' => true,
     'phpdoc_no_package'              => true,

@@ -18,9 +18,10 @@ namespace FOfX\Helper;
 /**
  * Selects a random proxy from the list of available proxies.
  *
- * @return  ?string              Random proxy IP or null if no proxies are available.
+ * @throws \RuntimeException If no proxies are available and this is critical for your application.
  *
- * @throws  \RuntimeException    If no proxies are available and this is critical for your application.
+ * @return ?string Random proxy IP or null if no proxies are available.
+ *
  * @see     Tracker::getProxyIps()
  */
 function get_random_proxy(): ?string
@@ -37,7 +38,7 @@ function get_random_proxy(): ?string
 /**
  * Returns default HTTP headers for the request.
  *
- * @return  array    Default HTTP headers.
+ * @return array Default HTTP headers.
  */
 function get_default_http_headers(): array
 {
@@ -53,7 +54,7 @@ function get_default_http_headers(): array
 /**
  * Returns a random user agent string.
  *
- * @return  string    Random user agent string.
+ * @return string Random user agent string.
  */
 function get_random_user_agent(): string
 {
@@ -68,13 +69,15 @@ function get_random_user_agent(): string
 
 /**
  * Fetches the contents of the given URL and returns it as a string.
- * 
+ *
  * This function is a basic alternative to file_get_contents().
- * 
- * @param   string                     $url  The URL to fetch contents from.
- * @return  string                           The fetched contents of the URL.
- * @throws  \InvalidArgumentException        if the URL is invalid.
- * @throws  \RuntimeException                if the file could not be read.
+ *
+ * @param string $url The URL to fetch contents from.
+ *
+ * @throws \InvalidArgumentException if the URL is invalid.
+ * @throws \RuntimeException         if the file could not be read.
+ *
+ * @return string The fetched contents of the URL.
  */
 function url_get_contents(string $url): string
 {
@@ -109,23 +112,25 @@ function url_get_contents(string $url): string
 
 /**
  * Fetches contents from a URL using cURL with various options.
- * 
- * $return_headers option based on comments from Geoffrey and sneaky
- * 
- * @link    https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request/41135574
- * @param   string                     $url               The URL to fetch contents from.
- * @param   bool                       $use_proxy         Whether to use a random proxy from config.ini.php.
- * @param   array                      $options           Additional cURL options to be set.
- * @param   bool                       $use_http_headers  Whether to set additional HTTP request headers.
- *                                                        Accept-Language, Connection, Cache-Control.
- * @param   bool                       $return_info       Whether to include info from curl_getinfo($ch) in the return value.
- *                                                        As array key 'info'.
- * @param   bool                       $return_headers    Whether to include response headers in the return value.
- *                                                        As array key 'headers'.
- * @return  string|array                                  The fetched contents. Or an array with additional information.
  *
- * @throws  \InvalidArgumentException
- * @throws  \RuntimeException
+ * $return_headers option based on comments from Geoffrey and sneaky
+ *
+ * @link    https://stackoverflow.com/questions/9183178/can-php-curl-retrieve-response-headers-and-body-in-a-single-request/41135574
+ *
+ * @param string $url              The URL to fetch contents from.
+ * @param bool   $use_proxy        Whether to use a random proxy from config.ini.php.
+ * @param array  $options          Additional cURL options to be set.
+ * @param bool   $use_http_headers Whether to set additional HTTP request headers.
+ *                                 Accept-Language, Connection, Cache-Control.
+ * @param bool   $return_info      Whether to include info from curl_getinfo($ch) in the return value.
+ *                                 As array key 'info'.
+ * @param bool   $return_headers   Whether to include response headers in the return value.
+ *                                 As array key 'headers'.
+ *
+ * @throws \InvalidArgumentException
+ * @throws \RuntimeException
+ *
+ * @return string|array The fetched contents. Or an array with additional information.
  */
 function curl_get_contents(
     string $url,
@@ -175,7 +180,7 @@ function curl_get_contents(
         curl_setopt($ch, CURLOPT_HTTPHEADER, get_default_http_headers());
     }
 
-    $headers = [];
+    $headers     = [];
     $header_size = 0;
 
     // Capture response headers if requested
@@ -187,6 +192,7 @@ function curl_get_contents(
             if (count($header) > 1) {
                 $headers[strtolower(trim($header[0]))][] = trim($header[1]);
             }
+
             return $len;
         });
     }
@@ -220,6 +226,7 @@ function curl_get_contents(
         if ($return_headers) {
             $result['headers'] = $headers;
         }
+
         return $result;
     }
 
@@ -230,12 +237,16 @@ function curl_get_contents(
  * Executes multiple cURL requests concurrently.
  *
  * @link     https://www.phpied.com/simultaneuos-http-requests-in-php-with-curl/
- * @param    array                      $urls         Array of URLs or data to fetch via cURL.
- * @param    bool                       $use_proxy    Whether to use a random proxy.
- * @param    bool                       $use_headers  Whether to include headers in the cURL requests.
- * @param    array                      $options      Additional cURL options.
  *
- * @return   array                                    An array of responses, each containing the URL, content, and optional info.
+ * @param array $urls        Array of URLs or data to fetch via cURL.
+ * @param bool  $use_proxy   Whether to use a random proxy.
+ * @param bool  $use_headers Whether to include headers in the cURL requests.
+ * @param array $options     Additional cURL options.
+ *
+ * @throws \InvalidArgumentException If any URL is invalid.
+ * @throws \RuntimeException         If the cURL request fails.
+ *
+ * @return array An array of responses, each containing the URL, content, and optional info.
  *
  * @example  GET request:
  *           $urls = [
@@ -244,7 +255,6 @@ function curl_get_contents(
  *               'http://localhost/helper/public/request-vars.php?string=test123&num=3'
  *           ];
  *           $results = curl_multi_get_contents($urls);
- * 
  * @example  POST request:
  *           $data = [
  *               [
@@ -258,15 +268,13 @@ function curl_get_contents(
  *           ];
  *           $results = curl_multi_get_contents($data);
  *
- * @throws   \InvalidArgumentException                If any URL is invalid.
- * @throws   \RuntimeException                        If the cURL request fails.
  * @see      Tracker::getProxyIps() For proxy settings.
  */
 function curl_multi_get_contents(array $urls, bool $use_proxy = false, bool $use_headers = true, array $options = []): array
 {
     $used_proxies = [];
     $curl_handles = [];
-    $result = [];
+    $result       = [];
 
     $mh = curl_multi_init();
 
@@ -276,14 +284,14 @@ function curl_multi_get_contents(array $urls, bool $use_proxy = false, bool $use
 
         // If the URL data is just a string, treat it as a URL (GET request)
         if (is_string($url_data)) {
-            $url = $url_data;
+            $url       = $url_data;
             $post_data = [];  // No POST data for a GET request
         } elseif (is_array($url_data) && isset($url_data['url'])) {
             // Otherwise, it's a POST request (or other type) with a URL and possibly POST data
-            $url = $url_data['url'];
+            $url       = $url_data['url'];
             $post_data = $url_data['post'] ?? [];
         } else {
-            throw new \InvalidArgumentException("Invalid URL data provided.");
+            throw new \InvalidArgumentException('Invalid URL data provided.');
         }
 
         // Validate URL
@@ -308,14 +316,14 @@ function curl_multi_get_contents(array $urls, bool $use_proxy = false, bool $use
 /**
  * Configures a cURL handle with the necessary options.
  *
- * @param  \CurlHandle  $ch             The cURL handle.
- * @param  string       $url            The URL to fetch.
- * @param  bool         $use_headers    Whether to include headers in the request.
- * @param  bool         $use_proxy      Whether to use a proxy.
- * @param  array        &$used_proxies  Reference to store used proxies.
- * @param  array        $options        Additional cURL options.
- * @param  int          $id             Index of the current cURL request.
- * @param  array        $post_data      Additional POST data (if applicable).
+ * @param \CurlHandle $ch            The cURL handle.
+ * @param string      $url           The URL to fetch.
+ * @param bool        $use_headers   Whether to include headers in the request.
+ * @param bool        $use_proxy     Whether to use a proxy.
+ * @param array       &$used_proxies Reference to store used proxies.
+ * @param array       $options       Additional cURL options.
+ * @param int         $id            Index of the current cURL request.
+ * @param array       $post_data     Additional POST data (if applicable).
  */
 function configure_curl_handle(\CurlHandle $ch, string $url, bool $use_headers, bool $use_proxy, array &$used_proxies, array $options, int $id, array $post_data = [])
 {
@@ -362,16 +370,16 @@ function configure_curl_handle(\CurlHandle $ch, string $url, bool $use_headers, 
 /**
  * Executes the multi-cURL requests and processes the responses.
  *
- * @param  \CurlMultiHandle  $mh            The multi-cURL handle.
- * @param  array     &$result       Reference to store the results.
- * @param  array     $curl_handles  Array of cURL handles.
- * @param  array     $urls          Array of URLs.
- * @param  bool      $use_proxy     Whether to include proxy in the response.
- * @param  array     $used_proxies  List of used proxies.
+ * @param \CurlMultiHandle $mh           The multi-cURL handle.
+ * @param array            &$result      Reference to store the results.
+ * @param array            $curl_handles Array of cURL handles.
+ * @param array            $urls         Array of URLs.
+ * @param bool             $use_proxy    Whether to include proxy in the response.
+ * @param array            $used_proxies List of used proxies.
  */
 function execute_multi_curl(\CurlMultiHandle $mh, array &$result, array $curl_handles, array $urls, bool $use_proxy, array $used_proxies)
 {
-    $running = null;
+    $running    = null;
     $info_array = [];
 
     do {

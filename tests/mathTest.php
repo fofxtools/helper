@@ -30,7 +30,6 @@ class MathTest extends TestCase
      */
     public function test_random_probability_never_returns_one()
     {
-
         // Run the function multiple times to increase confidence
         for ($i = 0; $i < 1000; $i++) {
             $result = random_probability();
@@ -43,11 +42,11 @@ class MathTest extends TestCase
      */
     public function test_random_probability_distribution()
     {
-        $buckets = array_fill(0, 10, 0);
+        $buckets    = array_fill(0, 10, 0);
         $iterations = 100000;
 
         for ($i = 0; $i < $iterations; $i++) {
-            $value = random_probability();
+            $value  = random_probability();
             $bucket = min(floor($value * 10), 9);
             $buckets[$bucket]++;
         }
@@ -76,8 +75,8 @@ class MathTest extends TestCase
      */
     public function test_rand_float_within_range()
     {
-        $min = -5.5;
-        $max = 10.5;
+        $min    = -5.5;
+        $max    = 10.5;
         $result = rand_float($min, $max);
         $this->assertGreaterThanOrEqual($min, $result);
         $this->assertLessThanOrEqual($max, $result);
@@ -88,7 +87,7 @@ class MathTest extends TestCase
      */
     public function test_rand_float_min_equals_max()
     {
-        $value = 3.14;
+        $value  = 3.14;
         $result = rand_float($value, $value);
         $this->assertEquals($value, $result);
     }
@@ -98,8 +97,8 @@ class MathTest extends TestCase
      */
     public function test_rand_float_small_range()
     {
-        $min = 1.0;
-        $max = 1.0000000001;
+        $min    = 1.0;
+        $max    = 1.0000000001;
         $result = rand_float($min, $max);
         $this->assertGreaterThanOrEqual($min, $result);
         $this->assertLessThanOrEqual($max, $result);
@@ -110,8 +109,8 @@ class MathTest extends TestCase
      */
     public function test_rand_float_large_range()
     {
-        $min = - (PHP_FLOAT_MAX / 2.01);
-        $max = PHP_FLOAT_MAX / 2.01;
+        $min    = -(PHP_FLOAT_MAX / 2.01);
+        $max    = PHP_FLOAT_MAX / 2.01;
         $result = rand_float($min, $max);
         $this->assertGreaterThanOrEqual($min, $result);
         $this->assertLessThanOrEqual($max, $result);
@@ -132,21 +131,20 @@ class MathTest extends TestCase
      */
     public function test_rand_float_distribution()
     {
-        $min = 0;
-        $max = 10;
+        $min        = 0;
+        $max        = 10;
         $iterations = 100000;
-        $buckets = array_fill(0, 10, 0);
+        $buckets    = array_fill(0, 10, 0);
 
         for ($i = 0; $i < $iterations; $i++) {
-            $value = rand_float($min, $max);
+            $value  = rand_float($min, $max);
             $bucket = min(floor($value), 9);
             $buckets[$bucket]++;
         }
 
-
         // Check that each bucket has roughly the expected number of values
         $expectedPerBucket = $iterations / 10;
-        $tolerance = $expectedPerBucket * 0.1; // 10% tolerance
+        $tolerance         = $expectedPerBucket * 0.1; // 10% tolerance
 
         foreach ($buckets as $count) {
             $this->assertEqualsWithDelta($expectedPerBucket, $count, $tolerance);
@@ -177,7 +175,7 @@ class MathTest extends TestCase
      */
     public function test_hashed_probability_consistency()
     {
-        $input = 'test_string';
+        $input   = 'test_string';
         $result1 = hashed_probability($input);
         $result2 = hashed_probability($input);
         $this->assertEquals($result1, $result2);
@@ -210,7 +208,7 @@ class MathTest extends TestCase
     public function test_hashed_probability_long_string()
     {
         $longString = str_repeat('a', 1000000);
-        $result = hashed_probability($longString);
+        $result     = hashed_probability($longString);
         $this->assertIsFloat($result);
         $this->assertGreaterThanOrEqual(0, $result);
         $this->assertLessThan(1, $result);
@@ -222,7 +220,7 @@ class MathTest extends TestCase
     public function test_hashed_probability_special_characters()
     {
         $specialChars = '!@#$%^&*()_+{}[]|:;<>?,./';
-        $result = hashed_probability($specialChars);
+        $result       = hashed_probability($specialChars);
         $this->assertIsFloat($result);
         $this->assertGreaterThanOrEqual(0, $result);
         $this->assertLessThan(1, $result);
@@ -234,7 +232,7 @@ class MathTest extends TestCase
     public function test_hashed_probability_unicode()
     {
         $unicodeString = 'こんにちは世界';
-        $result = hashed_probability($unicodeString);
+        $result        = hashed_probability($unicodeString);
         $this->assertIsFloat($result);
         $this->assertGreaterThanOrEqual(0, $result);
         $this->assertLessThan(1, $result);
@@ -245,11 +243,10 @@ class MathTest extends TestCase
      */
     public function test_hashed_probability_never_one()
     {
-
         // Test a large number of random strings
         for ($i = 0; $i < 1000; $i++) {
             $randomString = bin2hex(random_bytes(16));
-            $result = hashed_probability($randomString);
+            $result       = hashed_probability($randomString);
             $this->assertNotEquals(1, $result);
         }
     }
@@ -259,20 +256,19 @@ class MathTest extends TestCase
      */
     public function test_hashed_probability_distribution()
     {
-        $buckets = array_fill(0, 10, 0);
+        $buckets    = array_fill(0, 10, 0);
         $iterations = 100000;
 
         for ($i = 0; $i < $iterations; $i++) {
             $randomString = bin2hex(random_bytes(16));
-            $value = hashed_probability($randomString);
-            $bucket = min(floor($value * 10), 9);
+            $value        = hashed_probability($randomString);
+            $bucket       = min(floor($value * 10), 9);
             $buckets[$bucket]++;
         }
 
-
         // Check that each bucket has roughly the expected number of values
         $expectedPerBucket = $iterations / 10;
-        $tolerance = $expectedPerBucket * 0.1; // 10% tolerance
+        $tolerance         = $expectedPerBucket * 0.1; // 10% tolerance
 
         foreach ($buckets as $count) {
             $this->assertEqualsWithDelta($expectedPerBucket, $count, $tolerance);
@@ -285,7 +281,7 @@ class MathTest extends TestCase
     public function test_hashed_array_element_returns_consistent_result()
     {
         $string = 'consistent_input';
-        $array = ['Apple', 'Banana', 'Cherry', 'Date'];
+        $array  = ['Apple', 'Banana', 'Cherry', 'Date'];
 
         $result1 = hashed_array_element($string, $array);
         $result2 = hashed_array_element($string, $array);
@@ -300,7 +296,7 @@ class MathTest extends TestCase
     {
         $string1 = 'input_one';
         $string2 = 'input_two';
-        $array = ['Apple', 'Banana', 'Cherry', 'Date'];
+        $array   = ['Apple', 'Banana', 'Cherry', 'Date'];
 
         $result1 = hashed_array_element($string1, $array);
         $result2 = hashed_array_element($string2, $array);
@@ -314,7 +310,7 @@ class MathTest extends TestCase
     public function test_hashed_array_element_single_element_array()
     {
         $string = 'single_item';
-        $array = ['OnlyItem'];
+        $array  = ['OnlyItem'];
 
         $result = hashed_array_element($string, $array);
 
@@ -329,7 +325,7 @@ class MathTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $string = 'empty_array';
-        $array = [];
+        $array  = [];
 
         hashed_array_element($string, $array);
     }
@@ -340,7 +336,7 @@ class MathTest extends TestCase
     public function test_hashed_array_element_with_duplicate_elements()
     {
         $string = 'duplicate_elements';
-        $array = ['Apple', 'Banana', 'Banana', 'Banana', 'Cherry'];
+        $array  = ['Apple', 'Banana', 'Banana', 'Banana', 'Cherry'];
 
         $result = hashed_array_element($string, $array);
 
@@ -353,7 +349,7 @@ class MathTest extends TestCase
     public function test_hashed_array_element_with_special_characters_in_string()
     {
         $string = '!@#$%^&*()_+[]{};:,.<>?';
-        $array = ['Apple', 'Banana', 'Cherry', 'Date'];
+        $array  = ['Apple', 'Banana', 'Cherry', 'Date'];
 
         $result = hashed_array_element($string, $array);
 
@@ -366,7 +362,7 @@ class MathTest extends TestCase
     public function test_hashed_array_element_with_mixed_data_types()
     {
         $string = 'mixed_data_types';
-        $array = ['Apple', 123, 45.67, true, null];
+        $array  = ['Apple', 123, 45.67, true, null];
 
         $result = hashed_array_element($string, $array);
 
@@ -378,14 +374,14 @@ class MathTest extends TestCase
      */
     public function test_hashed_array_element_distribution()
     {
-        $array = ["Apples", "Bananas", "Oranges", "Pears", "Pineapples"];
-        $counts = [];
+        $array      = ['Apples', 'Bananas', 'Oranges', 'Pears', 'Pineapples'];
+        $counts     = [];
         $iterations = 100000;
 
         // Run the function multiple times and count the occurrences of each element
         for ($i = 0; $i < $iterations; $i++) {
-            $input = "Test string " . $i;
-            $value = hashed_array_element($input, $array);
+            $input          = 'Test string ' . $i;
+            $value          = hashed_array_element($input, $array);
             $counts[$value] = ($counts[$value] ?? 0) + 1;
         }
 
@@ -407,7 +403,7 @@ class MathTest extends TestCase
         }
 
         // Additional check: ensure all elements in $counts are from the original array
-        $this->assertEmpty(array_diff(array_keys($counts), $array), "Unexpected elements were selected");
+        $this->assertEmpty(array_diff(array_keys($counts), $array), 'Unexpected elements were selected');
     }
 
     /**
@@ -464,7 +460,7 @@ class MathTest extends TestCase
 
     /**
      * Test sample_duplicates with small numbers.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_small_numbers(): void
@@ -478,7 +474,7 @@ class MathTest extends TestCase
 
     /**
      * Test sample_duplicates with medium numbers.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_medium_numbers(): void
@@ -491,7 +487,7 @@ class MathTest extends TestCase
 
     /**
      * Test sample_duplicates with large numbers.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_large_numbers(): void
@@ -504,7 +500,7 @@ class MathTest extends TestCase
 
     /**
      * Test sample_duplicates when sample size is greater than total objects.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_sample_size_greater_than_total(): void
@@ -517,7 +513,7 @@ class MathTest extends TestCase
 
     /**
      * Test sample_duplicates with very large number of total objects.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_very_large_total_objects(): void
@@ -530,7 +526,7 @@ class MathTest extends TestCase
 
     /**
      * Test sample_duplicates when sample size equals total objects.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_sample_size_equals_total(): void
@@ -543,7 +539,7 @@ class MathTest extends TestCase
 
     /**
      * Test that sample_duplicates throws an exception for invalid input.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_invalid_input(): void
@@ -554,7 +550,7 @@ class MathTest extends TestCase
 
     /**
      * Test that sample_duplicates returns a float.
-     * 
+     *
      * @return void
      */
     public function test_sample_duplicates_return_type(): void
@@ -570,8 +566,8 @@ class MathTest extends TestCase
      */
     public function test_estimate_total_from_duplicates_small(): void
     {
-        $actual_total = 100;
-        $sample_size = 20;
+        $actual_total        = 100;
+        $sample_size         = 20;
         $expected_duplicates = expected_duplicates($actual_total, $sample_size);
 
         $estimated_total = estimate_total_from_duplicates($sample_size, $expected_duplicates);
@@ -586,8 +582,8 @@ class MathTest extends TestCase
      */
     public function test_estimate_total_from_duplicates_medium(): void
     {
-        $actual_total = 1000;
-        $sample_size = 100;
+        $actual_total        = 1000;
+        $sample_size         = 100;
         $expected_duplicates = expected_duplicates($actual_total, $sample_size);
 
         $estimated_total = estimate_total_from_duplicates($sample_size, $expected_duplicates);
@@ -602,8 +598,8 @@ class MathTest extends TestCase
      */
     public function test_estimate_total_from_duplicates_large(): void
     {
-        $actual_total = 5000;
-        $sample_size = 200;
+        $actual_total        = 5000;
+        $sample_size         = 200;
         $expected_duplicates = expected_duplicates($actual_total, $sample_size);
 
         $estimated_total = estimate_total_from_duplicates($sample_size, $expected_duplicates);
@@ -618,8 +614,8 @@ class MathTest extends TestCase
      */
     public function test_estimate_total_from_duplicates_small_sample(): void
     {
-        $actual_total = 10000;
-        $sample_size = 10;
+        $actual_total        = 10000;
+        $sample_size         = 10;
         $expected_duplicates = expected_duplicates($actual_total, $sample_size);
 
         $estimated_total = estimate_total_from_duplicates($sample_size, $expected_duplicates);
@@ -662,7 +658,7 @@ class MathTest extends TestCase
     public function test_estimate_total_from_duplicates_fractional_duplicates(): void
     {
         $sample_size = 50;
-        $duplicates = 2.3734; // This is close to the expected duplicates for actual_total = 500
+        $duplicates  = 2.3734; // This is close to the expected duplicates for actual_total = 500
 
         $estimated_total = estimate_total_from_duplicates($sample_size, $duplicates);
 
@@ -676,7 +672,7 @@ class MathTest extends TestCase
      */
     public function test_minimum_difference_in_positive_numbers_array()
     {
-        $array = [0.05, 0.085, 0.15, 0.01, 1.2, 0.7, 0.64];
+        $array  = [0.05, 0.085, 0.15, 0.01, 1.2, 0.7, 0.64];
         $result = array_minimum_difference($array, true);
         $this->assertEqualsWithDelta(0.035, $result, 0.00001);
     }
@@ -686,7 +682,7 @@ class MathTest extends TestCase
      */
     public function test_minimum_difference_in_mixed_numbers_array()
     {
-        $array = [0.05, -0.085, 0.15, -0.01, 1.2, 0.7, -0.64];
+        $array  = [0.05, -0.085, 0.15, -0.01, 1.2, 0.7, -0.64];
         $result = array_minimum_difference($array);
         $this->assertEqualsWithDelta(0.06, $result, 0.00001);
     }
@@ -718,7 +714,7 @@ class MathTest extends TestCase
      */
     public function test_minimum_difference_in_array_with_identical_elements()
     {
-        $array = [1, 1, 1, 1];
+        $array  = [1, 1, 1, 1];
         $result = array_minimum_difference($array);
         $this->assertEquals(0, $result);
     }
@@ -751,7 +747,7 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_basic_functionality()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 1, 1];
 
         // Run the function multiple times
@@ -772,12 +768,12 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_uneven_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 2, 7];
 
         // Run the function multiple times
         $results = array_fill_keys($array, 0);
-        $trials = 10000;
+        $trials  = 10000;
         for ($i = 0; $i < $trials; $i++) {
             $result = array_random_element_weighted($array, $weights);
             $results[$result]++;
@@ -796,7 +792,7 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_single_element()
     {
         // Set up test data
-        $array = ['a'];
+        $array   = ['a'];
         $weights = [1];
 
         // Assert that the function always returns the single element
@@ -809,7 +805,7 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_empty_arrays()
     {
         // Set up test data
-        $array = [];
+        $array   = [];
         $weights = [];
 
         // Assert that the function throws an exception for empty arrays
@@ -823,7 +819,7 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_mismatched_lengths()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 2];
 
         // Assert that the function throws an exception for mismatched lengths
@@ -837,7 +833,7 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_negative_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, -2, 3];
 
         // Assert that the function throws an exception for negative weights
@@ -851,7 +847,7 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_non_numeric_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 'two', 3];
 
         // Assert that the function throws an exception for non-numeric weights
@@ -865,7 +861,7 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_large_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [PHP_INT_MAX, PHP_INT_MAX, PHP_INT_MAX];
 
         // Run the function multiple times
@@ -886,12 +882,12 @@ class MathTest extends TestCase
     public function test_array_random_element_weighted_float_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [0.1, 0.2, 0.7];
 
         // Run the function multiple times
         $results = array_fill_keys($array, 0);
-        $trials = 10000;
+        $trials  = 10000;
         for ($i = 0; $i < $trials; $i++) {
             $result = array_random_element_weighted($array, $weights);
             $results[$result]++;
@@ -910,7 +906,7 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_basic_functionality()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 1, 1];
 
         // Run the function
@@ -929,12 +925,12 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_uneven_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 2, 7];
 
         // Run the function multiple times
         $positions = array_fill_keys($array, array_fill(0, 3, 0));
-        $trials = 1000;
+        $trials    = 1000;
         for ($i = 0; $i < $trials; $i++) {
             $result = array_weighted_sort($array, $weights);
             foreach ($result as $index => $value) {
@@ -953,7 +949,7 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_single_element()
     {
         // Set up test data
-        $array = ['a'];
+        $array   = ['a'];
         $weights = [1];
 
         // Assert that the function returns the single element array unchanged
@@ -966,7 +962,7 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_empty_arrays()
     {
         // Set up test data
-        $array = [];
+        $array   = [];
         $weights = [];
 
         // Assert that the function returns an empty array
@@ -979,7 +975,7 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_mismatched_lengths()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 2];
 
         // Assert that the function throws an exception for mismatched lengths
@@ -993,7 +989,7 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_negative_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, -2, 3];
 
         // Assert that the function throws an exception for negative weights
@@ -1007,7 +1003,7 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_non_numeric_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [1, 'two', 3];
 
         // Assert that the function throws an exception for non-numeric weights
@@ -1021,7 +1017,7 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_large_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [PHP_INT_MAX, PHP_INT_MAX, PHP_INT_MAX];
 
         // Run the function
@@ -1040,12 +1036,12 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_float_weights()
     {
         // Set up test data
-        $array = ['a', 'b', 'c'];
+        $array   = ['a', 'b', 'c'];
         $weights = [0.1, 0.2, 0.7];
 
         // Run the function multiple times
         $positions = array_fill_keys($array, array_fill(0, 3, 0));
-        $trials = 1000;
+        $trials    = 1000;
         for ($i = 0; $i < $trials; $i++) {
             $result = array_weighted_sort($array, $weights);
             foreach ($result as $index => $value) {
@@ -1064,12 +1060,12 @@ class MathTest extends TestCase
     public function test_array_weighted_sort_equal_weights_stability()
     {
         // Set up test data
-        $array = ['a', 'b', 'c', 'd'];
+        $array   = ['a', 'b', 'c', 'd'];
         $weights = [1, 1, 1, 1];
 
         // Run the function multiple times
         $order_preserved = 0;
-        $trials = 1000;
+        $trials          = 1000;
         for ($i = 0; $i < $trials; $i++) {
             $result = array_weighted_sort($array, $weights);
             if (
