@@ -23,7 +23,7 @@ namespace FOfX\Helper;
  *      Tracker::scriptTimer("Main", "end");
  *      Tracker::trackerEnd();
  *
- * Note: By default, it uses date_default_timezone_set() to set the time zone based on config.php.
+ * Note: By default, it uses date_default_timezone_set() to set the time zone based on helper.config.php.
  *       This can be modified by passing $setDefaultTimezone = false to the constructor.
  *
  * Note: get_network_stats() contains bandwidth information for the whole server, not just the executing script.
@@ -54,17 +54,17 @@ class Tracker
      * It is private to prevent direct instantiation, since it is a singleton.
      * Use Tracker::getInstance() to get the single global instance.
      *
-     * @param bool    $calcBandwidth
-     * @param mixed   $pid
-     * @param bool    $trackMemory
-     * @param ?string $configFile
-     * @param bool    $setDefaultTimezone
+     * @param bool    $calcBandwidth      Whether to calculate bandwidth or not.
+     * @param mixed   $pid                The process ID.
+     * @param bool    $trackMemory        Whether to track memory or not.
+     * @param ?string $configFile         The path to the configuration file.
+     * @param bool    $setDefaultTimezone Whether to set the default timezone or not.
      */
     private function __construct(
         bool $calcBandwidth = true,
         mixed $pid = false,
         bool $trackMemory = true,
-        ?string $configFile = 'config/config.php',
+        ?string $configFile = 'config/helper.config.php',
         bool $setDefaultTimezone = true
     ) {
         $this->calcBandwidth      = $calcBandwidth;
@@ -91,14 +91,25 @@ class Tracker
     }
 
     /**
-     * Get the single instance of the Tracker class
+     * Get the Singleton instance of the Tracker class
+     *
+     * @param bool    $calcBandwidth      Whether to calculate bandwidth or not.
+     * @param mixed   $pid                The process ID.
+     * @param bool    $trackMemory        Whether to track memory or not.
+     * @param ?string $configFile         The path to the configuration file.
+     * @param bool    $setDefaultTimezone Whether to set the default timezone or not.
      *
      * @return self
      */
-    public static function getInstance(): self
-    {
+    public static function getInstance(
+        bool $calcBandwidth = true,
+        mixed $pid = false,
+        bool $trackMemory = true,
+        ?string $configFile = 'config/helper.config.php',
+        bool $setDefaultTimezone = true
+    ): self {
         if (self::$instance === null) {
-            self::$instance = new self();
+            self::$instance = new self($calcBandwidth, $pid, $trackMemory, $configFile, $setDefaultTimezone);
         }
 
         return self::$instance;

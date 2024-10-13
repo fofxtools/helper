@@ -16,18 +16,23 @@ namespace FOfX\Helper;
 
 // Only call initialize_tracker if not in a testing environment
 if (!is_phpunit_environment()) {
-    initialize_tracker();
+    // If HELPER_CONFIG_FILE is not defined yet, then set it as the default config file
+    // This constant can be used to set the config file for initialize_tracker() before autoloading
+    if (!defined('HELPER_CONFIG_FILE')) {
+        define('HELPER_CONFIG_FILE', 'config/helper.config.php');
+    }
+    initialize_tracker(HELPER_CONFIG_FILE);
 }
 
 /**
- * Initialize the Tracker Singleton if autoStartTracker is set in config.php.
+ * Initialize the Tracker Singleton if autoStartTracker is set in helper.config.php.
  *
  * This function attempts to load the configuration file, checks for the
  * 'autoStartTracker' setting, and initializes the Tracker singleton if
  * the setting is true.
  *
  * @param string|null $configFile The path to the configuration file.
- *                                Defaults to 'config/config.php'.
+ *                                Defaults to 'config/helper.config.php'.
  *
  * @throws \RuntimeException If the configuration file cannot be loaded.
  *                           This exception is caught and ignored within the function.
@@ -38,7 +43,7 @@ if (!is_phpunit_environment()) {
  * @see     resolve_config_file_path()
  * @see     load_config()
  */
-function initialize_tracker(?string $configFile = 'config' . DIRECTORY_SEPARATOR . 'config.php'): void
+function initialize_tracker(?string $configFile = 'config' . DIRECTORY_SEPARATOR . 'helper.config.php'): void
 {
     $config_file_resolved = resolve_config_file_path($configFile);
 
@@ -52,10 +57,10 @@ function initialize_tracker(?string $configFile = 'config' . DIRECTORY_SEPARATOR
     }
 
     // Convert the string to a boolean
-    $autoStart = isset($config_data['helper']['autoStartTracker'])
-        ? filter_var($config_data['helper']['autoStartTracker'], FILTER_VALIDATE_BOOLEAN)
+    $autoStart = isset($config_data['tracker']['autoStartTracker'])
+        ? filter_var($config_data['tracker']['autoStartTracker'], FILTER_VALIDATE_BOOLEAN)
         : false;
     if ($autoStart) {
-        Tracker::getInstance();
+        Tracker::getInstance(configFile: $configFile);
     }
 }

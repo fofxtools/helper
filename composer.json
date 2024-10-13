@@ -25,7 +25,7 @@
             "src/"
         ],
         "files": [
-            "config/constants.php",
+            "config/helper.constants.php",
             "src/array.php",
             "src/buffer.php",
             "src/datetime.php",
@@ -55,6 +55,7 @@
         "test": "@phpunit",
         "tests": "@phpunit",
         "cs-fix": "vendor/bin/php-cs-fixer fix",
-        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff"
+        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "cs-list": "vendor/bin/php-cs-fixer list-files"
     }
 }

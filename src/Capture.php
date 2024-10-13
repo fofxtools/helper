@@ -26,7 +26,7 @@ namespace FOfX\Helper;
  * Class to help capture the outputs of commands.
  *
  * @example
- * $ini = include __DIR__ . '/../config/config.php';
+ * $ini = include __DIR__ . '/../config/helper.config.php';
  * $c = new Helper\Capture();
  * $c->captureEval('FOfX\Helper\get_diagnostics();');
  * $c->captureEval('echo FOfX\Helper\get_remote_addr();');

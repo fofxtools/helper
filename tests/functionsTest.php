@@ -67,7 +67,7 @@ class FunctionsTest extends TestCase
     public function test_resolve_config_file_path_default_config_file()
     {
         mkdir($this->tempDir . DIRECTORY_SEPARATOR . 'config');
-        $configFile = $this->tempDir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
+        $configFile = $this->tempDir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'helper.config.php';
         file_put_contents($configFile, '<?php return [];');
 
         $result = resolve_config_file_path();
@@ -80,10 +80,10 @@ class FunctionsTest extends TestCase
      */
     public function test_resolve_config_file_path_in_current_directory()
     {
-        $configFile = $this->tempDir . DIRECTORY_SEPARATOR . 'custom_config.php';
+        $configFile = $this->tempDir . DIRECTORY_SEPARATOR . 'custom_helper.config.php';
         file_put_contents($configFile, '<?php return [];');
 
-        $result = resolve_config_file_path('custom_config.php');
+        $result = resolve_config_file_path('custom_helper.config.php');
         $this->assertEquals($configFile, $result);
     }
 
@@ -93,13 +93,13 @@ class FunctionsTest extends TestCase
      */
     public function test_resolve_config_file_path_in_parent_directory()
     {
-        $configFile = $this->tempDir . DIRECTORY_SEPARATOR . 'parent_config.php';
+        $configFile = $this->tempDir . DIRECTORY_SEPARATOR . 'parent_helper.config.php';
         file_put_contents($configFile, '<?php return [];');
 
         mkdir($this->tempDir . DIRECTORY_SEPARATOR . 'subdir');
         chdir($this->tempDir . DIRECTORY_SEPARATOR . 'subdir');
 
-        $result = resolve_config_file_path('parent_config.php');
+        $result = resolve_config_file_path('parent_helper.config.php');
         $this->assertEquals($configFile, $result);
     }
 
@@ -109,7 +109,7 @@ class FunctionsTest extends TestCase
      */
     public function test_resolve_config_file_path_non_existent_file()
     {
-        $result = resolve_config_file_path('non_existent_config.php');
+        $result = resolve_config_file_path('non_existent_helper.config.php');
         $this->assertNull($result);
     }
 
@@ -133,7 +133,7 @@ class FunctionsTest extends TestCase
         $vendorDir = $this->tempDir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'package' . DIRECTORY_SEPARATOR . 'name' . DIRECTORY_SEPARATOR . 'src';
         mkdir($vendorDir, 0777, true);
 
-        $configFile = dirname($vendorDir, 4) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
+        $configFile = dirname($vendorDir, 4) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'helper.config.php';
         mkdir(dirname($configFile), 0777, true);
         file_put_contents($configFile, '<?php return [];');
 
@@ -147,7 +147,7 @@ class FunctionsTest extends TestCase
      */
     public function test_load_config_valid_file()
     {
-        $config_file = $this->tempDir . DIRECTORY_SEPARATOR . 'valid_config.php';
+        $config_file = $this->tempDir . DIRECTORY_SEPARATOR . 'valid_helper.config.php';
         file_put_contents($config_file, '<?php return ["key" => "value"];');
 
         $result = load_config($config_file);
@@ -165,7 +165,7 @@ class FunctionsTest extends TestCase
     {
         $config_dir = $this->tempDir . DIRECTORY_SEPARATOR . 'config';
         mkdir($config_dir);
-        $config_file = $config_dir . DIRECTORY_SEPARATOR . 'config.php';
+        $config_file = $config_dir . DIRECTORY_SEPARATOR . 'helper.config.php';
         file_put_contents($config_file, '<?php return ["default" => "value"];');
 
         $original_dir = getcwd();
@@ -198,7 +198,7 @@ class FunctionsTest extends TestCase
      */
     public function test_load_config_invalid_format()
     {
-        $config_file = $this->tempDir . DIRECTORY_SEPARATOR . 'invalid_config.php';
+        $config_file = $this->tempDir . DIRECTORY_SEPARATOR . 'invalid_helper.config.php';
         file_put_contents($config_file, '<?php return "not an array";');
 
         $this->expectException(\RuntimeException::class);

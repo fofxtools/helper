@@ -38,7 +38,7 @@ class InitTest extends TestCase
 
     private function createMockConfig(bool $autoStartTracker): void
     {
-        $configContent = "<?php\nreturn ['helper' => ['autoStartTracker' => " . ($autoStartTracker ? 'true' : 'false') . ']];';
+        $configContent = "<?php\nreturn ['tracker' => ['autoStartTracker' => " . ($autoStartTracker ? 'true' : 'false') . ']];';
         file_put_contents($this->tempConfigFile, $configContent);
     }
 

@@ -6,6 +6,16 @@ The main class is `Tracker`, which allows you to create code sections to track s
 
 The Tracker class uses a Singleton pattern to ensure a single global instance.
 
+## Installation
+
+To include this package in your project, run the following command in your project’s root directory:
+
+```bash
+composer require fofx/helper
+```
+
+The default configuration file path `config/helper.config.php`.
+
 ## Usage
 
 Below is the code from the `public/index.php` file. It creates code sections, and prints the Helper statistics with `timer_end()`.
@@ -34,7 +44,7 @@ Tracker::trackerEnd();
 
 ## AutoStart
 
-Alternatively, in config/config.php you can set 'autoStartTracker' to 'true'. This will auto-start the Tracker global Singleton.
+Alternatively, in config/helper.config.php you can set 'autoStartTracker' to 'true'. This will auto-start the Tracker global Singleton.
 
 Since this can cause problems in testing environments, this will only work if is_phpunit_environment() returns false.
 

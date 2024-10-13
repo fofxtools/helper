@@ -26,7 +26,7 @@ namespace FOfX\Helper;
  *
  * @return string|null The resolved absolute path to the configuration file, or null if not found.
  */
-function resolve_config_file_path(?string $config_file = 'config' . DIRECTORY_SEPARATOR . 'config.php'): ?string
+function resolve_config_file_path(?string $config_file = 'config' . DIRECTORY_SEPARATOR . 'helper.config.php'): ?string
 {
     if ($config_file === null) {
         return null;
@@ -65,7 +65,7 @@ function resolve_config_file_path(?string $config_file = 'config' . DIRECTORY_SE
  *
  * @return array The configuration data loaded from the file.
  */
-function load_config(string $config_file = 'config' . DIRECTORY_SEPARATOR . 'config.php'): array
+function load_config(string $config_file = 'config' . DIRECTORY_SEPARATOR . 'helper.config.php'): array
 {
     if (!file_exists($config_file)) {
         throw new \RuntimeException("Configuration file not found: $config_file");
