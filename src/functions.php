@@ -32,7 +32,13 @@ function resolve_config_file_path(?string $config_file = 'config' . DIRECTORY_SE
         return null;
     }
 
+    // If the config file path is absolute, return it
+    if (is_absolute_path($config_file)) {
+        return $config_file;
+    }
+
     // Check if the package is installed via Composer
+    // Use dirname() to check 3 levels up and 4 levels up the directory tree
     $vendorPath = dirname(__DIR__, 3);
     $configPath = dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . $config_file;
     if (basename($vendorPath) === 'vendor' && is_readable($configPath)) {
@@ -43,6 +49,7 @@ function resolve_config_file_path(?string $config_file = 'config' . DIRECTORY_SE
     // Check in current and parent working directories
     $possiblePaths = [
         getcwd() . DIRECTORY_SEPARATOR . $config_file,
+        // dirname(getcwd()) returns the parent directory of the current working directory
         dirname(getcwd()) . DIRECTORY_SEPARATOR . $config_file,
     ];
 

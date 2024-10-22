@@ -16,12 +16,14 @@ namespace FOfX\Helper;
 
 // Only call initialize_tracker if not in a testing environment
 if (!is_phpunit_environment()) {
-    // If HELPER_CONFIG_FILE is not defined yet, then set it as the default config file
+    // If HELPER_CONFIG_FILE is defined, then set it as the default config file
     // This constant can be used to set the config file for initialize_tracker() before autoloading
-    if (!defined('HELPER_CONFIG_FILE')) {
-        define('HELPER_CONFIG_FILE', 'config/helper.config.php');
+    if (defined('HELPER_CONFIG_FILE')) {
+        initialize_tracker(constant('HELPER_CONFIG_FILE'));
+    } else {
+        // Note that if the default config file does not exist, this will do nothing
+        initialize_tracker();
     }
-    initialize_tracker(HELPER_CONFIG_FILE);
 }
 
 /**
@@ -51,16 +53,16 @@ function initialize_tracker(?string $configFile = 'config' . DIRECTORY_SEPARATOR
     if ($config_file_resolved !== null) {
         try {
             $config_data = load_config($config_file_resolved);
+
+            // Convert the string to a boolean
+            $autoStart = isset($config_data['tracker']['autoStartTracker'])
+                ? filter_var($config_data['tracker']['autoStartTracker'], FILTER_VALIDATE_BOOLEAN)
+                : false;
+            if ($autoStart) {
+                Tracker::getInstance(configFile: $configFile);
+            }
         } catch (\RuntimeException $e) {
             // Configuration file not found or invalid, using default settings
         }
-    }
-
-    // Convert the string to a boolean
-    $autoStart = isset($config_data['tracker']['autoStartTracker'])
-        ? filter_var($config_data['tracker']['autoStartTracker'], FILTER_VALIDATE_BOOLEAN)
-        : false;
-    if ($autoStart) {
-        Tracker::getInstance(configFile: $configFile);
     }
 }

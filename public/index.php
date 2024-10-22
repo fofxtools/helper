@@ -1,7 +1,7 @@
 <?php
 
 // Optionally manuolly define the config file to be used by initialize_tracker()
-//define('HELPER_CONFIG_FILE', 'config/helper.config.php.example');
+//define('HELPER_CONFIG_FILE', __DIR__ . '/../config/helper.config.php.example');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -9,7 +9,7 @@ use FOfX\Helper;
 use FOfX\Helper\Tracker;
 
 if (defined('HELPER_CONFIG_FILE')) {
-    $tracker = Tracker::getInstance(configFile: HELPER_CONFIG_FILE);
+    $tracker = Tracker::getInstance(configFile: constant('HELPER_CONFIG_FILE'));
 } else {
     $tracker = Tracker::getInstance();
 }
