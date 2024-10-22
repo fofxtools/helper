@@ -1731,4 +1731,59 @@ class ServerTest extends TestCase
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
     }
+
+    public static function provider_is_absolute_path_for_absolute_paths(): array
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            // Windows-specific absolute paths
+            return [
+                ['C:\\Windows\\System32'],
+                ['C:/Program Files'],
+                ['\\\\server\\share\\folder'],
+                ['C:\\'],
+                ['C:/'],
+                ['\\\\server'],
+            ];
+        }
+
+        // Unix-like absolute paths
+        return [
+            ['/usr/local/bin'],
+            ['/var/www/html'],
+            ['/'],
+        ];
+    }
+
+    public static function provider_is_absolute_path_for_relative_paths(): array
+    {
+        return [
+            // Common relative paths
+            ['documents/report.txt'],
+            ['..\\data\\file.txt'],
+            ['./file'],
+            ['../file'],
+            ['folder\\subfolder\\file'],
+
+            // Edge cases for relative paths
+            [''],   // Empty path
+            ['.'],  // Current directory
+            ['..'], // Parent directory
+        ];
+    }
+
+    /**
+     * @dataProvider provider_is_absolute_path_for_absolute_paths
+     */
+    public function test_is_absolute_path_for_absolute_paths(string $path)
+    {
+        $this->assertTrue(is_absolute_path($path));
+    }
+
+    /**
+     * @dataProvider provider_is_absolute_path_for_relative_paths
+     */
+    public function test_is_absolute_path_for_relative_paths(string $path)
+    {
+        $this->assertFalse(is_absolute_path($path));
+    }
 }

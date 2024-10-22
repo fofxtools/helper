@@ -34,44 +34,42 @@ function generate_password(int $length = 8, bool $include_numbers = true, bool $
         throw new \InvalidArgumentException('Password length must be at least 4 characters.');
     }
 
-    $lowercase = 'abcdefghijklmnopqrstuvwxyz';
-    $numbers   = '0123456789';
-    $uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    // Define character sets
+    $char_sets = [
+        'lowercase' => 'abcdefghijklmnopqrstuvwxyz',
+        'numbers'   => '0123456789',
+        'uppercase' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        'special'   => '!@#$%^&*',
+    ];
 
-    // Special characters to include in the password, excluding '?' for compatibility reasons
-    $special = '!@#$%^&*';
+    // Define which character sets to include
+    $include_sets = [
+        'lowercase' => true,
+        'numbers'   => $include_numbers,
+        'uppercase' => $include_uppercase,
+        'special'   => $include_special,
+    ];
 
-    $available_characters = $lowercase;
-    $password_components  = [];
+    $available_characters = '';
+    $password             = '';
 
-    // Add numbers if required, and ensure at least one number is included in the password
-    if ($include_numbers) {
-        $available_characters .= $numbers;
-        $password_components[] = $numbers[random_int(0, strlen($numbers) - 1)];
+    // Build the available characters string and the password string
+    foreach ($include_sets as $set => $include) {
+        if ($include) {
+            $available_characters .= $char_sets[$set];
+            $set_length = strlen($char_sets[$set]);
+            $password .= $char_sets[$set][random_int(0, $set_length - 1)];
+        }
     }
 
-    // Add uppercase letters if required, and ensure at least one uppercase letter is included
-    if ($include_uppercase) {
-        $available_characters .= $uppercase;
-        $password_components[] = $uppercase[random_int(0, strlen($uppercase) - 1)];
+    $available_length = strlen($available_characters);
+    // Add characters until the password is the desired length
+    while (strlen($password) < $length) {
+        $password .= $available_characters[random_int(0, $available_length - 1)];
     }
 
-    // Add special characters if required, and ensure at least one special character is included
-    if ($include_special) {
-        $available_characters .= $special;
-        $password_components[] = $special[random_int(0, strlen($special) - 1)];
-    }
-
-    // Fill the remaining length of the password with random characters
-    $remaining_length = $length - count($password_components);
-    for ($i = 0; $i < $remaining_length; $i++) {
-        $password_components[] = $available_characters[random_int(0, strlen($available_characters) - 1)];
-    }
-
-    // Shuffle the characters to ensure random order
-    shuffle($password_components);
-
-    return implode('', $password_components);
+    // Shuffle the password to ensure randomness
+    return str_shuffle($password);
 }
 
 /**

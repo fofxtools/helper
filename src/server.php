@@ -577,3 +577,22 @@ function escapeshellarg_crossplatform(string $arg): string
         return escapeshellarg($arg);
     }
 }
+
+/**
+ * Checks if a given file or folder path is relative or absolute.
+ *
+ * @param string $path The file or folder path to check.
+ *
+ * @return bool True if the path is absolute, false if it is relative.
+ */
+function is_absolute_path(string $path): bool
+{
+    // Check for Windows absolute paths (drive letter or network share)
+    if (DIRECTORY_SEPARATOR === '\\') {
+        return (bool) preg_match('/^[A-Z]:[\\\\\\/]/i', $path) ||
+            str_starts_with($path, '\\\\');
+    }
+
+    // Check for Unix-like absolute paths
+    return str_starts_with($path, '/');
+}

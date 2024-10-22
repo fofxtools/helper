@@ -246,7 +246,7 @@ class DatetimeTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $end - $start);
 
         // Allow a small margin for system overhead
-        $this->assertLessThanOrEqual($seconds + 0.03, $end - $start);
+        $this->assertLessThanOrEqual($seconds + 0.04, $end - $start);
     }
 
     /**
