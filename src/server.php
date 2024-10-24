@@ -510,7 +510,7 @@ function print_array_info(string $name, array $arr): void
 }
 
 /**
- * Escapes a string to be used as a shell argument on Windows.
+ * Escapes a string to be used as a command line argument on Windows.
  *
  * This function properly escapes special characters, including double quotes,
  * so that the argument is passed correctly to Windows CLI commands.
@@ -519,7 +519,7 @@ function print_array_info(string $name, array $arr): void
  *
  * @return string The escaped argument.
  */
-function escapeshellarg_windows(string $arg): string
+function escape_windows_cmd_argument(string $arg): string
 {
     // Enclose the argument in double quotes
     $escaped         = '"';
@@ -563,7 +563,7 @@ function escapeshellarg_windows(string $arg): string
  *
  * This wrapper function ensures that shell arguments are properly escaped based on the operating system.
  * On Windows, it uses a custom escaping function to handle special characters and quotes
- * (`escapeshellarg_windows`), while on Unix-like systems, it uses the native `escapeshellarg` function.
+ * (`escape_windows_cmd_argument`), while on Unix-like systems, it uses the native `escapeshellarg` function.
  *
  * @param string $arg The argument to escape.
  *
@@ -572,10 +572,69 @@ function escapeshellarg_windows(string $arg): string
 function escapeshellarg_crossplatform(string $arg): string
 {
     if (PHP_OS_FAMILY === 'Windows') {
-        return escapeshellarg_windows($arg);
+        return escape_windows_cmd_argument($arg);
     } else {
         return escapeshellarg($arg);
     }
+}
+
+/**
+ * Escapes a string for use in a shell command executed on Linux.
+ *
+ * escapeshellarg() works differently when run on Windows. This function attempts to mimic
+ * the behavior of Linux's escapeshellarg().
+ *
+ * @param string $arg The argument to be escaped.
+ *
+ * @throws \ValueError If the argument contains null bytes.
+ *
+ * @return string The escaped argument.
+ */
+function escapeshellarg_linux(string $arg): string
+{
+    if (strpos($arg, "\0") !== false) {
+        throw new \ValueError('Argument must not contain any null bytes');
+    }
+
+    // Core Linux shell escaping: wrap in single quotes, escape internal quotes
+    return "'" . str_replace("'", "'\\''", $arg) . "'";
+}
+
+/**
+ * Escapes a string for use in a shell command executed on Windows.
+ *
+ * escapeshellarg() works differently when run on Windows. This function attempts to mimic
+ * the behavior of Windows's escapeshellarg().
+ *
+ * @param string $arg The argument to be escaped.
+ *
+ * @throws \ValueError If the argument contains null bytes.
+ *
+ * @return string The escaped argument.
+ */
+function escapeshellarg_windows(string $arg): string
+{
+    if (strpos($arg, "\0") !== false) {
+        throw new \ValueError('Argument must not contain any null bytes');
+    }
+
+    // Replace %, !, and " with spaces
+    $arg = str_replace(['%', '!', '"'], ' ', $arg);
+
+    // Escape backslashes before quotes
+    $arg = preg_replace('/(\\\\*)"/', '$1$1\\"', $arg);
+
+    // Count the number of trailing backslashes
+    if (preg_match('/(\\\\+)$/', $arg, $matches)) {
+        $num_trailing_backslashes = strlen($matches[1]);
+        // If odd, double the backslashes
+        if ($num_trailing_backslashes % 2 == 1) {
+            $arg .= '\\';
+        }
+    }
+
+    // Wrap in double quotes
+    return '"' . $arg . '"';
 }
 
 /**

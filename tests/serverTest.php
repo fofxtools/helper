@@ -1309,7 +1309,7 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_basic_string()
+    public function test_escape_windows_cmd_argument_basic_string()
     {
         // Basic input
         $arg = 'simple_argument';
@@ -1318,7 +1318,7 @@ class ServerTest extends TestCase
         $expected = '"simple_argument"';
 
         // Call the function
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1329,7 +1329,7 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_string_with_spaces()
+    public function test_escape_windows_cmd_argument_string_with_spaces()
     {
         // Input containing spaces
         $arg = 'argument with spaces';
@@ -1338,7 +1338,7 @@ class ServerTest extends TestCase
         $expected = '"argument with spaces"';
 
         // Call the function
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1349,7 +1349,7 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_string_with_double_quotes()
+    public function test_escape_windows_cmd_argument_string_with_double_quotes()
     {
         // Input containing double quotes
         $arg = 'argument "with quotes"';
@@ -1358,7 +1358,7 @@ class ServerTest extends TestCase
         $expected = '"argument \\"with quotes\\""';
 
         // Call the function
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1369,14 +1369,14 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_string_with_backslashes()
+    public function test_escape_windows_cmd_argument_string_with_backslashes()
     {
         $arg = 'argument\\with\\backslashes';
 
         // Expected output with escaped backslashes (4 backslashes)
         $expected = '"argument\\with\\backslashes"';
 
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1387,14 +1387,14 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_string_with_backslashes_and_quotes()
+    public function test_escape_windows_cmd_argument_string_with_backslashes_and_quotes()
     {
         $arg = 'argument\\with\\"both"';
 
         // Expected output with escaped backslashes and double quotes
         $expected = '"argument\\with\\\\\\"both\\""';
 
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1405,7 +1405,7 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_empty_string()
+    public function test_escape_windows_cmd_argument_empty_string()
     {
         // Empty input
         $arg = '';
@@ -1414,7 +1414,7 @@ class ServerTest extends TestCase
         $expected = '""';
 
         // Call the function
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1425,14 +1425,14 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_only_backslashes()
+    public function test_escape_windows_cmd_argument_only_backslashes()
     {
         $arg = '\\\\\\\\';
 
         // Expected output with 8 backslashes
         $expected = '"\\\\\\\\\\\\\\\\"';
 
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1443,7 +1443,7 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_special_characters()
+    public function test_escape_windows_cmd_argument_special_characters()
     {
         // Input containing special characters
         $arg = 'arg$#@&^%!*';
@@ -1452,7 +1452,7 @@ class ServerTest extends TestCase
         $expected = '"arg$#@&^%!*"';
 
         // Call the function
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1463,7 +1463,7 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_very_long_string()
+    public function test_escape_windows_cmd_argument_very_long_string()
     {
         // Input containing a long string (over 256 characters)
         $arg = str_repeat('a', 300);
@@ -1472,7 +1472,7 @@ class ServerTest extends TestCase
         $expected = '"' . str_repeat('a', 300) . '"';
 
         // Call the function
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1483,14 +1483,14 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_string_with_newlines()
+    public function test_escape_windows_cmd_argument_string_with_newlines()
     {
         $arg = "argument\nwith\nnewlines";
 
         // Expected output with newlines escaped
         $expected = "\"argument\nwith\nnewlines\"";
 
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1501,14 +1501,14 @@ class ServerTest extends TestCase
      *
      * @return void
      */
-    public function test_escapeshellarg_windows_string_with_tabs()
+    public function test_escape_windows_cmd_argument_string_with_tabs()
     {
         $arg = "argument\twith\ttabs";
 
         // Expected output with tab characters
         $expected = "\"argument\twith\ttabs\"";
 
-        $result = escapeshellarg_windows($arg);
+        $result = escape_windows_cmd_argument($arg);
 
         // Assert that the result matches the expected output
         $this->assertEquals($expected, $result);
@@ -1729,6 +1729,140 @@ class ServerTest extends TestCase
         $result = escapeshellarg_crossplatform($arg);
 
         // Assert that the result matches the expected output
+        $this->assertEquals($expected, $result);
+    }
+
+    public static function escapeshellarg_linux_provider(): array
+    {
+        return [
+            'basic string'                   => ['simple_argument', "'simple_argument'"],
+            'string with spaces'             => ['argument with spaces', "'argument with spaces'"],
+            'string with single quotes'      => ["it's complicated", "'it'\\''s complicated'"],
+            'string with double quotes'      => ['argument "with quotes"', "'argument \"with quotes\"'"],
+            'string with backslashes'        => ['argument\\with\\backslashes', "'argument\\with\\backslashes'"],
+            'string with special characters' => ['$pecial@chars!', "'\$pecial@chars!'"],
+            'empty string'                   => ['', "''"],
+            'string with newlines'           => ["line1\nline2", "'line1\nline2'"],
+            'string with tabs'               => ["column1\tcolumn2", "'column1\tcolumn2'"],
+            'complex string'                 => ["It's \"complicated\" with \\ and spaces", "'It'\\''s \"complicated\" with \\ and spaces'"],
+        ];
+    }
+
+    /**
+     * @dataProvider escapeshellarg_linux_provider
+     */
+    public function test_escapeshellarg_linux(string $input, string $expected): void
+    {
+        $result = escapeshellarg_linux($input);
+        $this->assertEquals($expected, $result);
+
+        // On Linux systems, also compare with the built-in escapeshellarg()
+        if (PHP_OS_FAMILY !== 'Windows') {
+            $builtInResult = escapeshellarg($input);
+            $this->assertEquals($builtInResult, $result, 'escapeshellarg_linux() should match built-in escapeshellarg() on Linux');
+        }
+    }
+
+    public function test_escapeshellarg_linux_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Argument must not contain any null bytes');
+        escapeshellarg_linux("null\0byte");
+    }
+
+    public function test_escapeshellarg_linux_matches_linux_behavior(): void
+    {
+        $testCases = $this->escapeshellarg_linux_provider();
+
+        foreach ($testCases as $name => $case) {
+            [$input, $expected] = $case;
+            $result             = escapeshellarg_linux($input);
+
+            // On Windows, we can't directly compare with escapeshellarg(),
+            // so we just check if the result matches the expected Linux behavior
+            if (PHP_OS_FAMILY === 'Windows') {
+                $this->assertEquals($expected, $result, "Case '$name' failed on Windows");
+            } else {
+                // On Linux, we can compare directly with escapeshellarg()
+                $builtInResult = escapeshellarg($input);
+                $this->assertEquals($builtInResult, $result, "Case '$name' failed on Linux");
+            }
+        }
+    }
+
+    public static function escapeshellarg_windows_provider(): array
+    {
+        return [
+            'basic string'                                    => ['simple_argument', '"simple_argument"'],
+            'string with spaces'                              => ['argument with spaces', '"argument with spaces"'],
+            'string with double quotes'                       => ['argument "with quotes"', '"argument  with quotes "'],
+            'string with percent signs'                       => ['50% complete', '"50  complete"'],
+            'string with exclamation marks'                   => ['Hello!', '"Hello "'],
+            'string with backslashes'                         => ['C:\\Windows\\System32', '"C:\Windows\System32"'],
+            'string with backslashes before quotes'           => ['He said \\"Hello\\"', '"He said \ Hello\ "'],
+            'string ending with backslash'                    => ['Trailing backslash\\', '"Trailing backslash\\\\"'],
+            'string with odd number of trailing backslashes'  => ['Odd backslashes\\\\\\', '"Odd backslashes\\\\\\\\"'],
+            'string with even number of trailing backslashes' => ['Even backslashes\\\\', '"Even backslashes\\\\"'],
+            'empty string'                                    => ['', '""'],
+            'string with newlines'                            => ["line1\nline2", "\"line1\nline2\""],
+            'string with tabs'                                => ["column1\tcolumn2", "\"column1\tcolumn2\""],
+            'string with special characters'                  => ['$pecial@chars&^%', '"$pecial@chars&^ "'],
+            'string with multiple spaces'                     => ['  multiple   spaces  ', '"  multiple   spaces  "'],
+            'string with Unicode characters'                  => ['Unicode 你好', '"Unicode 你好"'],
+            'string with control characters'                  => ["Control\x01Chars", "\"Control\x01Chars\""],
+            'very long string'                                => [str_repeat('a', 8000), '"' . str_repeat('a', 8000) . '"'],
+            'string with all printable ASCII characters'      => [
+                '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+                '"  #$ &\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider escapeshellarg_windows_provider
+     */
+    public function test_escapeshellarg_windows(string $input, string $expected): void
+    {
+        $result = escapeshellarg_windows($input);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_escapeshellarg_windows_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Argument must not contain any null bytes');
+        escapeshellarg_windows("null\0byte");
+    }
+
+    public function test_escapeshellarg_windows_consecutive_percent_signs(): void
+    {
+        $input    = '%%PATH%%';
+        $expected = '"  PATH  "';
+        $result   = escapeshellarg_windows($input);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_escapeshellarg_windows_mixed_quotes_and_backslashes(): void
+    {
+        $input    = 'Complex "string" with \\ and "" and \\""\\';
+        $expected = '"Complex  string  with \\ and    and \\  \\\\"';
+        $result   = escapeshellarg_windows($input);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_escapeshellarg_windows_only_special_characters(): void
+    {
+        $input    = '%!"';
+        $expected = '"   "';
+        $result   = escapeshellarg_windows($input);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_escapeshellarg_windows_alternating_special_and_normal_characters(): void
+    {
+        $input    = 'a%b!c"d';
+        $expected = '"a b c d"';
+        $result   = escapeshellarg_windows($input);
         $this->assertEquals($expected, $result);
     }
 
