@@ -705,7 +705,7 @@ function array_to_table(array $array, string $table_id = '', string $class = '',
  *
  * @see      array_same_keys
  * @see      transpose_indexed_array
- * @see      mb_str_pad
+ * @see      helper_mb_str_pad
  *
  * @example
  * $array = array(
@@ -762,7 +762,7 @@ function array_nested_to_tsv(array $array, bool $include_headers = true, bool $r
             } else {
                 $pad_type = STR_PAD_LEFT;
             }
-            $line[] = mb_str_pad($key, $lengths[$key], ' ', $pad_type);
+            $line[] = helper_mb_str_pad($key, $lengths[$key], ' ', $pad_type);
         }
         if (!empty($line)) {
             $content .= implode("\t", $line) . PHP_EOL;
@@ -778,7 +778,7 @@ function array_nested_to_tsv(array $array, bool $include_headers = true, bool $r
             } else {
                 $pad_type = STR_PAD_LEFT;
             }
-            $line[] = mb_str_pad($value, $lengths[$key], ' ', $pad_type);
+            $line[] = helper_mb_str_pad($value, $lengths[$key], ' ', $pad_type);
         }
         if (!empty($line)) {
             $content .= implode("\t", $line) . PHP_EOL;

@@ -2673,10 +2673,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_right()
+    public function test_helper_mb_str_pad_right()
     {
         $input  = 'test';
-        $result = mb_str_pad($input, 8, ' ');
+        $result = helper_mb_str_pad($input, 8, ' ');
         $this->assertEquals('test    ', $result);
     }
 
@@ -2685,10 +2685,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_left()
+    public function test_helper_mb_str_pad_left()
     {
         $input  = 'test';
-        $result = mb_str_pad($input, 8, ' ', STR_PAD_LEFT);
+        $result = helper_mb_str_pad($input, 8, ' ', STR_PAD_LEFT);
         $this->assertEquals('    test', $result);
     }
 
@@ -2697,10 +2697,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_both()
+    public function test_helper_mb_str_pad_both()
     {
         $input  = 'test';
-        $result = mb_str_pad($input, 10, ' ', STR_PAD_BOTH);
+        $result = helper_mb_str_pad($input, 10, ' ', STR_PAD_BOTH);
 
         // Adjust the expected value to match the correct behavior
         $this->assertEquals('   test   ', $result);
@@ -2712,10 +2712,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_no_padding_needed()
+    public function test_helper_mb_str_pad_no_padding_needed()
     {
         $input  = 'longstring';
-        $result = mb_str_pad($input, 10);
+        $result = helper_mb_str_pad($input, 10);
         $this->assertEquals('longstring', $result);
     }
 
@@ -2724,11 +2724,11 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_with_multibyte_characters()
+    public function test_helper_mb_str_pad_with_multibyte_characters()
     {
         // "Test" in Japanese
         $input  = 'テスト';
-        $result = mb_str_pad($input, 8, ' ', STR_PAD_RIGHT, 'UTF-8');
+        $result = helper_mb_str_pad($input, 8, ' ', STR_PAD_RIGHT, 'UTF-8');
         $this->assertEquals('テスト  ', $result);
     }
 
@@ -2737,10 +2737,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_multibyte_pad_string()
+    public function test_helper_mb_str_pad_multibyte_pad_string()
     {
         $input  = 'test';
-        $result = mb_str_pad($input, 10, 'あ', STR_PAD_RIGHT, 'UTF-8');
+        $result = helper_mb_str_pad($input, 10, 'あ', STR_PAD_RIGHT, 'UTF-8');
 
         // Adjusting the expected value to reflect the correct padding behavior
         $this->assertEquals('testああああああ', $result);
@@ -2751,10 +2751,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_custom_pad_string()
+    public function test_helper_mb_str_pad_custom_pad_string()
     {
         $input  = 'test';
-        $result = mb_str_pad($input, 10, '-+', STR_PAD_RIGHT);
+        $result = helper_mb_str_pad($input, 10, '-+', STR_PAD_RIGHT);
         $this->assertEquals('test-+-+-+', $result);
     }
 
@@ -2764,10 +2764,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_length_shorter_than_input()
+    public function test_helper_mb_str_pad_length_shorter_than_input()
     {
         $input  = 'test';
-        $result = mb_str_pad($input, 3);
+        $result = helper_mb_str_pad($input, 3);
         $this->assertEquals('test', $result);
     }
 
@@ -2776,10 +2776,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_empty_input()
+    public function test_helper_mb_str_pad_empty_input()
     {
         $input  = '';
-        $result = mb_str_pad($input, 5, '*');
+        $result = helper_mb_str_pad($input, 5, '*');
         $this->assertEquals('*****', $result);
     }
 
@@ -2789,10 +2789,10 @@ class StringTest extends TestCase
      *
      * @return void
      */
-    public function test_mb_str_pad_zero_pad_length()
+    public function test_helper_mb_str_pad_zero_pad_length()
     {
         $input  = 'test';
-        $result = mb_str_pad($input, 0, '*');
+        $result = helper_mb_str_pad($input, 0, '*');
         $this->assertEquals('test', $result);
     }
 

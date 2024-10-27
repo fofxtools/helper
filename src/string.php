@@ -651,7 +651,7 @@ function is_whole_number(mixed $number): bool
  *
  * @return string A padded multibyte string.
  */
-function mb_str_pad($input, $length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = 'UTF-8', $use_width = true)
+function helper_mb_str_pad($input, $length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = 'UTF-8', $use_width = true)
 {
     $result = $input;
 
@@ -1564,7 +1564,7 @@ function split_lines(string $input): array
  *
  * @return string The padded string.
  *
- * @see     mb_str_pad
+ * @see     helper_mb_str_pad
  */
 function pad_string(string $cell, int $width, string $alignment, bool $use_width = true): string
 {
@@ -1583,8 +1583,8 @@ function pad_string(string $cell, int $width, string $alignment, bool $use_width
         $pad_type = STR_PAD_BOTH;
     }
 
-    // Use mb_str_pad for multibyte-aware padding
-    return mb_str_pad($cell, $width, ' ', $pad_type, 'UTF-8', $use_width);
+    // Use helper_mb_str_pad for multibyte-aware padding
+    return helper_mb_str_pad($cell, $width, ' ', $pad_type, 'UTF-8', $use_width);
 }
 
 /**
