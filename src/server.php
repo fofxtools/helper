@@ -655,3 +655,148 @@ function is_absolute_path(string $path): bool
     // Check for Unix-like absolute paths
     return str_starts_with($path, '/');
 }
+
+/**
+ * Attempts to mimic escapeshellcmd()'s behavior on both Linux and Windows.
+ *
+ * Since escapeshellcmd() works differently on Linux and Windows, this function attempts to mimic
+ * the behavior of escapeshellcmd() on a specified operating system.
+ *
+ * @param string $command The command to escape.
+ * @param ?bool  $windows Whether to escape for Windows. If null, detects the current OS.
+ *
+ * @throws \ValueError If the command contains null bytes.
+ *
+ * @return string The escaped command.
+ *
+ * @link https://github.com/php/php-src/blob/master/ext/standard/exec.c
+ */
+function escapeshellcmd_os(string $command, ?bool $windows = null): string
+{
+    // Determine if we're on Windows if $windows is null
+    if ($windows === null) {
+        $windows = PHP_OS_FAMILY === 'Windows';
+    }
+
+    $escaped = '';
+    // Tracks the current quote type (' or ")
+    $inQuote = null;
+    // Split into multi-byte characters
+    $chars = mb_str_split($command);
+
+    // Windows special characters to escape with '^'
+    $windows_special_chars = ['%', '!', '"', '\'', '#', '&', ';', '`', '|', '*', '?', '~', '<', '>', '^', '(', ')', '[', ']', '{', '}', '$', '\\', "\x0A", "\xFF"];
+
+    // Unix-like special characters to escape with '\'
+    $unix_special_chars = ['#', '&', ';', '`', '|', '*', '?', '~', '<', '>', '^', '(', ')', '[', ']', '{', '}', '$', '\\', "\x0A", "\xFF"];
+
+    // Lookup tables for quick lookups
+    $windows_special_lookup = array_flip($windows_special_chars);
+    $unix_special_lookup    = array_flip($unix_special_chars);
+
+    foreach ($chars as $char) {
+        // Check for null byte
+        if ($char === "\x00") {
+            throw new \ValueError('escapeshellcmd_os(): Argument #1 ($command) must not contain any null bytes');
+        }
+
+        // Check if the character is a multi-byte character
+        $is_multibyte = strlen($char) > 1;
+
+        // Check for single-byte characters from \x80 to \xFF
+        if (!$is_multibyte) {
+            $ord = ord($char);
+            if ($ord >= 0x80) {
+                if ($windows) {
+                    if ($char === "\xFF") {
+                        // On Windows, escape \xFF with a single caret
+                        $escaped .= '^' . $char;
+
+                        continue;
+                    }
+                    if ($char === "\xA0") {
+                        // On Windows, \xA0 (non-breaking space) is valid
+                        $escaped .= $char;
+
+                        continue;
+                    }
+                    // Other characters in \x80 to \xFE range are valid on Windows
+                    $escaped .= $char;
+                }
+
+                // On Linux, ignore characters in \x80 to \xFF range
+                continue;
+            }
+        } elseif (!$windows) {
+            $is_valid_utf8 = mb_check_encoding($char, 'UTF-8');
+            // If not valid UTF-8, skip it
+            if (!$is_valid_utf8) {
+                continue;
+            }
+        }
+
+        if ($windows) {
+            if (isset($windows_special_lookup[$char])) {
+                $escaped .= '^' . $char;
+            } else {
+                $escaped .= $char;
+            }
+        } else {
+            if (isset($unix_special_lookup[$char])) {
+                $escaped .= '\\' . $char;
+            } elseif ($char === '"' || $char === '\'') {
+                if ($inQuote === null) {
+                    // Check if there's a matching quote ahead
+                    $pos = mb_strpos($command, $char, mb_strpos($command, $char) + 1);
+                    if ($pos !== false) {
+                        // Paired quote found
+                        $inQuote = $char;
+                        $escaped .= $char;
+                    } else {
+                        // Unpaired quote, escape it
+                        $escaped .= '\\' . $char;
+                    }
+                } elseif ($inQuote === $char) {
+                    // Closing quote
+                    $inQuote = null;
+                    $escaped .= $char;
+                } else {
+                    // Inside a different quote, escape it
+                    $escaped .= '\\' . $char;
+                }
+            } else {
+                $escaped .= $char;
+            }
+        }
+    }
+
+    return $escaped;
+}
+
+/**
+ * Wrapper for escapeshellcmd_os() that defaults to Linux escaping.
+ *
+ * @param string $command The command to escape.
+ *
+ * @return string The escaped command.
+ *
+ * @see escapeshellcmd_os()
+ */
+function escapeshellcmd_linux(string $command): string
+{
+    return escapeshellcmd_os($command, false);
+}
+
+/**
+ * Wrapper for escapeshellcmd_os() that defaults to Windows escaping.
+ *
+ * @param string $command The command to escape.
+ *
+ * @return string The escaped command.
+ *
+ * @see escapeshellcmd_os()
+ */
+function escapeshellcmd_windows(string $command): string
+{
+    return escapeshellcmd_os($command, true);
+}

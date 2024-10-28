@@ -3,6 +3,7 @@
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StringTest extends TestCase
 {
@@ -6943,5 +6944,165 @@ class StringTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Scientific notation is not supported.');
         number_to_words(PHP_FLOAT_MAX);
+    }
+
+    /**
+     * Data provider for trim_if_string tests
+     */
+    public static function trim_if_string_provider(): array
+    {
+        return [
+            'trims_string'               => ['  Hello, World!  ', 'Hello, World!'],
+            'trims_string_with_tabs'     => ["\tHello, World!\t", 'Hello, World!'],
+            'trims_string_with_newlines' => ["\nHello, World!\n", 'Hello, World!'],
+            'already_trimmed_string'     => ['Hello, World!', 'Hello, World!'],
+            'empty_string'               => ['', ''],
+            'string_of_spaces'           => ['     ', ''],
+            'integer'                    => [42, 42],
+            'float'                      => [3.14, 3.14],
+            'boolean_true'               => [true, true],
+            'boolean_false'              => [false, false],
+            'null'                       => [null, null],
+            'array'                      => [[1, 2, 3], [1, 2, 3]],
+            'object'                     => [new \stdClass(), new \stdClass()],
+            'resource'                   => [fopen('php://memory', 'r'), 'resource'],
+            'closure'                    => [function () {}, 'Closure'],
+        ];
+    }
+
+    #[DataProvider('trim_if_string_provider')]
+    public function test_trim_if_string($input, $expected)
+    {
+        $result = trim_if_string($input);
+
+        if ($expected === 'resource') {
+            $this->assertTrue(is_resource($result));
+        } elseif ($expected === 'Closure') {
+            $this->assertInstanceOf(\Closure::class, $result);
+        } elseif (is_object($expected)) {
+            $this->assertEquals(get_class($expected), get_class($result));
+        } else {
+            $this->assertSame($expected, $result);
+        }
+    }
+
+    public function test_trim_if_string_with_custom_object()
+    {
+        $obj = new class () {
+            public $property = 'value';
+        };
+
+        $result = trim_if_string($obj);
+
+        $this->assertInstanceOf(get_class($obj), $result);
+        $this->assertSame('value', $result->property);
+    }
+
+    public function test_trim_if_string_with_stringable()
+    {
+        $stringable = new class () implements \Stringable {
+            public function __toString()
+            {
+                return '  Stringable  ';
+            }
+        };
+
+        $result = trim_if_string($stringable);
+
+        $this->assertInstanceOf(get_class($stringable), $result);
+        $this->assertSame('  Stringable  ', (string)$result);
+    }
+
+    public static function escape_single_quotes_for_sed_provider()
+    {
+        return [
+            ["It's a test", "It'\\''s a test"],
+            ['No quotes here', 'No quotes here'],
+            ["Multiple'quotes'in'a'row", "Multiple'\\''quotes'\\''in'\\''a'\\''row"],
+            ["'", "'\\''"],
+            ["''", "'\\'''\\''"],
+            ["'''", "'\\'''\\'''\\''"],
+            ["Ends with quote'", "Ends with quote'\\''"],
+        ];
+    }
+
+    #[DataProvider('escape_single_quotes_for_sed_provider')]
+    public function test_escape_single_quotes_for_sed($input, $expected)
+    {
+        $this->assertEquals($expected, escape_single_quotes_for_sed($input));
+    }
+
+    /**
+     * Data provider for basic domain sanitization tests
+     */
+    public static function basic_domain_provider(): array
+    {
+        return [
+            'simple domain'        => ['example.com', 'example_com'],
+            'subdomain'            => ['subdomain.example.com', 'subdomain_example_com'],
+            'http protocol'        => ['http://example.com', 'example_com'],
+            'https protocol'       => ['https://example.com', 'example_com'],
+            'www prefix'           => ['www.example.com', 'example_com'],
+            'special characters'   => ['example.com/special&chars', 'example_com_special_chars'],
+            'multiple underscores' => ['multiple___underscores', 'multiple_underscores'],
+            'empty input'          => ['', ''],
+            'unicode characters'   => ['ñ.example.com', 'example_com'],
+            'trailing underscore'  => ['example.com_', 'example_com'],
+        ];
+    }
+
+    #[DataProvider('basic_domain_provider')]
+    public function test_sanitize_domain_for_database_basic_cases(string $input, string $expected): void
+    {
+        $this->assertEquals($expected, sanitize_domain_for_database($input));
+    }
+
+    /**
+     * Data provider for domain sanitization with additional parameters
+     */
+    public static function domain_with_params_provider(): array
+    {
+        return [
+            'with username'               => ['example.com', 'user123', true, false, 'db_', 'example_com_user123'],
+            'force letter start'          => ['123example.com', '', true, true, 'db_', 'db_123example_com'],
+            'no force letter start'       => ['123example.com', '', true, false, 'db_', '123example_com'],
+            'custom prefix'               => ['123example.com', '', true, true, 'custom_', 'custom_123example_com'],
+            'username with special chars' => ['example.com', 'user@123', true, false, 'db_', 'example_com_user_123'],
+            'with TLD'                    => ['example.com', '', true, false, 'db_', 'example_com'],
+            'without TLD'                 => ['example.com', '', false, false, 'db_', 'example'],
+        ];
+    }
+
+    #[DataProvider('domain_with_params_provider')]
+    public function test_sanitize_domain_for_database_with_params(
+        string $domain,
+        string $username,
+        bool $includeTLD,
+        bool $forceLetterStart,
+        string $prefix,
+        string $expected
+    ): void {
+        $this->assertEquals($expected, sanitize_domain_for_database($domain, $username, $includeTLD, $forceLetterStart, $prefix));
+    }
+
+    /**
+     * Test long domain truncation
+     */
+    public function test_sanitize_domain_for_database_truncates_long_domain(): void
+    {
+        $longDomain = str_repeat('a', 100) . '.com';
+        $expected   = str_repeat('a', 64);
+        $this->assertEquals($expected, sanitize_domain_for_database($longDomain));
+    }
+
+    /**
+     * Test long domain truncation with username
+     */
+    public function test_sanitize_domain_for_database_truncates_long_domain_with_username(): void
+    {
+        $longDomain = str_repeat('a', 100) . '.com';
+        $username   = 'user123';
+        $expected   = str_repeat('a', 56) . '_user123'; // 64 chars minus '_user123'
+        $this->assertEquals($expected, sanitize_domain_for_database($longDomain, $username));
     }
 }

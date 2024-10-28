@@ -3,6 +3,7 @@
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ServerTest extends TestCase
 {
@@ -1748,9 +1749,7 @@ class ServerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider escapeshellarg_linux_provider
-     */
+    #[DataProvider('escapeshellarg_linux_provider')]
     public function test_escapeshellarg_linux(string $input, string $expected): void
     {
         $result = escapeshellarg_linux($input);
@@ -1818,9 +1817,7 @@ class ServerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider escapeshellarg_windows_provider
-     */
+    #[DataProvider('escapeshellarg_windows_provider')]
     public function test_escapeshellarg_windows(string $input, string $expected): void
     {
         $result = escapeshellarg_windows($input);
@@ -1905,19 +1902,254 @@ class ServerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provider_is_absolute_path_for_absolute_paths
-     */
+    #[DataProvider('provider_is_absolute_path_for_absolute_paths')]
     public function test_is_absolute_path_for_absolute_paths(string $path)
     {
         $this->assertTrue(is_absolute_path($path));
     }
 
-    /**
-     * @dataProvider provider_is_absolute_path_for_relative_paths
-     */
+    #[DataProvider('provider_is_absolute_path_for_relative_paths')]
     public function test_is_absolute_path_for_relative_paths(string $path)
     {
         $this->assertFalse(is_absolute_path($path));
+    }
+
+    /**
+     * Provides basic and multibyte character test data for Windows.
+     *
+     * @return array
+     */
+    public static function escapeshellcmd_windows_basic_data_provider(): array
+    {
+        return [
+            // Basic ASCII Characters
+            'tab'             => [0x09, "\t"],
+            'newline'         => [0x0A, "^\n"],
+            'carriage_return' => [0x0D, "\r"],
+            'space'           => [0x20, ' '],
+            'exclamation'     => [0x21, '^!'],
+            'double_quote'    => [0x22, '^"'],
+            'single_quote'    => [0x27, "^'"],
+            'percent'         => [0x25, '^%'],
+            'ampersand'       => [0x26, '^&'],
+            'asterisk'        => [0x2A, '^*'],
+            'semicolon'       => [0x3B, '^;'],
+            'less_than'       => [0x3C, '^<'],
+            'greater_than'    => [0x3E, '^>'],
+            'caret'           => [0x5E, '^^'],
+            'dollar'          => [0x24, '^$'],
+            'backslash'       => [0x5C, '^\\'],
+
+            // Extended ASCII Characters
+            'latin_small_a_grave' => [0xE0, "\xC3\xA0"],
+            'latin_small_o_tilde' => [0xF5, "\xC3\xB5"],
+            'non_breaking_space'  => [0xA0, "\xC2\xA0"],
+
+            // Multibyte Characters
+            'emoji_smile'        => [0x1F600, "\xF0\x9F\x98\x80"],
+            'cjk_character'      => [0x4E2D, "\xE4\xB8\xAD"],
+            'hiragana_character' => [0x3042, "\xE3\x81\x82"],
+            'euro_sign'          => [0x20AC, "\xE2\x82\xAC"],
+
+            // Edge Cases
+            'high_surrogate' => [0xD800, "\xED\xA0\x80"],
+            'low_surrogate'  => [0xDFFF, "\xED\xBF\xBF"],
+            'max_unicode'    => [0x10FFFF, "\xF4\x8F\xBF\xBF"],
+            'non_character'  => [0xFFFF, "\xEF\xBF\xBF"],
+        ];
+    }
+
+    public static function escapeshellcmd_windows_complex_data_provider(): array
+    {
+        return [
+            'string_with_quotes'                => ['echo "Hello \'world\'"', 'echo ^"Hello ^\'world^\'^"'],
+            'string_with_semicolon'             => ['ls; rm -rf /', 'ls^; rm -rf /'],
+            'string_with_asterisk'              => ['find . -name "*.php"', 'find . -name ^"^*.php^"'],
+            'string_with_backticks'             => ['echo `uname -a`', 'echo ^`uname -a^`'],
+            'string_with_pipe'                  => ['ps aux | grep apache', 'ps aux ^| grep apache'],
+            'string_with_environment'           => ['echo $HOME', 'echo ^$HOME'],
+            'string_with_parentheses'           => ['echo (test)', 'echo ^(test^)'],
+            'string_with_multiple_escape_chars' => ['echo \\"foo\\"', 'echo ^\^"foo^\^"'],
+            'string_with_dollar_and_specials'   => ['echo $VAR & ls', 'echo ^$VAR ^& ls'],
+            'string_with_mixed_utf8'            => ['Grüß Gott! 😀', 'Grüß Gott^! 😀'],
+            'string_with_utf8_symbols'          => ['⌘ ✈ ☎', '⌘ ✈ ☎'],
+            'string_with_newline'               => ["echo -e 'Hello\nWorld'", "echo -e ^'Hello^\nWorld^'"],
+            'string_with_backslash'             => ['C:\\Windows\\System32', 'C:^\Windows^\System32'],
+            'string_complex_mixed'              => ['echo "O\'Reilly; rm -rf *; echo $PWD"', 'echo ^"O^\'Reilly^; rm -rf ^*^; echo ^$PWD^"'],
+        ];
+    }
+
+    /**
+     * Provides basic and multibyte character test data for Linux.
+     *
+     * @return array
+     */
+    public static function escapeshellcmd_linux_basic_data_provider(): array
+    {
+        return [
+            // Basic ASCII Characters
+            'tab'             => [0x09, "\t"],
+            'newline'         => [0x0A, "\\\n"],
+            'carriage_return' => [0x0D, "\r"],
+            'space'           => [0x20, ' '],
+            'exclamation'     => [0x21, '!'],
+            'double_quote'    => [0x22, '\"'],
+            'single_quote'    => [0x27, "\\'"],
+            'percent'         => [0x25, '%'],
+            'ampersand'       => [0x26, '\&'],
+            'asterisk'        => [0x2A, '\*'],
+            'semicolon'       => [0x3B, '\;'],
+            'less_than'       => [0x3C, '\<'],
+            'greater_than'    => [0x3E, '\>'],
+            'caret'           => [0x5E, '\\^'],
+            'dollar'          => [0x24, '\$'],
+            'backslash'       => [0x5C, '\\\\'],
+
+            // Extended ASCII Characters
+            'latin_small_a_grave' => [0xE0, "\xC3\xA0"],
+            'latin_small_o_tilde' => [0xF5, "\xC3\xB5"],
+            'non_breaking_space'  => [0xA0, "\xC2\xA0"],
+
+            // Multibyte Characters
+            'emoji_smile'        => [0x1F600, "\xF0\x9F\x98\x80"],
+            'cjk_character'      => [0x4E2D, "\xE4\xB8\xAD"],
+            'hiragana_character' => [0x3042, "\xE3\x81\x82"],
+            'euro_sign'          => [0x20AC, "\xE2\x82\xAC"],
+
+            // Edge Cases
+            'high_surrogate' => [0xD800, ''],
+            'low_surrogate'  => [0xDFFF, ''],
+            'max_unicode'    => [0x10FFFF, "\xF4\x8F\xBF\xBF"],
+            'non_character'  => [0xFFFF, "\xEF\xBF\xBF"],
+        ];
+    }
+
+    public static function escapeshellcmd_linux_complex_data_provider(): array
+    {
+        return [
+            'string_with_quotes'                => ['echo "Hello \'world\'"', 'echo "Hello \\\'world\\\'"'],
+            'string_with_semicolon'             => ['ls; rm -rf /', 'ls\; rm -rf /'],
+            'string_with_asterisk'              => ['find . -name "*.php"', 'find . -name "\*.php"'],
+            'string_with_backticks'             => ['echo `uname -a`', 'echo \`uname -a\`'],
+            'string_with_pipe'                  => ['ps aux | grep apache', 'ps aux \| grep apache'],
+            'string_with_environment'           => ['echo $HOME', 'echo \$HOME'],
+            'string_with_parentheses'           => ['echo (test)', 'echo \(test\)'],
+            'string_with_multiple_escape_chars' => ['echo \\"foo\\"', 'echo \\\\"foo\\\\"'],
+            'string_with_dollar_and_specials'   => ['echo $VAR & ls', 'echo \$VAR \& ls'],
+            'string_with_mixed_utf8'            => ['Grüß Gott! 😀', 'Grüß Gott! 😀'],
+            'string_with_utf8_symbols'          => ['⌘ ✈ ☎', '⌘ ✈ ☎'],
+            'string_with_newline'               => ["echo -e 'Hello\nWorld'", "echo -e 'Hello\\\nWorld'"],
+            'string_with_backslash'             => ['C:\\Windows\\System32', 'C:\\\\Windows\\\\System32'],
+            'string_complex_mixed'              => ['echo "O\'Reilly; rm -rf *; echo $PWD"', 'echo "O\\\'Reilly\\; rm -rf \\*\\; echo \\$PWD"'],
+        ];
+    }
+
+    #[DataProvider('escapeshellcmd_windows_basic_data_provider')]
+    public function test_escapeshellcmd_os_windows_basic(int $codePoint, string $utf8Char): void
+    {
+        $char   = mb_convert_encoding('&#' . $codePoint . ';', 'UTF-8', 'HTML-ENTITIES');
+        $result = escapeshellcmd_os($char, true);
+        $this->assertEquals($utf8Char, $result, "Failed on Windows with input: $utf8Char");
+    }
+
+    #[DataProvider('escapeshellcmd_linux_basic_data_provider')]
+    public function test_escapeshellcmd_os_linux_basic(int $codePoint, string $utf8Char): void
+    {
+        $char   = mb_convert_encoding('&#' . $codePoint . ';', 'UTF-8', 'HTML-ENTITIES');
+        $result = escapeshellcmd_os($char, false);
+        $this->assertEquals($utf8Char, $result, "Failed on Linux with input: $utf8Char");
+    }
+
+    /**
+     * Test that a ValueError is thrown when a null byte is present.
+     */
+    public function test_escapeshellcmd_os_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Argument #1 ($command) must not contain any null bytes');
+        escapeshellcmd_os("\0", true); // For Windows
+        escapeshellcmd_os("\0", false); // For Linux
+    }
+
+    /**
+     * Test escapeshellcmd_os() on Windows with complex strings.
+     */
+    #[DataProvider('escapeshellcmd_windows_complex_data_provider')]
+    public function test_escapeshellcmd_os_windows_complex(string $input, string $expected): void
+    {
+        $result = escapeshellcmd_os($input, true);
+        $this->assertEquals($expected, $result, "Failed on Windows with input: $input");
+    }
+
+    /**
+     * Test escapeshellcmd_os() on Linux with complex strings.
+     */
+    #[DataProvider('escapeshellcmd_linux_complex_data_provider')]
+    public function test_escapeshellcmd_os_linux_complex(string $input, string $expected): void
+    {
+        $result = escapeshellcmd_os($input, false);
+        $this->assertEquals($expected, $result, "Failed on Linux with input: $input");
+    }
+
+    /**
+     * Test escapeshellcmd_linux() with basic characters.
+     */
+    #[DataProvider('escapeshellcmd_linux_basic_data_provider')]
+    public function test_escapeshellcmd_linux_basic(int $codePoint, string $utf8Char): void
+    {
+        $char   = mb_convert_encoding('&#' . $codePoint . ';', 'UTF-8', 'HTML-ENTITIES');
+        $result = escapeshellcmd_linux($char);
+        $this->assertEquals($utf8Char, $result, "Failed with input: $utf8Char");
+    }
+
+    /**
+     * Test escapeshellcmd_linux() with complex strings.
+     */
+    #[DataProvider('escapeshellcmd_linux_complex_data_provider')]
+    public function test_escapeshellcmd_linux_complex(string $input, string $expected): void
+    {
+        $result = escapeshellcmd_linux($input);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test escapeshellcmd_windows() with basic characters.
+     */
+    #[DataProvider('escapeshellcmd_windows_basic_data_provider')]
+    public function test_escapeshellcmd_windows_basic(int $codePoint, string $utf8Char): void
+    {
+        $char   = mb_convert_encoding('&#' . $codePoint . ';', 'UTF-8', 'HTML-ENTITIES');
+        $result = escapeshellcmd_windows($char);
+        $this->assertEquals($utf8Char, $result, "Failed with input: $utf8Char");
+    }
+
+    /**
+     * Test escapeshellcmd_windows() with complex strings.
+     */
+    #[DataProvider('escapeshellcmd_windows_complex_data_provider')]
+    public function test_escapeshellcmd_windows_complex(string $input, string $expected): void
+    {
+        $result = escapeshellcmd_windows($input);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test that escapeshellcmd_linux() throws ValueError for null bytes.
+     */
+    public function test_escapeshellcmd_linux_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Argument #1 ($command) must not contain any null bytes');
+        escapeshellcmd_linux("\0");
+    }
+
+    /**
+     * Test that escapeshellcmd_windows() throws ValueError for null bytes.
+     */
+    public function test_escapeshellcmd_windows_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Argument #1 ($command) must not contain any null bytes');
+        escapeshellcmd_windows("\0");
     }
 }
