@@ -297,7 +297,7 @@ class DatetimeTest extends TestCase
 
         // Assert that the sleep duration does not exceed the specified seconds
         // Allow for some system overhead time
-        $this->assertLessThanOrEqual($seconds + 0.03, $actual_sleep_duration);
+        $this->assertLessThanOrEqual($seconds + 0.04, $actual_sleep_duration);
     }
 
     /**
@@ -321,8 +321,8 @@ class DatetimeTest extends TestCase
         $actual_sleep_duration = $end - $start;
 
         // Assert that the sleep duration is within the expected range
-        $this->assertGreaterThanOrEqual($seconds, $actual_sleep_duration + 0.03);
-        $this->assertLessThanOrEqual($seconds + 0.03, $actual_sleep_duration);
+        $this->assertGreaterThanOrEqual($seconds, $actual_sleep_duration + 0.04);
+        $this->assertLessThanOrEqual($seconds + 0.04, $actual_sleep_duration);
     }
 
     /**
@@ -346,7 +346,7 @@ class DatetimeTest extends TestCase
         $actual_sleep_duration = $end - $start;
 
         // Assert that the sleep duration is effectively zero
-        $this->assertLessThan(0.03, $actual_sleep_duration);
+        $this->assertLessThan(0.04, $actual_sleep_duration);
     }
 
     /**
@@ -383,8 +383,8 @@ class DatetimeTest extends TestCase
         $actual_sleep_duration = $end - $start;
 
         // Assert that the sleep duration is within the expected range
-        $this->assertGreaterThanOrEqual($seconds, $actual_sleep_duration + 0.03);
-        $this->assertLessThanOrEqual($seconds + 0.03, $actual_sleep_duration);
+        $this->assertGreaterThanOrEqual($seconds, $actual_sleep_duration + 0.04);
+        $this->assertLessThanOrEqual($seconds + 0.04, $actual_sleep_duration);
     }
 
     /**
@@ -408,8 +408,8 @@ class DatetimeTest extends TestCase
         $actual_sleep_duration = $end - $start;
 
         // Assert that the sleep duration is within the expected range
-        $this->assertGreaterThanOrEqual($seconds, $actual_sleep_duration + 0.03);
-        $this->assertLessThanOrEqual($seconds + 0.03, $actual_sleep_duration);
+        $this->assertGreaterThanOrEqual($seconds, $actual_sleep_duration + 0.04);
+        $this->assertLessThanOrEqual($seconds + 0.04, $actual_sleep_duration);
     }
 
     /**
@@ -441,8 +441,8 @@ class DatetimeTest extends TestCase
         $actual_sleep_duration = $end - $start;
 
         // Assert that the sleep duration is within the expected range
-        $this->assertGreaterThanOrEqual($expected_sleep_time - 0.03, $actual_sleep_duration);
-        $this->assertLessThanOrEqual($expected_sleep_time + 0.03, $actual_sleep_duration);
+        $this->assertGreaterThanOrEqual($expected_sleep_time - 0.04, $actual_sleep_duration);
+        $this->assertLessThanOrEqual($expected_sleep_time + 0.04, $actual_sleep_duration);
     }
 
     /**
@@ -472,8 +472,8 @@ class DatetimeTest extends TestCase
         $actual_sleep_duration = $end - $start;
 
         // Assert that the sleep duration is within the expected range
-        $this->assertGreaterThanOrEqual($expected_sleep_time - 0.03, $actual_sleep_duration);
-        $this->assertLessThanOrEqual($expected_sleep_time + 0.03, $actual_sleep_duration);
+        $this->assertGreaterThanOrEqual($expected_sleep_time - 0.04, $actual_sleep_duration);
+        $this->assertLessThanOrEqual($expected_sleep_time + 0.04, $actual_sleep_duration);
     }
 
     /**

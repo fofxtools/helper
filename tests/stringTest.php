@@ -6680,7 +6680,7 @@ class StringTest extends TestCase
             ' -e ' . $this->expected_quote . 'SELECT * FROM users' . $this->expected_quote;
 
         // Call the function
-        $result = mysql_cli_command($user, $password, $query, $database);
+        $result = mysql_cli_command($user, $password, $query, $database, true, '\FOfX\Helper\escapeshellarg_crossplatform');
 
         // Assert that the result matches the expected command
         $this->assertEquals(trim($expected), trim($result));
@@ -6704,7 +6704,7 @@ class StringTest extends TestCase
             ' -e ' . $this->expected_quote . 'SHOW TABLES' . $this->expected_quote;
 
         // Call the function without database
-        $result = mysql_cli_command($user, $password, $query);
+        $result = mysql_cli_command($user, $password, $query, null, true, '\FOfX\Helper\escapeshellarg_crossplatform');
 
         // Assert that the result matches the expected command, accounting for possible extra spaces
         $this->assertEquals(trim($expected), trim($result));
@@ -6794,7 +6794,7 @@ class StringTest extends TestCase
             ' -e ' . $this->expected_quote . '  SELECT * FROM users  ' . $this->expected_quote;
 
         // Call the function
-        $result = mysql_cli_command($user, $password, $query, $database);
+        $result = mysql_cli_command($user, $password, $query, $database, true, '\FOfX\Helper\escapeshellarg_crossplatform');
 
         // Assert that the result matches the expected command, trimming extra spaces
         $this->assertEquals(trim($expected), trim($result));
@@ -6822,7 +6822,7 @@ class StringTest extends TestCase
         }
 
         // Call the function
-        $result = mysql_cli_command($user, $password, $query);
+        $result = mysql_cli_command($user, $password, $query, null, true, '\FOfX\Helper\escapeshellarg_crossplatform');
 
         // Assert that the result matches the expected command, accounting for platform differences
         $this->assertEquals($expected, $result);
@@ -6847,10 +6847,40 @@ class StringTest extends TestCase
             ' -e %s', $expected_query);
 
         // Call the function
-        $result = mysql_cli_command($user, $password, $query);
+        $result = mysql_cli_command($user, $password, $query, null, true, '\FOfX\Helper\escapeshellarg_crossplatform');
 
         // Assert that the result matches the expected command, trimming spaces
         $this->assertEquals(trim($expected), trim($result));
+    }
+
+    /**
+     * Test command generation with Linux escaping.
+     *
+     * @return void
+     */
+    public function test_mysql_cli_command_linux_escaping()
+    {
+        // Define input parameters with characters that need Linux-style escaping
+        $user     = 'root$';
+        $password = 'pa$$w0rd';
+        $query    = 'SELECT * FROM `users` WHERE name="O\'Reilly"';
+        $database = 'test$db';
+
+        // Expected Linux-style escaping (using single quotes and escaping internal single quotes)
+        $expected = "mysql -u 'root\$' -p'pa\$\$w0rd' -D 'test\$db' -e 'SELECT * FROM `users` WHERE name=\"O'\''Reilly\"'";
+
+        // Call the function with Linux escaping
+        $result = mysql_cli_command(
+            $user,
+            $password,
+            $query,
+            $database,
+            true,
+            '\FOfX\Helper\escapeshellarg_linux'
+        );
+
+        // Assert that the result matches the expected command
+        $this->assertEquals($expected, $result);
     }
 
     /**

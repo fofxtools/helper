@@ -1738,11 +1738,16 @@ function align_csv_columns(
 /**
  * Generates a MySQL CLI command for executing a query.
  *
- * @param string  $user         The MySQL username.
- * @param string  $password     The MySQL user's password.
- * @param string  $query        The MySQL query to be executed.
- * @param ?string $database     Optional. The MySQL database name.
- * @param bool    $escape_shell Optional. Whether to apply escaping functions.
+ * @param string    $user            The MySQL username.
+ * @param string    $password        The MySQL user's password.
+ * @param string    $query           The MySQL query to be executed.
+ * @param ?string   $database        Optional. The MySQL database name.
+ * @param bool      $escape_shell    Whether to escape shell arguments.
+ * @param ?callable $escape_function Optional. Function to escape shell arguments.
+ *                                   If null, uses strval() (no escaping).
+ *                                   Defaults to escapeshellarg_linux().
+ *                                   Note: For Windows, escape_windows_cmd_argument() should be used instead of escapeshellarg_windows()
+ *                                   since on Windows escapeshellarg() replaces double quotes with spaces.
  *
  * @throws \InvalidArgumentException If the input parameters are invalid.
  *
@@ -1753,23 +1758,35 @@ function mysql_cli_command(
     string $password,
     string $query,
     ?string $database = null,
-    bool $escape_shell = true
+    bool $escape_shell = true,
+    ?callable $escape_function = null
 ): string {
     if (empty($user) || empty($password) || empty($query)) {
         throw new \InvalidArgumentException('User, password, and query are required.');
     }
-    // Determine the escape function based on $escape_shell
-    $escape_function = $escape_shell ? __NAMESPACE__ . '\escapeshellarg_crossplatform' : 'strval';
+
+    // Use callable escape function if provided, otherwise default to strval
+    if ($escape_shell) {
+        // Default to escapeshellarg_linux if no function provided
+        // Note that for Windows, escape_windows_cmd_argument() should be used instead of escapeshellarg_windows()
+        // since on Windows escapeshellarg() replaces double quotes with spaces.
+        $escape_function ??= __NAMESPACE__ . '\escapeshellarg_linux';
+    } else {
+        $escape_function = 'strval';
+    }
+
     // Build the base command string
     $command = sprintf(
         'mysql -u %s -p%s',
         $escape_function($user),
         $escape_function($password)
     );
+
     // Add the database part if provided
     if ($database) {
         $command .= sprintf(' -D %s', $escape_function($database));
     }
+
     // Add the query part
     $command .= sprintf(' -e %s', $escape_function($query));
 
