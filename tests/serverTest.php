@@ -1733,136 +1733,6 @@ class ServerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public static function escapeshellarg_linux_provider(): array
-    {
-        return [
-            'basic string'                   => ['simple_argument', "'simple_argument'"],
-            'string with spaces'             => ['argument with spaces', "'argument with spaces'"],
-            'string with single quotes'      => ["it's complicated", "'it'\\''s complicated'"],
-            'string with double quotes'      => ['argument "with quotes"', "'argument \"with quotes\"'"],
-            'string with backslashes'        => ['argument\\with\\backslashes', "'argument\\with\\backslashes'"],
-            'string with special characters' => ['$pecial@chars!', "'\$pecial@chars!'"],
-            'empty string'                   => ['', "''"],
-            'string with newlines'           => ["line1\nline2", "'line1\nline2'"],
-            'string with tabs'               => ["column1\tcolumn2", "'column1\tcolumn2'"],
-            'complex string'                 => ["It's \"complicated\" with \\ and spaces", "'It'\\''s \"complicated\" with \\ and spaces'"],
-        ];
-    }
-
-    #[DataProvider('escapeshellarg_linux_provider')]
-    public function test_escapeshellarg_linux(string $input, string $expected): void
-    {
-        $result = escapeshellarg_linux($input);
-        $this->assertEquals($expected, $result);
-
-        // On Linux systems, also compare with the built-in escapeshellarg()
-        if (PHP_OS_FAMILY !== 'Windows') {
-            $builtInResult = escapeshellarg($input);
-            $this->assertEquals($builtInResult, $result, 'escapeshellarg_linux() should match built-in escapeshellarg() on Linux');
-        }
-    }
-
-    public function test_escapeshellarg_linux_null_byte(): void
-    {
-        $this->expectException(\ValueError::class);
-        $this->expectExceptionMessage('Argument must not contain any null bytes');
-        escapeshellarg_linux("null\0byte");
-    }
-
-    public function test_escapeshellarg_linux_matches_linux_behavior(): void
-    {
-        $testCases = $this->escapeshellarg_linux_provider();
-
-        foreach ($testCases as $name => $case) {
-            [$input, $expected] = $case;
-            $result             = escapeshellarg_linux($input);
-
-            // On Windows, we can't directly compare with escapeshellarg(),
-            // so we just check if the result matches the expected Linux behavior
-            if (PHP_OS_FAMILY === 'Windows') {
-                $this->assertEquals($expected, $result, "Case '$name' failed on Windows");
-            } else {
-                // On Linux, we can compare directly with escapeshellarg()
-                $builtInResult = escapeshellarg($input);
-                $this->assertEquals($builtInResult, $result, "Case '$name' failed on Linux");
-            }
-        }
-    }
-
-    public static function escapeshellarg_windows_provider(): array
-    {
-        return [
-            'basic string'                                    => ['simple_argument', '"simple_argument"'],
-            'string with spaces'                              => ['argument with spaces', '"argument with spaces"'],
-            'string with double quotes'                       => ['argument "with quotes"', '"argument  with quotes "'],
-            'string with percent signs'                       => ['50% complete', '"50  complete"'],
-            'string with exclamation marks'                   => ['Hello!', '"Hello "'],
-            'string with backslashes'                         => ['C:\\Windows\\System32', '"C:\Windows\System32"'],
-            'string with backslashes before quotes'           => ['He said \\"Hello\\"', '"He said \ Hello\ "'],
-            'string ending with backslash'                    => ['Trailing backslash\\', '"Trailing backslash\\\\"'],
-            'string with odd number of trailing backslashes'  => ['Odd backslashes\\\\\\', '"Odd backslashes\\\\\\\\"'],
-            'string with even number of trailing backslashes' => ['Even backslashes\\\\', '"Even backslashes\\\\"'],
-            'empty string'                                    => ['', '""'],
-            'string with newlines'                            => ["line1\nline2", "\"line1\nline2\""],
-            'string with tabs'                                => ["column1\tcolumn2", "\"column1\tcolumn2\""],
-            'string with special characters'                  => ['$pecial@chars&^%', '"$pecial@chars&^ "'],
-            'string with multiple spaces'                     => ['  multiple   spaces  ', '"  multiple   spaces  "'],
-            'string with Unicode characters'                  => ['Unicode 你好', '"Unicode 你好"'],
-            'string with control characters'                  => ["Control\x01Chars", "\"Control\x01Chars\""],
-            'very long string'                                => [str_repeat('a', 8000), '"' . str_repeat('a', 8000) . '"'],
-            'string with all printable ASCII characters'      => [
-                '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
-                '"  #$ &\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"',
-            ],
-        ];
-    }
-
-    #[DataProvider('escapeshellarg_windows_provider')]
-    public function test_escapeshellarg_windows(string $input, string $expected): void
-    {
-        $result = escapeshellarg_windows($input);
-        $this->assertEquals($expected, $result);
-    }
-
-    public function test_escapeshellarg_windows_null_byte(): void
-    {
-        $this->expectException(\ValueError::class);
-        $this->expectExceptionMessage('Argument must not contain any null bytes');
-        escapeshellarg_windows("null\0byte");
-    }
-
-    public function test_escapeshellarg_windows_consecutive_percent_signs(): void
-    {
-        $input    = '%%PATH%%';
-        $expected = '"  PATH  "';
-        $result   = escapeshellarg_windows($input);
-        $this->assertEquals($expected, $result);
-    }
-
-    public function test_escapeshellarg_windows_mixed_quotes_and_backslashes(): void
-    {
-        $input    = 'Complex "string" with \\ and "" and \\""\\';
-        $expected = '"Complex  string  with \\ and    and \\  \\\\"';
-        $result   = escapeshellarg_windows($input);
-        $this->assertEquals($expected, $result);
-    }
-
-    public function test_escapeshellarg_windows_only_special_characters(): void
-    {
-        $input    = '%!"';
-        $expected = '"   "';
-        $result   = escapeshellarg_windows($input);
-        $this->assertEquals($expected, $result);
-    }
-
-    public function test_escapeshellarg_windows_alternating_special_and_normal_characters(): void
-    {
-        $input    = 'a%b!c"d';
-        $expected = '"a b c d"';
-        $result   = escapeshellarg_windows($input);
-        $this->assertEquals($expected, $result);
-    }
-
     public static function provider_is_absolute_path_for_absolute_paths(): array
     {
         if (DIRECTORY_SEPARATOR === '\\') {
@@ -2151,5 +2021,236 @@ class ServerTest extends TestCase
         $this->expectException(\ValueError::class);
         $this->expectExceptionMessage('Argument #1 ($command) must not contain any null bytes');
         escapeshellcmd_windows("\0");
+    }
+
+    /**
+     * Provides basic test data for Windows escapeshellarg_os.
+     */
+    public static function escapeshellarg_windows_basic_data_provider(): array
+    {
+        return [
+            // Basic ASCII Characters
+            'tab'             => ["\t", "\"\t\""],
+            'newline'         => ["\n", "\"\n\""],
+            'carriage_return' => ["\r", "\"\r\""],
+            'space'           => [' ', '" "'],
+            'exclamation'     => ['!', '" "'],  // Replaced with space on Windows
+            'double_quote'    => ['"', '" "'],  // Replaced with space on Windows
+            'single_quote'    => ["'", "\"'\""],
+            'percent'         => ['%', '" "'],  // Replaced with space on Windows
+            'ampersand'       => ['&', '"&"'],
+            'asterisk'        => ['*', '"*"'],
+            'semicolon'       => [';', '";"'],
+            'less_than'       => ['<', '"<"'],
+            'greater_than'    => ['>', '">"'],
+            'caret'           => ['^', '"^"'],
+            'dollar'          => ['$', '"$"'],
+            'backslash'       => ['\\', '"\\\\"'],
+
+            // Extended ASCII Characters
+            'latin_small_a_grave' => ['à', '"à"'],
+            'latin_small_o_tilde' => ['õ', '"õ"'],
+            'non_breaking_space'  => ["\xC2\xA0", "\"\xC2\xA0\""],
+
+            // Multibyte Characters
+            'emoji_smile'        => ['😀', '"😀"'],
+            'cjk_character'      => ['中', '"中"'],
+            'hiragana_character' => ['あ', '"あ"'],
+            'euro_sign'          => ['€', '"€"'],
+        ];
+    }
+
+    /**
+     * Provides complex test data for Windows escapeshellarg_os.
+     */
+    public static function escapeshellarg_windows_complex_data_provider(): array
+    {
+        return [
+            'string_with_quotes'                => ['echo "Hello \'world\'"', '"echo  Hello \'world\' "'],
+            'string_with_semicolon'             => ['ls; rm -rf /', '"ls; rm -rf /"'],
+            'string_with_asterisk'              => ['find . -name "*.php"', '"find . -name  *.php "'],
+            'string_with_backticks'             => ['echo `uname -a`', '"echo `uname -a`"'],
+            'string_with_pipe'                  => ['ps aux | grep apache', '"ps aux | grep apache"'],
+            'string_with_environment'           => ['echo $HOME', '"echo $HOME"'],
+            'string_with_parentheses'           => ['echo (test)', '"echo (test)"'],
+            'string_with_multiple_escape_chars' => ['echo \\"foo\\"', '"echo \\ foo\\ "'],
+            'string_with_dollar_and_specials'   => ['echo $VAR & ls', '"echo $VAR & ls"'],
+            'string_with_mixed_utf8'            => ['Grüß Gott! 😀', '"Grüß Gott  😀"'],
+            'string_with_utf8_symbols'          => ['⌘ ✈ ☎', '"⌘ ✈ ☎"'],
+            'string_with_newline'               => ["echo -e 'Hello\nWorld'", "\"echo -e 'Hello\nWorld'\""],
+            'string_with_backslash'             => ['C:\\Windows\\System32', '"C:\\Windows\\System32"'],
+            'string_complex_mixed'              => ['echo "O\'Reilly; rm -rf *; echo $PWD"', '"echo  O\'Reilly; rm -rf *; echo $PWD "'],
+        ];
+    }
+
+    /**
+     * Provides basic test data for Linux escapeshellarg_os.
+     */
+    public static function escapeshellarg_linux_basic_data_provider(): array
+    {
+        return [
+            // Basic ASCII Characters
+            'tab'             => ["\t", "'\t'"],
+            'newline'         => ["\n", "'\n'"],
+            'carriage_return' => ["\r", "'\r'"],
+            'space'           => [' ', "' '"],
+            'exclamation'     => ['!', "'!'"],
+            'double_quote'    => ['"', "'\"'"],
+            'single_quote'    => ["'", "''\\'''"],
+            'percent'         => ['%', "'%'"],
+            'ampersand'       => ['&', "'&'"],
+            'asterisk'        => ['*', "'*'"],
+            'semicolon'       => [';', "';'"],
+            'less_than'       => ['<', "'<'"],
+            'greater_than'    => ['>', "'>'"],
+            'caret'           => ['^', "'^'"],
+            'dollar'          => ['$', "'$'"],
+            'backslash'       => ['\\', "'\\'"],
+
+            // Extended ASCII Characters
+            'latin_small_a_grave' => ['à', "'à'"],
+            'latin_small_o_tilde' => ['õ', "'õ'"],
+            'non_breaking_space'  => ["\xC2\xA0", "'\xC2\xA0'"],
+
+            // Multibyte Characters
+            'emoji_smile'        => ['😀', "'😀'"],
+            'cjk_character'      => ['中', "'中'"],
+            'hiragana_character' => ['あ', "'あ'"],
+            'euro_sign'          => ['€', "'€'"],
+        ];
+    }
+
+    /**
+     * Provides complex test data for Linux escapeshellarg_os.
+     */
+    public static function escapeshellarg_linux_complex_data_provider(): array
+    {
+        return [
+            'string_with_quotes'                => ['echo "Hello \'world\'"', "'echo \"Hello '\\''world'\\''\"'"],
+            'string_with_semicolon'             => ['ls; rm -rf /', "'ls; rm -rf /'"],
+            'string_with_asterisk'              => ['find . -name "*.php"', "'find . -name \"*.php\"'"],
+            'string_with_backticks'             => ['echo `uname -a`', "'echo `uname -a`'"],
+            'string_with_pipe'                  => ['ps aux | grep apache', "'ps aux | grep apache'"],
+            'string_with_environment'           => ['echo $HOME', "'echo \$HOME'"],
+            'string_with_parentheses'           => ['echo (test)', "'echo (test)'"],
+            'string_with_multiple_escape_chars' => ['echo \\"foo\\"', "'echo \\\"foo\\\"'"],
+            'string_with_dollar_and_specials'   => ['echo $VAR & ls', "'echo \$VAR & ls'"],
+            'string_with_mixed_utf8'            => ['Grüß Gott! 😀', "'Grüß Gott! 😀'"],
+            'string_with_utf8_symbols'          => ['⌘ ✈ ☎', "'⌘ ✈ ☎'"],
+            'string_with_newline'               => ["echo -e 'Hello\nWorld'", "'echo -e '\\''Hello\nWorld'\\'''"],
+            'string_with_backslash'             => ['C:\\Windows\\System32', "'C:\\Windows\\System32'"],
+            'string_complex_mixed'              => ['echo "O\'Reilly; rm -rf *; echo $PWD"', "'echo \"O'\\''Reilly; rm -rf *; echo \$PWD\"'"],
+        ];
+    }
+
+    /**
+     * Test escapeshellarg_os() with basic characters for Windows.
+     */
+    #[DataProvider('escapeshellarg_windows_basic_data_provider')]
+    public function test_escapeshellarg_os_windows_basic(string $input, string $expected): void
+    {
+        $result = escapeshellarg_os($input, true);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test escapeshellarg_os() with complex strings for Windows.
+     */
+    #[DataProvider('escapeshellarg_windows_complex_data_provider')]
+    public function test_escapeshellarg_os_windows_complex(string $input, string $expected): void
+    {
+        $result = escapeshellarg_os($input, true);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test escapeshellarg_os() with basic characters for Linux.
+     */
+    #[DataProvider('escapeshellarg_linux_basic_data_provider')]
+    public function test_escapeshellarg_os_linux_basic(string $input, string $expected): void
+    {
+        $result = escapeshellarg_os($input, false);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test escapeshellarg_os() with complex strings for Linux.
+     */
+    #[DataProvider('escapeshellarg_linux_complex_data_provider')]
+    public function test_escapeshellarg_os_linux_complex(string $input, string $expected): void
+    {
+        $result = escapeshellarg_os($input, false);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test that escapeshellarg_os() throws ValueError for null bytes.
+     */
+    public function test_escapeshellarg_os_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('escapeshellarg_os(): Argument #1 ($arg) must not contain any null bytes');
+        escapeshellarg_os("\0", true);  // Test with Windows
+        escapeshellarg_os("\0", false); // Test with Linux
+    }
+
+    /**
+     * Test escapeshellarg_linux() with basic characters.
+     */
+    #[DataProvider('escapeshellarg_linux_basic_data_provider')]
+    public function test_escapeshellarg_linux_basic(string $input, string $expected): void
+    {
+        $result = escapeshellarg_linux($input);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test escapeshellarg_linux() with complex strings.
+     */
+    #[DataProvider('escapeshellarg_linux_complex_data_provider')]
+    public function test_escapeshellarg_linux_complex(string $input, string $expected): void
+    {
+        $result = escapeshellarg_linux($input);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test escapeshellarg_windows() with basic characters.
+     */
+    #[DataProvider('escapeshellarg_windows_basic_data_provider')]
+    public function test_escapeshellarg_windows_basic(string $input, string $expected): void
+    {
+        $result = escapeshellarg_windows($input);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test escapeshellarg_windows() with complex strings.
+     */
+    #[DataProvider('escapeshellarg_windows_complex_data_provider')]
+    public function test_escapeshellarg_windows_complex(string $input, string $expected): void
+    {
+        $result = escapeshellarg_windows($input);
+        $this->assertEquals($expected, $result, "Failed with input: $input");
+    }
+
+    /**
+     * Test that escapeshellarg_linux() throws ValueError for null bytes.
+     */
+    public function test_escapeshellarg_linux_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('escapeshellarg_os(): Argument #1 ($arg) must not contain any null bytes');
+        escapeshellarg_linux("\0");
+    }
+
+    /**
+     * Test that escapeshellarg_windows() throws ValueError for null bytes.
+     */
+    public function test_escapeshellarg_windows_null_byte(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('escapeshellarg_os(): Argument #1 ($arg) must not contain any null bytes');
+        escapeshellarg_windows("\0");
     }
 }
