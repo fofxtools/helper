@@ -435,6 +435,7 @@ function strip_tags_with_whitespace(string $string, array|string|null $allowable
  *
  * @param string $string        The input string to process.
  * @param bool   $allow_unicode Whether to allow Unicode alphabetic characters (default: false).
+ * @param string $replacement   The replacement string for non-alphabetic characters (default: '').
  *
  * @return string The string with only alphabetic characters remaining.
  *
@@ -446,15 +447,15 @@ function strip_tags_with_whitespace(string $string, array|string|null $allowable
  *     ThisisastringwithmultiplelanguagesEnglish
  *     Thisisastringwithmultiplelanguages中文русскийEnglish
  */
-function strip_non_alpha(string $string, bool $allow_unicode = false): string
+function strip_non_alpha(string $string, bool $allow_unicode = false, string $replacement = ''): string
 {
     // If Unicode alphabetic characters are allowed, use \p{L} to match all alphabetic characters
     if ($allow_unicode) {
-        return preg_replace('/[^\p{L}]/u', '', $string);
+        return preg_replace('/[^\p{L}]/u', $replacement, $string);
     }
 
     // Default: strip everything but ASCII alphabetic characters (A-Z, a-z)
-    return preg_replace('/[^a-zA-Z]/', '', $string);
+    return preg_replace('/[^a-zA-Z]/', $replacement, $string);
 }
 
 /**
@@ -466,6 +467,7 @@ function strip_non_alpha(string $string, bool $allow_unicode = false): string
  *
  * @param string $string        The input string to process.
  * @param bool   $allow_unicode Whether to allow Unicode digits (default: false).
+ * @param string $replacement   The replacement string for non-digit characters (default: '').
  *
  * @return string The string with only digits remaining.
  *
@@ -480,15 +482,15 @@ function strip_non_alpha(string $string, bool $allow_unicode = false): string
  *     // Output:
  *     123٤٥٦٧٨٩٠
  */
-function strip_non_digit(string $string, bool $allow_unicode = false): string
+function strip_non_digit(string $string, bool $allow_unicode = false, string $replacement = ''): string
 {
     // If Unicode digits are allowed, use \p{N} to match all Unicode numeric characters
     if ($allow_unicode) {
-        return preg_replace('/[^\p{N}]/u', '', $string);
+        return preg_replace('/[^\p{N}]/u', $replacement, $string);
     }
 
     // Default: strip everything but ASCII digits (0-9)
-    return preg_replace('/\D/', '', $string);
+    return preg_replace('/\D/', $replacement, $string);
 }
 
 /**
@@ -500,6 +502,7 @@ function strip_non_digit(string $string, bool $allow_unicode = false): string
  *
  * @param string $string        The input string to process.
  * @param bool   $allow_unicode Whether to allow Unicode alphanumeric characters (default: false).
+ * @param string $replacement   The replacement string for non-alphanumeric characters (default: '').
  *
  * @return string The string with only alphanumeric characters remaining.
  *
@@ -511,15 +514,15 @@ function strip_non_digit(string $string, bool $allow_unicode = false): string
  *     Thisisastringwithnumbers12345English
  *     Thisisastringwithnumbers12345中文русскийEnglish
  */
-function strip_non_alnum(string $string, bool $allow_unicode = false): string
+function strip_non_alnum(string $string, bool $allow_unicode = false, string $replacement = ''): string
 {
     // If Unicode alphanumeric characters are allowed, use \p{L} for letters and \p{N} for numbers
     if ($allow_unicode) {
-        return preg_replace('/[^\p{L}\p{N}]/u', '', $string);
+        return preg_replace('/[^\p{L}\p{N}]/u', $replacement, $string);
     }
 
     // Default: strip everything but ASCII alphanumeric characters (A-Z, a-z, 0-9)
-    return preg_replace('/[^a-zA-Z0-9]/', '', $string);
+    return preg_replace('/[^a-zA-Z0-9]/', $replacement, $string);
 }
 
 /**
@@ -1863,6 +1866,93 @@ function escape_single_quotes_for_sed(string $string): string
 }
 
 /**
+ * Sanitizes a string for use as a MySQL identifier (database name, table name, column name, index name, etc.).
+ *
+ * MySQL identifier rules:
+ * - Maximum length is typically 64 characters
+ * - Can contain ASCII letters (a-z, A-Z), numbers (0-9), underscore (_)
+ * - Can contain extended Unicode characters (letters and numbers) when $allowExtendedChars is true
+ * - While MySQL technically allows $ in identifiers, it's excluded here for portability
+ * - Identifiers may begin with a number, but this might cause issues in some contexts
+ * - All identifiers are converted to lowercase for maximum portability across systems
+ * - A leading underscore is preserved if the original string started with underscore(s)
+ * - Trailing underscores are always removed
+ * - Multiple consecutive underscores are collapsed into a single underscore
+ *
+ * @param string $string                          The string to sanitize.
+ * @param int    $maxLength                       Maximum length for the identifier (default: 64).
+ * @param bool   $allowExtendedChars              Whether to allow extended Unicode characters (default: false).
+ * @param bool   $mustStartWithLetterOrUnderscore Whether to force the identifier to start with a letter
+ *                                                or underscore (default: false).
+ * @param bool   $preserveLeadingUnderscore       Whether to preserve original leading underscores (default: true).
+ *
+ * @throws \InvalidArgumentException If maxLength is less than 1.
+ * @throws \RuntimeException         If the resulting sanitized string is empty.
+ *
+ * @return string The sanitized MySQL identifier.
+ */
+function sanitize_mysql_identifier(
+    string $string,
+    int $maxLength = 64,
+    bool $allowExtendedChars = false,
+    bool $mustStartWithLetterOrUnderscore = false,
+    bool $preserveLeadingUnderscore = true
+): string {
+    if ($maxLength < 1) {
+        throw new \InvalidArgumentException('Maximum length must be greater than 0 characters.');
+    }
+
+    // Check if original string starts with underscore
+    $hadLeadingUnderscore = str_starts_with($string, '_');
+
+    // Convert to lowercase for consistency
+    $sanitized = mb_strtolower($string, 'UTF-8');
+
+    if ($allowExtendedChars) {
+        // Allow ASCII and extended characters
+        // Replace anything else with underscores
+        $sanitized = preg_replace('/[^\p{L}\p{N}_]/u', '_', $sanitized);
+    } else {
+        // Only allow basic ASCII letters, numbers, and underscores
+        $sanitized = preg_replace('/[^a-z0-9_]/', '_', $sanitized);
+    }
+
+    // Collapse multiple underscores into a single underscore
+    $sanitized = preg_replace('/_+/', '_', $sanitized);
+
+    // Remove all leading and trailing underscores initially
+    $sanitized = trim($sanitized, '_');
+
+    // Restore original leading underscore if needed
+    if ($preserveLeadingUnderscore && $hadLeadingUnderscore) {
+        $sanitized = '_' . $sanitized;
+    }
+
+    // If it must start with a letter or underscore and doesn't
+    if ($mustStartWithLetterOrUnderscore) {
+        if ($allowExtendedChars) {
+            // Check if it starts with a letter (including extended) or underscore
+            if (!preg_match('/^[\p{L}_]/u', $sanitized)) {
+                $sanitized = '_' . $sanitized;
+            }
+        } else {
+            // Check if it starts with an ASCII letter or underscore
+            if (!preg_match('/^[a-z_]/', $sanitized)) {
+                $sanitized = '_' . $sanitized;
+            }
+        }
+    }
+
+    // If empty after sanitization, throw an exception
+    if ($sanitized === '') {
+        throw new \RuntimeException('Resulting sanitized string is empty.');
+    }
+
+    // Ensure the length doesn't exceed the maximum
+    return mb_substr($sanitized, 0, $maxLength, 'UTF-8');
+}
+
+/**
  * Sanitize a domain name for use in MySQL database names.
  *
  * @param string $domainName       The domain name to sanitize.
@@ -1893,7 +1983,17 @@ function sanitize_domain_for_database(string $domainName, string $username = '',
     $needsPrefix = $forceLetterStart && !ctype_alpha($sanitizedDomain[0]);
 
     // Calculate the maximum domain length
-    $maxDomainLength = 64 - (strlen($username) > 0 ? strlen($username) + 1 : 0) - ($needsPrefix ? strlen($prefix) : 0);
+    $maxDomainLength = 64;
+
+    if (strlen($username) > 0) {
+        // Account for the username and underscore
+        $maxDomainLength -= strlen($username) + 1;
+    }
+
+    if ($needsPrefix) {
+        // Account for the prefix
+        $maxDomainLength -= strlen($prefix);
+    }
 
     // Truncate the domain if necessary
     $sanitizedDomain = substr($sanitizedDomain, 0, $maxDomainLength);

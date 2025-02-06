@@ -1784,6 +1784,19 @@ class StringTest extends TestCase
     }
 
     /**
+     * Tests strip_non_alpha() with a replacement character.
+     *
+     * @return void
+     */
+    public function test_strip_non_alpha_replacement(): void
+    {
+        $replacement = '_';
+        $input       = 'Hello123World!';
+        $expected    = 'Hello___World_';
+        $this->assertEquals($expected, strip_non_alpha($input, false, $replacement));
+    }
+
+    /**
      * Tests strip_non_digit() with a string containing English digits and non-digit characters.
      *
      * @return void
@@ -1906,6 +1919,19 @@ class StringTest extends TestCase
     }
 
     /**
+     * Tests strip_non_digit() with a replacement character.
+     *
+     * @return void
+     */
+    public function test_strip_non_digit_replacement(): void
+    {
+        $replacement = '_';
+        $input       = 'Hello 123 World!';
+        $expected    = '______123_______';
+        $this->assertEquals($expected, strip_non_digit($input, false, $replacement));
+    }
+
+    /**
      * Tests strip_non_alnum() with a string containing ASCII alphanumeric characters and non-alphanumeric characters.
      *
      * @return void
@@ -2024,6 +2050,19 @@ class StringTest extends TestCase
         $input    = str_repeat('ABC123!@# ', 1000);
         $expected = str_repeat('ABC123', 1000);
         $this->assertEquals($expected, strip_non_alnum($input));
+    }
+
+    /**
+     * Tests strip_non_alnum() with a replacement character.
+     *
+     * @return void
+     */
+    public function test_strip_non_alnum_replacement(): void
+    {
+        $replacement = '_';
+        $input       = 'Hello 123 World!';
+        $expected    = 'Hello_123_World_';
+        $this->assertEquals($expected, strip_non_alnum($input, false, $replacement));
     }
 
     /**
@@ -7060,6 +7099,178 @@ class StringTest extends TestCase
     public function test_escape_single_quotes_for_sed($input, $expected)
     {
         $this->assertEquals($expected, escape_single_quotes_for_sed($input));
+    }
+
+    /**
+     * Data provider for basic MySQL identifier sanitization tests
+     */
+    public static function mysql_identifier_basic_provider(): array
+    {
+        return [
+            'simple identifier' => [
+                'input'    => 'test_table',
+                'expected' => 'test_table',
+            ],
+            'uppercase conversion' => [
+                'input'    => 'TestTable',
+                'expected' => 'testtable',
+            ],
+            'special characters' => [
+                'input'    => 'test@table#123',
+                'expected' => 'test_table_123',
+            ],
+            'multiple underscores' => [
+                'input'    => 'test__table___123',
+                'expected' => 'test_table_123',
+            ],
+            'leading number' => [
+                'input'    => '123_test',
+                'expected' => '123_test',
+            ],
+            'spaces to underscore' => [
+                'input'    => 'test table 123',
+                'expected' => 'test_table_123',
+            ],
+            'original leading underscore' => [
+                'input'    => '_test_table',
+                'expected' => '_test_table',
+            ],
+            'trailing underscore removed' => [
+                'input'    => 'test_table_',
+                'expected' => 'test_table',
+            ],
+            'maximum length' => [
+                'input'    => str_repeat('a', 100),
+                'expected' => str_repeat('a', 64),
+            ],
+        ];
+    }
+
+    #[DataProvider('mysql_identifier_basic_provider')]
+    public function test_sanitize_mysql_identifier_basic(string $input, string $expected): void
+    {
+        $this->assertEquals($expected, sanitize_mysql_identifier($input));
+    }
+
+    /**
+     * Data provider for MySQL identifier tests with extended characters
+     */
+    public static function mysql_identifier_extended_chars_provider(): array
+    {
+        return [
+            'ascii only mode' => [
+                'input'         => 'café_table',
+                'allowExtended' => false,
+                'expected'      => 'caf_table',
+            ],
+            'extended chars allowed' => [
+                'input'         => 'café_table',
+                'allowExtended' => true,
+                'expected'      => 'café_table',
+            ],
+            'mixed extended and special' => [
+                'input'         => 'café@表_123',
+                'allowExtended' => true,
+                'expected'      => 'café_表_123',
+            ],
+        ];
+    }
+
+    #[DataProvider('mysql_identifier_extended_chars_provider')]
+    public function test_sanitize_mysql_identifier_extended_chars(
+        string $input,
+        bool $allowExtended,
+        string $expected
+    ): void {
+        $this->assertEquals(
+            $expected,
+            sanitize_mysql_identifier($input, 64, $allowExtended)
+        );
+    }
+
+    /**
+     * Data provider for MySQL identifier tests with must-start-with-letter option
+     */
+    public static function mysql_identifier_must_start_provider(): array
+    {
+        return [
+            'number start needs underscore' => [
+                'input'         => '123test',
+                'allowExtended' => false,
+                'expected'      => '_123test',
+            ],
+            'letter start unchanged' => [
+                'input'         => 'test123',
+                'allowExtended' => false,
+                'expected'      => 'test123',
+            ],
+            'extended letter start unchanged' => [
+                'input'         => 'étest123',
+                'allowExtended' => true,
+                'expected'      => 'étest123',
+            ],
+            'special char replaced' => [
+                'input'         => '@test',
+                'allowExtended' => false,
+                'expected'      => 'test',
+            ],
+        ];
+    }
+
+    #[DataProvider('mysql_identifier_must_start_provider')]
+    public function test_sanitize_mysql_identifier_must_start_with_letter(
+        string $input,
+        bool $allowExtended,
+        string $expected
+    ): void {
+        $this->assertEquals(
+            $expected,
+            sanitize_mysql_identifier($input, 64, $allowExtended, true)
+        );
+    }
+
+    /**
+     * Test that empty result throws RuntimeException
+     */
+    public function test_sanitize_mysql_identifier_empty_result(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Resulting sanitized string is empty.');
+        sanitize_mysql_identifier('@#$');
+    }
+
+    /**
+     * Test that invalid length throws InvalidArgumentException
+     */
+    public function test_sanitize_mysql_identifier_invalid_length(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Maximum length must be greater than 0 characters.');
+        sanitize_mysql_identifier('test', 0);
+    }
+
+    /**
+     * Test preservation of original leading underscore
+     */
+    public function test_sanitize_mysql_identifier_leading_underscore_preservation(): void
+    {
+        // Original leading underscore should be preserved
+        $this->assertEquals(
+            '_test',
+            sanitize_mysql_identifier('_test', 64, false, false, true)
+        );
+    }
+
+    /**
+     * Test that leading underscore from sanitization is not preserved
+     */
+    public function test_sanitize_mysql_identifier_sanitized_underscore_not_preserved(): void
+    {
+        // Leading underscore from sanitization should not be preserved
+        $this->assertEquals(
+            'test',
+            sanitize_mysql_identifier('@test', 64, false, false, true)
+        );
     }
 
     /**

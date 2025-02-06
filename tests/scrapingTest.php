@@ -9,34 +9,56 @@ use PHPUnit\Framework\TestCase;
  */
 class ScrapingTest extends TestCase
 {
+    /** @var string The base URL for test requests */
+    private static string $baseUrl;
+
     /**
-     * Check if the web server is running before running the whole test suite.
+     * Set up the base URL and check web server before running test suite
      */
     public static function setUpBeforeClass(): void
     {
+        // Get the appropriate host based on environment
+        if (PHP_OS_FAMILY === 'Linux' && getenv('WSL_DISTRO_NAME')) {
+            // In WSL2, /etc/resolv.conf's nameserver points to the Windows host
+            $nameserver    = trim(shell_exec("grep nameserver /etc/resolv.conf | awk '{print $2}'"));
+            self::$baseUrl = 'http://' . $nameserver;
+        } else {
+            self::$baseUrl = 'http://localhost';
+        }
+
         self::check_web_server_status();
     }
 
     /**
-     * Check if the web server is running by attempting to access localhost.
+     * Check if the web server is running by attempting to access it
      */
     private static function check_web_server_status()
     {
-        $url = 'http://localhost';
-
-        // Use cURL to check if the server is running.
-        $ch = curl_init($url);
+        $ch = curl_init(self::$baseUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         // Timeout after 2 seconds
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_exec($ch);
 
-        // If the connection fails, skip all tests.
+        // If the connection fails, skip all tests
         if (curl_errno($ch)) {
             self::markTestSkipped('The web server is not running. Skipping tests.');
         }
 
         curl_close($ch);
+    }
+
+    /**
+     * Helper method to build test URLs
+     */
+    private function buildUrl(string $path, array $query = []): string
+    {
+        $url = self::$baseUrl . '/helper/public/' . ltrim($path, '/');
+        if (!empty($query)) {
+            $url .= '?' . http_build_query($query);
+        }
+
+        return $url;
     }
 
     /**
@@ -105,7 +127,10 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_success()
     {
-        $url     = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
+        $url = $this->buildUrl('request-vars.php', [
+            'string' => 'hello',
+            'num'    => '1',
+        ]);
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -149,7 +174,9 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_url_with_special_chars()
     {
-        $url     = 'http://localhost/helper/public/request-vars.php?param=' . urlencode('value with spaces');
+        $url = $this->buildUrl('request-vars.php', [
+            'param' => 'value with spaces',
+        ]);
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -161,7 +188,10 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_url_with_query_params()
     {
-        $url     = 'http://localhost/helper/public/request-vars.php?foo=bar&baz=qux';
+        $url = $this->buildUrl('request-vars.php', [
+            'foo' => 'bar',
+            'baz' => 'qux',
+        ]);
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -174,7 +204,7 @@ class ScrapingTest extends TestCase
      */
     public function test_url_get_contents_redirect()
     {
-        $url     = 'http://localhost/helper/public/request-vars.php?redirect=true';
+        $url     = $this->buildUrl('request-vars.php', ['redirect' => 'true']);
         $content = url_get_contents($url);
 
         $this->assertNotEmpty($content);
@@ -186,7 +216,10 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_valid_url()
     {
-        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
+        $url = $this->buildUrl('request-vars.php', [
+            'string' => 'hello',
+            'num'    => '1',
+        ]);
         $result = curl_get_contents($url);
 
         $this->assertIsString($result);
@@ -198,10 +231,11 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_proxy()
     {
-        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
-        $config = ['use_proxy' => true];
-
-        $result = curl_get_contents($url, $config['use_proxy']);
+        $url = $this->buildUrl('request-vars.php', [
+            'string' => 'hello',
+            'num'    => '1',
+        ]);
+        $result = curl_get_contents($url, true);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('contents', $result);
@@ -213,10 +247,11 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_headers()
     {
-        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
-        $config = ['return_headers' => true];
-
-        $result = curl_get_contents($url, false, [], true, false, $config['return_headers']);
+        $url = $this->buildUrl('request-vars.php', [
+            'string' => 'hello',
+            'num'    => '1',
+        ]);
+        $result = curl_get_contents($url, false, [], true, false, true);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('headers', $result);
@@ -228,10 +263,11 @@ class ScrapingTest extends TestCase
      */
     public function test_curl_get_contents_with_info()
     {
-        $url    = 'http://localhost/helper/public/request-vars.php?string=hello&num=1';
-        $config = ['return_info' => true];
-
-        $result = curl_get_contents($url, false, [], true, $config['return_info']);
+        $url = $this->buildUrl('request-vars.php', [
+            'string' => 'hello',
+            'num'    => '1',
+        ]);
+        $result = curl_get_contents($url, false, [], true, true);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('info', $result);
