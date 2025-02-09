@@ -4024,7 +4024,7 @@ class StringTest extends TestCase
     public function test_preg_split_whitespace_non_breaking_spaces_treated_as_regular(): void
     {
         $input = "This\xC2\xA0is\xC2\xA0a\xC2\xA0test";
-        // Non-breaking spaces are treated as regular characters.
+        // Non-breaking spaces are treated as regular characters. They should not be split.
         $expected = ['This is a test'];
         $this->assertSame($expected, preg_split_whitespace($input, false));
     }
@@ -4038,7 +4038,7 @@ class StringTest extends TestCase
     public function test_preg_split_whitespace_multiple_spaces_with_non_breaking_spaces_excluded(): void
     {
         $input = "This   is\xC2\xA0a   test";
-        // Only normal spaces are split.
+        // Only normal spaces are split. Non-breaking spaces should not be split.
         $expected = ['This', 'is a', 'test'];
         $this->assertSame($expected, preg_split_whitespace($input, false));
     }
@@ -7345,5 +7345,196 @@ class StringTest extends TestCase
         $username   = 'user123';
         $expected   = str_repeat('a', 56) . '_user123'; // 64 chars minus '_user123'
         $this->assertEquals($expected, sanitize_domain_for_database($longDomain, $username));
+    }
+
+    /**
+     * Data provider for basic identifier validation tests
+     */
+    public static function provide_validate_identifier_valid_cases(): array
+    {
+        return [
+            'simple valid' => [
+                'input'    => 'test123',
+                'expected' => true,
+            ],
+            'with hyphens' => [
+                'input'    => 'test-123-test',
+                'expected' => true,
+            ],
+            'with underscores' => [
+                'input'    => 'test_123_test',
+                'expected' => true,
+            ],
+            'mixed case' => [
+                'input'    => 'Test_123-TEST',
+                'expected' => true,
+            ],
+            'numbers only' => [
+                'input'    => '123456',
+                'expected' => true,
+            ],
+            'single character' => [
+                'input'    => 'a',
+                'expected' => true,
+            ],
+        ];
+    }
+
+    #[DataProvider('provide_validate_identifier_valid_cases')]
+    public function test_validate_identifier_valid_cases(string $input, bool $expected): void
+    {
+        $this->assertEquals($expected, validate_identifier($input));
+    }
+
+    /**
+     * Data provider for invalid identifier tests
+     */
+    public static function provide_validate_identifier_invalid_cases(): array
+    {
+        return [
+            'empty string' => [
+                'input'             => '',
+                'expectedException' => \InvalidArgumentException::class,
+                'expectedMessage'   => 'Identifier cannot be empty.',
+            ],
+            'spaces' => [
+                'input'             => 'test 123',
+                'expectedException' => \InvalidArgumentException::class,
+                'expectedMessage'   => 'Identifier "test 123" can only contain letters, numbers, hyphens, and underscores.',
+            ],
+            'special characters' => [
+                'input'             => 'test@123',
+                'expectedException' => \InvalidArgumentException::class,
+                'expectedMessage'   => 'Identifier "test@123" can only contain letters, numbers, hyphens, and underscores.',
+            ],
+            'unicode characters' => [
+                'input'             => 'tést123',
+                'expectedException' => \InvalidArgumentException::class,
+                'expectedMessage'   => 'Identifier "tést123" can only contain letters, numbers, hyphens, and underscores.',
+            ],
+        ];
+    }
+
+    #[DataProvider('provide_validate_identifier_invalid_cases')]
+    public function test_validate_identifier_invalid_cases(
+        string $input,
+        string $expectedException,
+        string $expectedMessage
+    ): void {
+        $this->expectException($expectedException);
+        $this->expectExceptionMessage($expectedMessage);
+        validate_identifier($input);
+    }
+
+    /**
+     * Test maximum length validation
+     */
+    public function test_validate_identifier_max_length(): void
+    {
+        // Should pass with exactly max length
+        $this->assertTrue(validate_identifier(str_repeat('a', 64)));
+
+        // Should fail when exceeding max length
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Identifier "' . str_repeat('a', 65) . '" exceeds maximum length of 64 characters.');
+        validate_identifier(str_repeat('a', 65));
+    }
+
+    /**
+     * Test custom maximum length
+     */
+    public function test_validate_identifier_custom_max_length(): void
+    {
+        // Should pass with custom length
+        $this->assertTrue(validate_identifier('test', 10));
+
+        // Should fail with custom length
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Identifier "toolongstring" exceeds maximum length of 5 characters.');
+        validate_identifier('toolongstring', 5);
+    }
+
+    /**
+     * Test null maximum length
+     */
+    public function test_validate_identifier_null_max_length(): void
+    {
+        // Should pass with very long string when max length is null
+        $this->assertTrue(validate_identifier(str_repeat('a', 1000), null));
+    }
+
+    /**
+     * Data provider for reserved identifier tests
+     */
+    public static function provide_validate_identifier_reserved_cases_valid(): array
+    {
+        return [
+            'valid non-reserved string' => [
+                'input'           => 'test',
+                'reservedStrings' => ['admin', 'root', 'system'],
+                'expected'        => true,
+            ],
+            'substring of reserved not blocked' => [
+                'input'           => 'administrator',
+                'reservedStrings' => ['admin', 'root', 'system'],
+                'expected'        => true,
+            ],
+        ];
+    }
+
+    /**
+     * Data provider for invalid reserved identifier tests
+     */
+    public static function provide_validate_identifier_reserved_cases_invalid(): array
+    {
+        return [
+            'matches reserved string exactly' => [
+                'input'             => 'admin',
+                'reservedStrings'   => ['admin', 'root', 'system'],
+                'expectedException' => \InvalidArgumentException::class,
+                'expectedMessage'   => 'Identifier "admin" matches reserved string.',
+            ],
+            'matches reserved string case-insensitive' => [
+                'input'             => 'ADMIN',
+                'reservedStrings'   => ['admin', 'root', 'system'],
+                'expectedException' => \InvalidArgumentException::class,
+                'expectedMessage'   => 'Identifier "ADMIN" matches reserved string.',
+            ],
+            'matches reserved string mixed case' => [
+                'input'             => 'AdMiN',
+                'reservedStrings'   => ['admin', 'root', 'system'],
+                'expectedException' => \InvalidArgumentException::class,
+                'expectedMessage'   => 'Identifier "AdMiN" matches reserved string.',
+            ],
+        ];
+    }
+
+    #[DataProvider('provide_validate_identifier_reserved_cases_valid')]
+    public function test_validate_identifier_reserved_cases_valid(
+        string $input,
+        array $reservedStrings,
+        bool $expected
+    ): void {
+        $this->assertEquals($expected, validate_identifier($input, null, $reservedStrings));
+    }
+
+    #[DataProvider('provide_validate_identifier_reserved_cases_invalid')]
+    public function test_validate_identifier_reserved_cases_invalid(
+        string $input,
+        array $reservedStrings,
+        string $expectedException,
+        string $expectedMessage
+    ): void {
+        $this->expectException($expectedException);
+        $this->expectExceptionMessage($expectedMessage);
+        validate_identifier($input, null, $reservedStrings);
+    }
+
+    /**
+     * Test null reserved strings array
+     */
+    public function test_validate_identifier_empty_reserved_list(): void
+    {
+        $this->assertTrue(validate_identifier('admin', null, []));
     }
 }

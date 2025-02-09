@@ -2014,3 +2014,56 @@ function sanitize_domain_for_database(string $domainName, string $username = '',
     // Remove any trailing underscores from the final result
     return rtrim($sanitizedDomain, '_');
 }
+
+/**
+ * Validates a string identifier against a set of rules.
+ *
+ * Rules:
+ * - String must not be empty
+ * - String can only contain letters, numbers, hyphens, and underscores
+ * - Optional maximum length check (defaults to 64 characters)
+ * - Optional check against reserved strings (case-insensitive)
+ *
+ * @param string   $identifier      The string to validate
+ * @param ?int     $maxLength       Optional maximum length (default: 64, null for no limit)
+ * @param string[] $reservedStrings Optional array of reserved strings that are not allowed
+ *
+ * @throws \InvalidArgumentException If the identifier is invalid or contains reserved strings
+ *
+ * @return bool Returns true if validation passes (throws exception otherwise)
+ */
+function validate_identifier(
+    string $identifier,
+    ?int $maxLength = 64,
+    array $reservedStrings = []
+): bool {
+    // Check for empty string
+    if ($identifier === '') {
+        throw new \InvalidArgumentException('Identifier cannot be empty.');
+    }
+
+    // Check maximum length if specified
+    if ($maxLength !== null && strlen($identifier) > $maxLength) {
+        throw new \InvalidArgumentException(
+            sprintf('Identifier "%s" exceeds maximum length of %d characters.', $identifier, $maxLength)
+        );
+    }
+
+    // Check for valid characters (letters, numbers, hyphens, underscores)
+    if (!preg_match('/^[a-zA-Z0-9\-_]+$/', $identifier)) {
+        throw new \InvalidArgumentException(
+            sprintf('Identifier "%s" can only contain letters, numbers, hyphens, and underscores.', $identifier)
+        );
+    }
+
+    // Check against reserved strings if any are provided (case-insensitive)
+    foreach ($reservedStrings as $reserved) {
+        if (strcasecmp($identifier, $reserved) === 0) {
+            throw new \InvalidArgumentException(
+                sprintf('Identifier "%s" matches reserved string.', $identifier)
+            );
+        }
+    }
+
+    return true;
+}
