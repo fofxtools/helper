@@ -873,3 +873,49 @@ function escapeshellarg_windows(string $arg): string
 {
     return escapeshellarg_os($arg, true);
 }
+
+/**
+ * Get the first nameserver IP from WSL's resolv.conf file.
+ *
+ * @return string|null The first nameserver IP if found, null otherwise
+ */
+function resolv_conf_nameserver_ip(): ?string
+{
+    $result = shell_exec("grep nameserver /etc/resolv.conf | awk '{print $2}'");
+
+    if ($result === null || $result === false) {
+        return null;
+    }
+
+    $ip = trim($result);
+
+    return $ip !== '' ? $ip : null;
+}
+
+/**
+ * Convert a URL to be WSL-aware by replacing 'localhost' with the Windows host IP
+ * when running under WSL (Windows Subsystem for Linux).
+ *
+ * @param string $url The URL that may need WSL awareness
+ *
+ * @return string The WSL-aware URL, or original URL if not in WSL
+ */
+function wsl_url(string $url): string
+{
+    // Only modify URL if running in WSL
+    if (PHP_OS_FAMILY === 'Linux' && getenv('WSL_DISTRO_NAME')) {
+        // Get Windows host IP from WSL's resolv.conf
+        $nameserver = resolv_conf_nameserver_ip();
+
+        if ($nameserver) {
+            // Replace localhost with the Windows host IP, preserving any port number
+            return preg_replace(
+                '/localhost(:\d+)?/',
+                $nameserver . '$1',
+                $url
+            );
+        }
+    }
+
+    return $url;
+}

@@ -2253,4 +2253,87 @@ class ServerTest extends TestCase
         $this->expectExceptionMessage('escapeshellarg_os(): Argument #1 ($arg) must not contain any null bytes');
         escapeshellarg_windows("\0");
     }
+
+    /**
+     * Test resolv_conf_nameserver_ip() on Linux systems
+     */
+    public function test_resolv_conf_nameserver_ip(): void
+    {
+        // Skip if not on Linux
+        if (PHP_OS_FAMILY !== 'Linux') {
+            $this->markTestSkipped('This test only runs on Linux systems.');
+        }
+
+        $result = resolv_conf_nameserver_ip();
+
+        if ($result !== null) {
+            // If we got a result, it should be a valid IP
+            $this->assertTrue(
+                filter_var($result, FILTER_VALIDATE_IP) !== false,
+                'Expected valid IP address'
+            );
+        } else {
+            // Null result is acceptable (e.g. if resolv.conf doesn't exist or is empty)
+            $this->assertNull($result);
+        }
+    }
+
+    /**
+     * Data provider for wsl_url() tests
+     *
+     * @return array<string,array{string}>
+     */
+    public static function wsl_url_provider(): array
+    {
+        return [
+            'localhost_only'                  => ['http://localhost'],
+            'localhost_basic'                 => ['http://localhost/api'],
+            'localhost_with_port'             => ['http://localhost:8000/api'],
+            'localhost_with_port_and_version' => ['http://localhost:10001/api/v1'],
+            'external_api'                    => ['http://api.example.com/v1'],
+            'ip_basic'                        => ['http://127.0.0.1/api'],
+            'ip_with_port'                    => ['http://172.20.128.1:8000/api'],
+            'ip_with_port_and_version'        => ['http://172.20.128.1:10001/api/v1'],
+        ];
+    }
+
+    /**
+     * Test wsl_url() function
+     */
+    #[DataProvider('wsl_url_provider')]
+    public function test_wsl_url(string $url): void
+    {
+        // Mock environment check
+        $isWsl = PHP_OS_FAMILY === 'Linux' && getenv('WSL_DISTRO_NAME');
+
+        if ($isWsl) {
+            // In WSL environment
+            $result = wsl_url($url);
+
+            if (str_contains($url, 'localhost')) {
+                // localhost URLs should be modified
+                $this->assertStringNotContainsString(
+                    'localhost',
+                    $result,
+                    'WSL should convert localhost to IP address'
+                );
+
+                // Should preserve port if present
+                if (preg_match('/:\d+/', $url, $matches)) {
+                    $this->assertStringContainsString(
+                        $matches[0],
+                        $result,
+                        'WSL should preserve port number'
+                    );
+                }
+            } else {
+                // Non-localhost URLs should remain unchanged
+                $this->assertSame($url, $result, 'Non-localhost URL should not be modified');
+            }
+        } else {
+            // Not in WSL environment - URLs should remain unchanged
+            $result = wsl_url($url);
+            $this->assertSame($url, $result, 'URL should not be modified outside WSL');
+        }
+    }
 }
