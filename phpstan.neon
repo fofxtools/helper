@@ -3,7 +3,9 @@ parameters:
     paths:
         - bootstrap
         - config
+        - local
         - public
         - src
     excludePaths:
         - vendor
+        - local/deleted

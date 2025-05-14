@@ -7537,4 +7537,82 @@ class StringTest extends TestCase
     {
         $this->assertTrue(validate_identifier('admin', null, []));
     }
+
+    /**
+     * Data provider for valid UUID test cases
+     */
+    public static function provide_valid_uuid_cases(): array
+    {
+        return [
+            'standard lowercase UUID' => [
+                'input'    => '123e4567-e89b-12d3-a456-426614174000',
+                'expected' => true,
+            ],
+            'uppercase UUID' => [
+                'input'    => '123E4567-E89B-12D3-A456-426614174000',
+                'expected' => true,
+            ],
+            'mixed case UUID' => [
+                'input'    => '123e4567-e89b-12D3-A456-426614174000',
+                'expected' => true,
+            ],
+        ];
+    }
+
+    /**
+     * Data provider for invalid UUID test cases
+     */
+    public static function provide_invalid_uuid_cases(): array
+    {
+        return [
+            'too short' => [
+                'input'    => '123e4567-e89b-12d3-a456-42661417400',
+                'expected' => false,
+            ],
+            'too long' => [
+                'input'    => '123e4567-e89b-12d3-a456-4266141740000',
+                'expected' => false,
+            ],
+            'missing hyphen' => [
+                'input'    => '123e4567e89b-12d3-a456-426614174000',
+                'expected' => false,
+            ],
+            'wrong format' => [
+                'input'    => '123e-4567-e89b-12d3-a456-426614174000',
+                'expected' => false,
+            ],
+            'non-hex character' => [
+                'input'    => '123e4567-e89b-12d3-a456-42661417400g',
+                'expected' => false,
+            ],
+            'plain string' => [
+                'input'    => 'not-a-uuid',
+                'expected' => false,
+            ],
+            'empty string' => [
+                'input'    => '',
+                'expected' => false,
+            ],
+            'no hyphens' => [
+                'input'    => '123e4567e89b12d3a456426614174000',
+                'expected' => false,
+            ],
+            'invalid characters' => [
+                'input'    => '123e4567-e89b-12z3-a456-426614174000',
+                'expected' => false,
+            ],
+        ];
+    }
+
+    #[DataProvider('provide_valid_uuid_cases')]
+    public function test_is_valid_uuid_valid_cases(string $input, bool $expected): void
+    {
+        $this->assertEquals($expected, is_valid_uuid($input));
+    }
+
+    #[DataProvider('provide_invalid_uuid_cases')]
+    public function test_is_valid_uuid_invalid_cases(string $input, bool $expected): void
+    {
+        $this->assertEquals($expected, is_valid_uuid($input));
+    }
 }

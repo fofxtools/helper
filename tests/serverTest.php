@@ -2261,7 +2261,7 @@ class ServerTest extends TestCase
     {
         // Skip if not on Linux
         if (PHP_OS_FAMILY !== 'Linux') {
-            $this->markTestSkipped('This test only runs on Linux systems.');
+            $this->markTestSkipped('This test is only applicable to Linux.');
         }
 
         $result = resolv_conf_nameserver_ip();

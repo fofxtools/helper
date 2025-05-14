@@ -2067,3 +2067,23 @@ function validate_identifier(
 
     return true;
 }
+
+/**
+ * Validates whether a string is a valid UUID (Universally Unique Identifier).
+ *
+ * This function performs a format-based validation rather than a strict validation.
+ * It checks if the input string matches the standard UUID format,
+ * which consists of 5 hyphen-separated groups (8-4-4-4-12 hexadecimal characters).
+ *
+ * The function supports both uppercase and lowercase hexadecimal characters.
+ * It does not validate the version or variant of the UUID, nor does it verify
+ * that the UUID was generated according to any particular algorithm.
+ *
+ * @param string $uuid The string to validate as a UUID.
+ *
+ * @return bool Returns true if the string matches UUID format, false otherwise.
+ */
+function is_valid_uuid(string $uuid): bool
+{
+    return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $uuid) === 1;
+}

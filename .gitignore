@@ -1,4 +1,4 @@
-# Logs and Error Files
+# Logs and Errors
 error_log
 *.log
 /logs/
@@ -17,30 +17,48 @@ config.*.php
 *.config.php
 *.config.*.php
 
-# Local and Temporary Files
+# Local Folders
 /local/
-/temp*.php
-/out*.txt
+
+# Storage Folders
+/storage/
 
 # IDE and Editor Files
-/.fleet
-/.idea
+.cursorrules
+
+# IDE and Editor Folders
+/.cursor/
+/.fleet/
+/.idea/
 /.vscode/
-/.zed
+/.zed/
 
 # Cache Files
 /.php-cs-fixer.cache
 /.phpunit.result.cache
 /.phpunit.cache
-/.phpstan/cache/
+
+# Cache Folders
+/.phpstan/
 
 # Build Files
+/public/hot
+
+# Build Folders
 /coverage/
 /node_modules/
 /public/build/
-/public/hot
 /public/storage
-/storage/*.key
+
+# Temporary Files
+/temp*.php
+/out*.txt
+
+# SQLite Files
+*.sqlite*
+
+# Redis Files
+*.rdb
 
 # NPM and Yarn logs
 npm-debug.log
@@ -57,10 +75,7 @@ Homestead.yaml
 auth.json
 
 # Custom Output Files
-/*repopack-output.txt
+/*repopack-output.*
+/*repomix-output.*
 /phpunit.txt
 /phpstan.txt
-
-# Storage Files
-/storage/*.log
-/storage/*.sql
