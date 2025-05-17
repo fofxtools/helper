@@ -4025,7 +4025,7 @@ class StringTest extends TestCase
     {
         $input = "This\xC2\xA0is\xC2\xA0a\xC2\xA0test";
         // Non-breaking spaces are treated as regular characters. They should not be split.
-        $expected = ['This is a test'];
+        $expected = ['This is a test']; // Uses non-breaking space character
         $this->assertSame($expected, preg_split_whitespace($input, false));
     }
 
@@ -4039,7 +4039,7 @@ class StringTest extends TestCase
     {
         $input = "This   is\xC2\xA0a   test";
         // Only normal spaces are split. Non-breaking spaces should not be split.
-        $expected = ['This', 'is a', 'test'];
+        $expected = ['This', 'is a', 'test']; // Uses non-breaking space character
         $this->assertSame($expected, preg_split_whitespace($input, false));
     }
 
@@ -7614,5 +7614,117 @@ class StringTest extends TestCase
     public function test_is_valid_uuid_invalid_cases(string $input, bool $expected): void
     {
         $this->assertEquals($expected, is_valid_uuid($input));
+    }
+
+    /**
+     * Data provider for testing uuid_v4 with different options
+     */
+    public static function uuid_v4_options_provider(): array
+    {
+        return [
+            'default options'         => [true, true, true],
+            'no dashes'               => [false, true, false],
+            'uppercase'               => [true, false, true],
+            'no dashes and uppercase' => [false, false, false],
+        ];
+    }
+
+    /**
+     * Test the basic functionality of uuid_v4
+     */
+    public function test_uuid_v4_basic(): void
+    {
+        $uuid = uuid_v4();
+
+        // UUID should be a string
+        $this->assertIsString($uuid);
+
+        // UUID with dashes should be 36 characters
+        $this->assertEquals(36, strlen($uuid));
+
+        // Should be a valid UUID
+        $this->assertTrue(is_valid_uuid($uuid), 'The generated UUID is not valid');
+
+        // Should include the version 4 marker
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $uuid);
+    }
+
+    /**
+     * Test uuid_v4 with different formatting options
+     */
+    #[DataProvider('uuid_v4_options_provider')]
+    public function test_uuid_v4_format_options(bool $dashes, bool $lowercase, bool $shouldHaveDashes): void
+    {
+        $uuid = uuid_v4($dashes, $lowercase);
+
+        // Check if dashes are present as expected
+        if ($shouldHaveDashes) {
+            $this->assertStringContainsString('-', $uuid);
+            $this->assertEquals(36, strlen($uuid));
+        } else {
+            $this->assertStringNotContainsString('-', $uuid);
+            $this->assertEquals(32, strlen($uuid));
+        }
+
+        // Check case
+        if ($lowercase) {
+            $this->assertEquals(strtolower($uuid), $uuid);
+        } else {
+            $this->assertEquals(strtoupper($uuid), $uuid);
+        }
+
+        // Clean up dashes for validation if needed
+        $cleanUuid = str_replace('-', '', $uuid);
+
+        // Check if it's a valid hex string
+        $this->assertTrue(ctype_xdigit($cleanUuid), 'UUID contains non-hexadecimal characters');
+
+        // Reformat for standard validation if needed
+        if (!$dashes) {
+            $formattedUuid = substr($cleanUuid, 0, 8) . '-' .
+                             substr($cleanUuid, 8, 4) . '-' .
+                             substr($cleanUuid, 12, 4) . '-' .
+                             substr($cleanUuid, 16, 4) . '-' .
+                             substr($cleanUuid, 20, 12);
+            $this->assertTrue(is_valid_uuid($formattedUuid), 'The UUID is not valid when reformatted');
+        }
+    }
+
+    /**
+     * Test that uuid_v4 generates unique values
+     */
+    public function test_uuid_v4_uniqueness(): void
+    {
+        $uuids = [];
+        $count = 100;
+
+        // Generate multiple UUIDs
+        for ($i = 0; $i < $count; $i++) {
+            $uuids[] = uuid_v4();
+        }
+
+        // Check uniqueness
+        $uniqueUuids = array_unique($uuids);
+        $this->assertCount($count, $uniqueUuids, 'Generated UUIDs are not unique');
+    }
+
+    /**
+     * Test uuid_v4 generates RFC 4122 compliant version 4 UUIDs
+     */
+    public function test_uuid_v4_rfc4122_compliance(): void
+    {
+        $uuid = uuid_v4();
+
+        // Extract the version and variant fields
+        $parts = explode('-', $uuid);
+        $this->assertCount(5, $parts);
+
+        // Check version (should be 4)
+        $version = $parts[2][0];
+        $this->assertEquals('4', $version);
+
+        // Check variant (should be 8, 9, a, or b)
+        $variant = $parts[3][0];
+        $this->assertMatchesRegularExpression('/^[89ab]$/', $variant);
     }
 }

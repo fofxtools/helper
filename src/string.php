@@ -2087,3 +2087,42 @@ function is_valid_uuid(string $uuid): bool
 {
     return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $uuid) === 1;
 }
+
+/**
+ * Generates a UUID (Universally Unique Identifier) v4.
+ *
+ * This function creates a version 4 UUID, which is based on random numbers.
+ * The generated UUID follows the RFC 4122 standard format:
+ * xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx where:
+ * - x is any hexadecimal digit
+ * - y is one of 8, 9, A, or B
+ *
+ * @param bool $dashes    Whether to include dashes in the UUID (default: true)
+ * @param bool $lowercase Whether to return the UUID in lowercase (default: true)
+ *
+ * @return string The generated UUID
+ */
+function uuid_v4(bool $dashes = true, bool $lowercase = true): string
+{
+    // Generate 16 random bytes
+    $data = random_bytes(16);
+
+    // Set version to 4 (random)
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+
+    // Set variant to RFC 4122
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+    // Convert the binary data to hexadecimal representation
+    $hex = bin2hex($data);
+
+    // Format with dashes if requested
+    if ($dashes) {
+        $uuid = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split($hex, 4));
+    } else {
+        $uuid = $hex;
+    }
+
+    // Return in requested case
+    return $lowercase ? strtolower($uuid) : strtoupper($uuid);
+}
