@@ -16,12 +16,17 @@ composer require fofx/helper
 
 The default configuration file path `config/helper.config.php`.
 
-## Usage
+## Docs
 
-Below is the code from the `public/index.php` file. It creates code sections, and prints the Helper statistics with `timer_end()`.
+- For a detailed overview of the project structure and components, please see [docs/project-structure.md](docs/project-structure.md).
+- For detailed usage examples of the `Tracker` class, please see [docs/Tracker.usage.md](docs/Tracker.usage.md).
+- For detailed documentation about the `ReflectionUtils` class and its methods, please see [docs/ReflectionUtils.usage.md](docs/ReflectionUtils.usage.md).
+
+## Tracker Usage
+
+Below is a basic example from the `public/index.php` file:
 
 ```php
-
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use FOfX\Helper;
@@ -44,54 +49,8 @@ Tracker::trackerEnd();
 
 ## AutoStart
 
-Alternatively, in config/helper.config.php you can set 'autoStartTracker' to 'true'. This will auto-start the Tracker global Singleton.
+Alternatively, in `config/helper.config.php` you can set `autoStartTracker` to `true`. This will auto-start the Tracker global Singleton.
 
-Since this can cause problems in testing environments, this will only work if is_phpunit_environment() returns false.
+Since this can cause problems in testing environments, this will only work if `is_phpunit_environment()` returns `false`.
 
-If autoStart is enabled, you do not need to do "$tracker = Tracker::getInstance();". The global Singleton will be initialized automatically during autoloading.
-
-## ReflectionUtils
-
-The `ReflectionUtils` class provides utilities for extracting bound parameters from methods and functions.
-
-### extractBoundArgs
-
-Extracts argument values from callables (methods, functions, closures), excluding nulls for nullable parameters and enforcing required ones.
-
-```php
-// For class methods
-public function someMethod(string $required, ?string $optional = null, array $options = [])
-{
-    // Extract all parameters except 'options'
-    $params = ReflectionUtils::extractBoundArgs(
-        __METHOD__,
-        get_defined_vars(),
-        ['options']
-    );
-    
-    // Result: ['required' => 'value', 'optional' => 'value']
-    // Note: null values for nullable parameters are automatically excluded
-}
-
-// For functions
-function apiRequest(string $endpoint, ?array $params = null, bool $debug = false)
-{
-    // Get all parameters except 'debug' 
-    $requestParams = ReflectionUtils::extractBoundArgs(
-        __FUNCTION__,
-        get_defined_vars(),
-        ['debug']
-    );
-    
-    // If $params is null, it won't be included in the result
-}
-```
-
-You can use either the `__METHOD__` magic constant or `[$this, __FUNCTION__]` for class methods.
-
-Key features:
-- Throws exceptions for missing required parameters
-- Works with instance methods, static methods, functions, and closures
-- Automatically excludes null values for nullable parameters
-- Allows excluding parameters via the third argument
-- Supports both `[$this, __FUNCTION__]` and `__METHOD__` formats
+If `autoStartTracker` is enabled, you do not need to do `$tracker = Tracker::getInstance();`. The global Singleton will be initialized automatically during autoloading.

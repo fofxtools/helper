@@ -284,6 +284,82 @@ class ReflectionUtilsTest extends TestCase
 
         $this->assertEquals(['param' => 'value from magic constant'], $result);
     }
+
+    /**
+     * Test extractBoundArgsFromBacktrace with immediate caller
+     */
+    public function testExtractBoundArgsFromBacktraceImmediateCaller(): void
+    {
+        $result = $this->helperMethodWithBacktrace('test', 'email@example.com', 42);
+
+        $this->assertEquals(['keyword' => 'test', 'locationName' => 'email@example.com'], $result);
+    }
+
+    /**
+     * Test extractBoundArgsFromBacktrace with deeper caller
+     */
+    public function testExtractBoundArgsFromBacktraceDeeper(): void
+    {
+        $result = $this->wrapperForBacktraceTest();
+
+        // This test expects the parameters passed from wrapperForBacktraceTest to deeperMethodWithBacktrace
+        $this->assertEquals(['keyword' => 'deeper-test'], $result);
+    }
+
+    /**
+     * Helper method that calls extractBoundArgsFromBacktrace
+     */
+    private function helperMethodWithBacktrace(string $keyword, ?string $locationName = null, int $amount = 1): array
+    {
+        return ReflectionUtils::extractBoundArgsFromBacktrace(1, ['amount']);
+    }
+
+    /**
+     * Helper method that calls another method with backtrace
+     */
+    private function wrapperForBacktraceTest(): array
+    {
+        return $this->deeperMethodWithBacktrace('deeper-test');
+    }
+
+    /**
+     * Helper method that calls extractBoundArgsFromBacktrace with depth=2
+     */
+    private function deeperMethodWithBacktrace(string $keyword, ?string $locationName = null): array
+    {
+        return ReflectionUtils::extractBoundArgsFromBacktrace(1);
+    }
+
+    /**
+     * Test extractBoundArgsFromBacktrace with invalid depth
+     */
+    public function testExtractBoundArgsFromBacktraceInvalidDepth(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('No stack frame at depth 100');
+
+        ReflectionUtils::extractBoundArgsFromBacktrace(100);
+    }
+
+    /**
+     * Test static method call with extractBoundArgsFromBacktrace
+     */
+    public function testExtractBoundArgsFromBacktraceStaticMethod(): void
+    {
+        $result = TestHelperClass::staticMethodWithBacktrace('static-test');
+
+        $this->assertEquals(['param' => 'static-test'], $result);
+    }
+
+    /**
+     * Test extractBoundArgsFromBacktrace with function call
+     */
+    public function testExtractBoundArgsFromBacktraceFunction(): void
+    {
+        $result = testHelperFunctionWithBacktrace('function-test', 25);
+
+        $this->assertEquals(['name' => 'function-test', 'age' => 25], $result);
+    }
 }
 
 /**
@@ -325,6 +401,14 @@ class TestHelperClass
     {
         return $param;
     }
+
+    /**
+     * Static method that uses extractBoundArgsFromBacktrace
+     */
+    public static function staticMethodWithBacktrace(string $param): array
+    {
+        return ReflectionUtils::extractBoundArgsFromBacktrace(1);
+    }
 }
 
 /**
@@ -339,4 +423,12 @@ function testHelperFunction(string $name, ?int $age = null): array
     }
 
     return $params;
+}
+
+/**
+ * Helper function for testing backtracing
+ */
+function testHelperFunctionWithBacktrace(string $name, ?int $age = null): array
+{
+    return ReflectionUtils::extractBoundArgsFromBacktrace(1);
 }

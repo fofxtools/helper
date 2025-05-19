@@ -3,6 +3,7 @@ parameters:
     paths:
         - bootstrap
         - config
+        - examples
         - local
         - public
         - src

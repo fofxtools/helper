@@ -75,4 +75,108 @@ final class ReflectionUtils
 
         return $out;
     }
+
+    /**
+     * Inspect the call-stack, resolve the caller's signature, and return bound arguments.
+     * This automatically determines the calling method or function from the backtrace.
+     *
+     * @param int   $depth         How far up the stack to look (1 = immediate caller)
+     * @param array $excludeParams Parameter names to exclude from result
+     *
+     * @throws \InvalidArgumentException If the trace depth is invalid or a callable cannot be built from the frame
+     * @throws \ReflectionException      If reflection fails (bubbles up)
+     *
+     * @return array Associative array of parameter name => value
+     */
+    public static function extractBoundArgsFromBacktrace(int $depth = 1, array $excludeParams = []): array
+    {
+        // Get backtrace with object instances to properly build callables
+        $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, $depth + 1);
+
+        if (!isset($trace[$depth])) {
+            $maxDepth  = count($trace) - 1;
+            $available = array_map(function ($frame) {
+                $func = $frame['function'];
+
+                // Normalize closures and invokables for readability
+                if ($func === '{closure}') {
+                    $func = '[closure]';
+                } elseif ($func === '__invoke') {
+                    $func = '[__invoke]';
+                }
+
+                return isset($frame['class'])
+                    ? $frame['class'] . '::' . $func
+                    : $func;
+            }, $trace);
+
+            throw new \InvalidArgumentException(sprintf(
+                'No stack frame at depth %d (max depth: %d). Available call stack: %s',
+                $depth,
+                $maxDepth,
+                json_encode($available)
+            ));
+        }
+
+        $frame = $trace[$depth];
+
+        // Build callable from the frame information
+        if (isset($frame['class'])) {
+            // Method call (instance or static)
+            if (isset($frame['object'])) {
+                // Instance method call
+                $callable = [$frame['object'], $frame['function']];
+            } else {
+                // Static method call
+                $callable = $frame['class'] . '::' . $frame['function'];
+            }
+        } elseif ($frame['function']) {
+            // Function, closure, or invokable object
+            $callable = $frame['function'];
+        } else {
+            throw new \InvalidArgumentException(
+                'Unable to determine callable from stack frame'
+            );
+        }
+
+        // Map positional arguments to parameter names using reflection
+        $reflection = is_array($callable)
+            ? new \ReflectionMethod($callable[0], $callable[1])
+            : (is_string($callable) && str_contains($callable, '::')
+                ? (function () use ($callable) {
+                    [$class, $method] = explode('::', $callable, 2);
+
+                    return new \ReflectionMethod($class, $method);
+                })()
+                : new \ReflectionFunction($callable));
+
+        $namedArgs = [];
+        $params    = $reflection->getParameters();
+        $args      = $frame['args'] ?? [];
+
+        foreach ($params as $idx => $param) {
+            $name = $param->getName();
+
+            // Skip if caller didn't supply this argument
+            if (!array_key_exists($idx, $args)) {
+                continue;
+            }
+
+            $value      = $args[$idx];
+            $type       = $param->getType();
+            $isNullable = $type instanceof \ReflectionNamedType && $type->allowsNull();
+
+            // Only include if not null, or if the param is not nullable
+            if ($value !== null || !$isNullable) {
+                $namedArgs[$name] = $value;
+            }
+        }
+
+        // Delegate to the existing extractBoundArgs for final filtering and validation
+        return self::extractBoundArgs(
+            $callable,
+            $namedArgs,
+            $excludeParams
+        );
+    }
 }
