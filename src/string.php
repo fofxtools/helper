@@ -14,6 +14,8 @@
  * - HTML and CSS-related string operations
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**
@@ -320,7 +322,7 @@ function print_array_with_headings(
     $output = '';
 
     foreach ($array as $key => $value) {
-        $formatted_key = $use_htmlspecialchars ? htmlspecialchars($key, ENT_QUOTES, 'UTF-8') : $key;
+        $formatted_key = $use_htmlspecialchars ? htmlspecialchars((string)$key, ENT_QUOTES, 'UTF-8') : (string)$key;
 
         if (is_array($value)) {
             $formatted_value = print_array_with_headings(
@@ -333,7 +335,7 @@ function print_array_with_headings(
         } else {
             $formatted_value = $value ?? '';
             if ($use_htmlspecialchars) {
-                $formatted_value = htmlspecialchars($formatted_value, ENT_QUOTES, 'UTF-8');
+                $formatted_value = htmlspecialchars((string)$formatted_value, ENT_QUOTES, 'UTF-8');
             }
         }
 
@@ -637,10 +639,16 @@ function is_whole_number(mixed $number): bool
 /**
  * Multibyte String Pad
  *
- * Functionally, the equivalent of the standard str_pad function, but is capable of successfully padding multibyte strings.
+ * Note: Not the same as the built-in mb_str_pad function, which is not capable of visual alignment.
  *
- * By default, this function uses mb_strwidth() for length calculations, which is more appropriate for visual alignment
- * of strings containing multibyte characters. If exact byte-length padding is needed, set $use_width to false.
+ * Similar to the str_pad function, but is capable of successfully padding multibyte strings.
+ *
+ * By default, this function uses mb_strwidth() to calculate the width of characters, making it suitable for visually aligning
+ * strings that include multibyte characters such as emoji or East Asian characters. This is especially useful for console output
+ * or fixed-width formatting where visual alignment matters.
+ *
+ * If visual alignment is not needed and you prefer length based on character count, set $use_width to false to use mb_strlen()
+ * instead of mb_strwidth().
  *
  * @link    https://stackoverflow.com/questions/14773072/php-str-pad-not-working-with-unicode-characters
  *
@@ -654,7 +662,7 @@ function is_whole_number(mixed $number): bool
  *
  * @return string A padded multibyte string.
  */
-function helper_mb_str_pad($input, $length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = 'UTF-8', $use_width = true)
+function helper_mb_str_pad(string $input, int $length, string $pad_string = ' ', int $pad_type = STR_PAD_RIGHT, string $encoding = 'UTF-8', bool $use_width = true): string
 {
     $result = $input;
 
@@ -1503,7 +1511,7 @@ function show_escape_sequences(string $input, bool $html_output = false): string
     );
 
     if ($html_output) {
-        $result = htmlspecialchars($result, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+        $result = htmlspecialchars((string)$result, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
         $result = '<code>' . str_replace(' ', '&nbsp;', $result) . '</code>';
     }
 

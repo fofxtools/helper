@@ -13,6 +13,8 @@
  * - Cross-platform shell command utilities
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**
@@ -358,6 +360,12 @@ function get_linux_network_stats(int|false $pid = false, ?callable $commandExecu
 {
     // Default to 'shell_exec' if no callable is provided
     $commandExecutor = $commandExecutor ?? 'shell_exec';
+
+    // For shell_exec, validate that the process ID is a positive integer, and that the file exists
+    // If not using shell_exec, this is probably a mock callable for testing, so we'll ignore the validation
+    if ($commandExecutor === 'shell_exec' && $pid !== false && ($pid <= 0 || !is_readable("/proc/$pid/net/dev"))) {
+        throw new \InvalidArgumentException('Invalid process ID provided.');
+    }
 
     $file   = $pid ? "/proc/$pid/net/dev" : '/proc/net/dev';
     $output = $commandExecutor("cat $file");

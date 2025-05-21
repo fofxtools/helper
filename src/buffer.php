@@ -17,6 +17,8 @@
  * - Capturing output from evaluated PHP code
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**

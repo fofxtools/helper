@@ -13,6 +13,8 @@
  * - Sleep and rate limiting functions
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**

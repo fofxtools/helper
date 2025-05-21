@@ -13,6 +13,8 @@
  * - Memory size conversion and formatting
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**
@@ -79,7 +81,8 @@ function get_memory_size(mixed $value): int
     $initial_memory = memory_get_usage();
 
     // json functions return less bytes consumptions than serialize
-    $encoded_value = json_decode(json_encode($value));
+    $encoded       = json_encode($value, JSON_PARTIAL_OUTPUT_ON_ERROR);
+    $encoded_value = json_decode($encoded);
 
     // Ensure we don't return a negative value due to potential garbage collection
     return max(0, memory_get_usage() - $initial_memory);

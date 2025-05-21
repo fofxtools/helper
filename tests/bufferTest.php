@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;

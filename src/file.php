@@ -13,6 +13,8 @@
  * - File writing operations with error handling
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**

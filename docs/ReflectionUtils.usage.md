@@ -15,6 +15,8 @@ Extracts named argument values from callables (methods, functions, closures), au
 ```php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use FOfX\Helper\ReflectionUtils;
+
 function apiRequest(string $endpoint, ?array $params = null, bool $debug = false)
 {
     $requestParams = ReflectionUtils::extractBoundArgs(
@@ -67,6 +69,8 @@ Extracts bound arguments using PHP's backtrace system, allowing you to access pa
 
 ```php
 require_once __DIR__ . '/../vendor/autoload.php';
+
+use FOfX\Helper\ReflectionUtils;
 
 class BacktraceDemo
 {

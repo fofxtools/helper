@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Outputs the GET or POST variables in a safe and formatted way.
  *
@@ -12,7 +14,7 @@ function output_vars(array $vars, string $type): void
         echo "\$_{$type} is empty.<br/>\n";
     } else {
         foreach ($vars as $key => $value) {
-            echo "\$_{$type} '" . htmlspecialchars($key, ENT_QUOTES, 'UTF-8') . "' is: " . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . "<br/>\n";
+            echo "\$_{$type} '" . htmlspecialchars((string)$key, ENT_QUOTES, 'UTF-8') . "' is: " . htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8') . "<br/>\n";
         }
     }
 }

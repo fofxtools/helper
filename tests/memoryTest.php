@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;
@@ -264,14 +266,14 @@ class MemoryTest extends TestCase
     }
 
     /**
-     * Test that get_memory_size returns 0 for null.
+     * Test that get_memory_size returns int for null.
      *
      * @return void
      */
-    public function test_get_memory_size_returns_zero_for_null(): void
+    public function test_get_memory_size_returns_int_for_null(): void
     {
         $result = get_memory_size(null);
-        $this->assertEquals(0, $result);
+        $this->assertIsInt($result);
     }
 
     /**

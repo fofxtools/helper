@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;
@@ -919,11 +921,10 @@ class ServerTest extends TestCase
     {
         if (PHP_OS_FAMILY !== 'Windows') {
             // Expect a TypeError for a non-numeric PID
-            $this->expectException(\TypeError::class);
+            $this->expectException(\InvalidArgumentException::class);
 
             // Call get_network_stats with an invalid PID
-            // @phpstan-ignore-next-line
-            get_network_stats('invalid_pid');
+            get_network_stats(-1);
         } else {
             $this->markTestSkipped('This test is only applicable to Linux.');
         }
@@ -1106,11 +1107,10 @@ class ServerTest extends TestCase
         }
 
         // Expect a TypeError for a non-numeric PID
-        $this->expectException(\TypeError::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         // Call get_linux_network_stats with an invalid PID
-        // @phpstan-ignore-next-line
-        get_linux_network_stats('invalid_pid');
+        get_linux_network_stats(-1);
     }
 
     /**

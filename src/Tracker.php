@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Performance Tracking and Profiling Class
- *
- * This file defines the Tracker class, which provides functionality
- * for tracking execution time, memory usage, and other performance metrics.
- */
+declare(strict_types=1);
 
 namespace FOfX\Helper;
 

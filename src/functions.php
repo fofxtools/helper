@@ -12,6 +12,8 @@
  * - PHPUnit environment detection
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**

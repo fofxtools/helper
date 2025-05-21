@@ -20,6 +20,8 @@
  * or formatted with HTML tags for display.
  */
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 /**

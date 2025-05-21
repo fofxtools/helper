@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+namespace FOfX\Helper;
+
 /**
- * Utility class for extracting parameters from callables using Reflection.
+ * A class for extracting parameters from callables using Reflection.
  */
-final class ReflectionUtils
+class ReflectionUtils
 {
     /**
      * Extract bound argument values from a function or method, skipping nulls for nullable parameters.

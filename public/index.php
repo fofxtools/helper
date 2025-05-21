@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Optionally manuolly define the config file to be used by initialize_tracker()
 //define('HELPER_CONFIG_FILE', __DIR__ . '/../config/helper.config.php.example');
 

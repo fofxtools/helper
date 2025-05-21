@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use FOfX\Helper\ReflectionUtils;
+
 function apiRequest(string $endpoint, ?array $params = null, bool $debug = false)
 {
     $requestParams = ReflectionUtils::extractBoundArgs(

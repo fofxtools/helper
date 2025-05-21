@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FOfX\Helper;
 
 use PHPUnit\Framework\TestCase;
@@ -473,7 +475,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Tests text_chunk_overlapping with a large size and small array.
+     * Tests text_chunk_overlapping with a large size and a small array.
      *
      * @return void
      */

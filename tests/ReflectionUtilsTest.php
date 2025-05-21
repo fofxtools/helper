@@ -1,7 +1,88 @@
 <?php
 
+declare(strict_types=1);
+
+namespace FOfX\Helper;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+
+/**
+ * Helper class for testing the ReflectionUtils class
+ *
+ * Define above ReflectionUtilsTest to avoid Intelephense errors
+ */
+class TestHelperClass
+{
+    public function methodWithRequiredParams(string $firstParam, string $secondParam): array
+    {
+        return [$firstParam, $secondParam];
+    }
+
+    public function methodWithNullableParams(string $name, ?string $email = null, ?int $age = null): array
+    {
+        $params = ['name' => $name];
+
+        if ($email !== null) {
+            $params['email'] = $email;
+        }
+
+        if ($age !== null) {
+            $params['age'] = $age;
+        }
+
+        return $params;
+    }
+
+    public function methodWithMixedTypes(int $id, string $title, array $data = [], bool $isActive = false): array
+    {
+        return [
+            'id'       => $id,
+            'title'    => $title,
+            'data'     => $data,
+            'isActive' => $isActive,
+        ];
+    }
+
+    public static function staticMethod(string $param): string
+    {
+        return $param;
+    }
+
+    /**
+     * Static method that uses extractBoundArgsFromBacktrace
+     */
+    public static function staticMethodWithBacktrace(string $param): array
+    {
+        return ReflectionUtils::extractBoundArgsFromBacktrace(1);
+    }
+}
+
+/**
+ * Helper function for testing extractBoundArgs with functions
+ *
+ * Define above ReflectionUtilsTest to avoid Intelephense errors
+ */
+function testHelperFunction(string $name, ?int $age = null): array
+{
+    $params = ['name' => $name];
+
+    if ($age !== null) {
+        $params['age'] = $age;
+    }
+
+    return $params;
+}
+
+/**
+ * Helper function for testing backtracing
+ *
+ * Define above ReflectionUtilsTest to avoid Intelephense errors
+ */
+function testHelperFunctionWithBacktrace(string $name, ?int $age = null): array
+{
+    return ReflectionUtils::extractBoundArgsFromBacktrace(1);
+}
 
 class ReflectionUtilsTest extends TestCase
 {
@@ -106,7 +187,7 @@ class ReflectionUtilsTest extends TestCase
                 'args'                     => [],
                 'excludeParams'            => [],
                 'expectedException'        => \ReflectionException::class,
-                'expectedExceptionMessage' => 'Method TestHelperClass::nonExistentMethod() does not exist',
+                'expectedExceptionMessage' => 'Method FOfX\Helper\TestHelperClass::nonExistentMethod() does not exist',
             ],
         ];
     }
@@ -120,25 +201,25 @@ class ReflectionUtilsTest extends TestCase
     {
         return [
             'static method with __METHOD__ style' => [
-                'methodString'  => 'TestHelperClass::staticMethod',
+                'methodString'  => 'FOfX\Helper\TestHelperClass::staticMethod',
                 'args'          => ['param' => 'test'],
                 'excludeParams' => [],
                 'expected'      => ['param' => 'test'],
             ],
             'instance method with __METHOD__ style' => [
-                'methodString'  => 'TestHelperClass::methodWithNullableParams',
+                'methodString'  => 'FOfX\Helper\TestHelperClass::methodWithNullableParams',
                 'args'          => ['name' => 'Alice', 'email' => 'alice@example.com', 'age' => 25],
                 'excludeParams' => [],
                 'expected'      => ['name' => 'Alice', 'email' => 'alice@example.com', 'age' => 25],
             ],
             'nullable params with __METHOD__ style' => [
-                'methodString'  => 'TestHelperClass::methodWithNullableParams',
+                'methodString'  => 'FOfX\Helper\TestHelperClass::methodWithNullableParams',
                 'args'          => ['name' => 'Bob', 'email' => null],
                 'excludeParams' => [],
                 'expected'      => ['name' => 'Bob'], // null email should be excluded
             ],
             'with exclusions in __METHOD__ style' => [
-                'methodString'  => 'TestHelperClass::methodWithMixedTypes',
+                'methodString'  => 'FOfX\Helper\TestHelperClass::methodWithMixedTypes',
                 'args'          => ['id' => 123, 'title' => 'Test Title', 'data' => ['a' => 1], 'isActive' => true],
                 'excludeParams' => ['isActive', 'data'],
                 'expected'      => ['id' => 123, 'title' => 'Test Title'],
@@ -160,9 +241,9 @@ class ReflectionUtilsTest extends TestCase
                 'expectedExceptionMessage' => 'Class "NonExistentClass" does not exist',
             ],
             'non-existent method' => [
-                'methodString'             => 'TestHelperClass::nonExistentMethod',
+                'methodString'             => 'FOfX\Helper\TestHelperClass::nonExistentMethod',
                 'expectedException'        => \InvalidArgumentException::class,
-                'expectedExceptionMessage' => 'Method TestHelperClass::nonExistentMethod() does not exist',
+                'expectedExceptionMessage' => 'Method FOfX\Helper\TestHelperClass::nonExistentMethod() does not exist',
             ],
         ];
     }
@@ -183,7 +264,7 @@ class ReflectionUtilsTest extends TestCase
     public function testExtractBoundArgsFromFunctions(array $args, array $excludeParams, array $expected): void
     {
         $result = ReflectionUtils::extractBoundArgs(
-            'testHelperFunction',
+            'FOfX\Helper\testHelperFunction',
             $args,
             $excludeParams
         );
@@ -218,7 +299,7 @@ class ReflectionUtilsTest extends TestCase
     public function testExtractBoundArgsFromStringClassMethod(): void
     {
         $result = ReflectionUtils::extractBoundArgs(
-            'TestHelperClass::staticMethod',
+            'FOfX\Helper\TestHelperClass::staticMethod',
             ['param' => 'test'],
             []
         );
@@ -274,7 +355,7 @@ class ReflectionUtilsTest extends TestCase
     {
         // Our current method is ReflectionUtilsTest::testExtractBoundArgsWithActualMethodConstant
         // But for testing purposes, we'll use a known class::method
-        $mockMethodConstant = 'TestHelperClass::staticMethod';
+        $mockMethodConstant = 'FOfX\Helper\TestHelperClass::staticMethod';
 
         $result = ReflectionUtils::extractBoundArgs(
             $mockMethodConstant, // This would normally be __METHOD__ in real usage
@@ -360,75 +441,4 @@ class ReflectionUtilsTest extends TestCase
 
         $this->assertEquals(['name' => 'function-test', 'age' => 25], $result);
     }
-}
-
-/**
- * Helper class for testing the ReflectionUtils class
- */
-class TestHelperClass
-{
-    public function methodWithRequiredParams(string $firstParam, string $secondParam): array
-    {
-        return [$firstParam, $secondParam];
-    }
-
-    public function methodWithNullableParams(string $name, ?string $email = null, ?int $age = null): array
-    {
-        $params = ['name' => $name];
-
-        if ($email !== null) {
-            $params['email'] = $email;
-        }
-
-        if ($age !== null) {
-            $params['age'] = $age;
-        }
-
-        return $params;
-    }
-
-    public function methodWithMixedTypes(int $id, string $title, array $data = [], bool $isActive = false): array
-    {
-        return [
-            'id'       => $id,
-            'title'    => $title,
-            'data'     => $data,
-            'isActive' => $isActive,
-        ];
-    }
-
-    public static function staticMethod(string $param): string
-    {
-        return $param;
-    }
-
-    /**
-     * Static method that uses extractBoundArgsFromBacktrace
-     */
-    public static function staticMethodWithBacktrace(string $param): array
-    {
-        return ReflectionUtils::extractBoundArgsFromBacktrace(1);
-    }
-}
-
-/**
- * Helper function for testing extractBoundArgs with functions
- */
-function testHelperFunction(string $name, ?int $age = null): array
-{
-    $params = ['name' => $name];
-
-    if ($age !== null) {
-        $params['age'] = $age;
-    }
-
-    return $params;
-}
-
-/**
- * Helper function for testing backtracing
- */
-function testHelperFunctionWithBacktrace(string $name, ?int $age = null): array
-{
-    return ReflectionUtils::extractBoundArgsFromBacktrace(1);
 }
