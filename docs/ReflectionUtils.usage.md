@@ -17,39 +17,83 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use FOfX\Helper\ReflectionUtils;
 
-function apiRequest(string $endpoint, ?array $params = null, bool $debug = false)
+function apiRequest(string $endpoint, ?array $params = null, ?int $limit = null, bool $debug = false)
 {
-    $requestParams = ReflectionUtils::extractBoundArgs(
+    $args = ReflectionUtils::extractArgs(
         __FUNCTION__,
         get_defined_vars(),
         ['debug']
     );
 
-    print_r($requestParams);
+    echo "apiRequest - Args:\n";
+    print_r($args);
+
+    $boundArgs = ReflectionUtils::extractBoundArgs(
+        __FUNCTION__,
+        get_defined_vars(),
+        ['debug']
+    );
+
+    echo "apiRequest - Bound args:\n";
+    print_r($boundArgs);
 }
 
 class Demo
 {
-    public function someMethod(string $required, ?string $optional = null, array $options = [])
+    public function someMethod(string $required, ?string $optional = null, ?int $limit = null, array $options = [])
     {
-        $params = ReflectionUtils::extractBoundArgs(
+        $args = ReflectionUtils::extractArgs(
             __METHOD__,
             get_defined_vars(),
             ['options']
         );
 
-        print_r($params);
+        echo "someMethod - Args:\n";
+        print_r($args);
+
+        $boundArgs = ReflectionUtils::extractBoundArgs(
+            __METHOD__,
+            get_defined_vars(),
+            ['options']
+        );
+
+        echo "someMethod - Bound args:\n";
+        print_r($boundArgs);
     }
 }
 
 // Run examples
-apiRequest('/users', null, true);
-// Output: ['endpoint' => '/users']
-// Note: Since $params is null and 'debug' is excluded, they won't be included in the result
+apiRequest('/users', null, null, true);
+// Output:
+// apiRequest - Args:
+// [ 'endpoint' => '/users', 'params' => null, 'limit' => null ]
+// apiRequest - Bound args:
+// [ 'endpoint' => '/users' ]
+// Note: 'params' and 'limit' are null and filtered from bound args; 'debug' is excluded by name
 
-(new Demo())->someMethod('abc', 'xyz');
-// Output: ['required' => 'abc', 'optional' => 'xyz']
-// Note: null values for nullable parameters are automatically excluded
+apiRequest('/users', ['abc']);
+// Output:
+// apiRequest - Args:
+// [ 'endpoint' => '/users', 'params' => [...], 'limit' => null ]
+// apiRequest - Bound args:
+// [ 'endpoint' => '/users', 'params' => [...] ]
+
+$demo = new Demo();
+$demo->someMethod('abc', null, null, ['xyz']);
+// Output:
+// someMethod - Args:
+// [ 'required' => 'abc', 'optional' => null, 'limit' => null ]
+// someMethod - Bound args:
+// [ 'required' => 'abc' ]
+// Note: 'optional' and 'limit' are null and filtered from bound args; 'options' is excluded by name
+
+$demo->someMethod('abc', '123');
+// Output:
+// someMethod - Args:
+// [ 'required' => 'abc', 'optional' => '123', 'limit' => null ]
+// someMethod - Bound args:
+// [ 'required' => 'abc', 'optional' => '123' ]
+// Note: 'limit' is null and filtered from bound args; 'options' is excluded by name
 ```
 
 You can use either the `__METHOD__` magic constant or `[$this, __FUNCTION__]` for class methods.
@@ -76,38 +120,144 @@ class BacktraceDemo
 {
     protected const EXCLUDED_ARGUMENTS = ['debug', 'extra'];
 
-    protected function extractParamsHelper(array $extraExclude = []): array
+    protected function argsHelper(array $extraExclude = []): array
     {
         $exclude = array_merge(self::EXCLUDED_ARGUMENTS, $extraExclude);
-        $params  = ReflectionUtils::extractBoundArgsFromBacktrace(2, $exclude);
 
-        return $params;
+        return ReflectionUtils::extractArgsFromBacktrace(2, $exclude);
     }
 
-    public function run(string $query, ?string $lang = null, bool $debug = false, array $extra = []): void
+    protected function boundArgsHelper(array $extraExclude = []): array
     {
-        $params = ReflectionUtils::extractBoundArgs(
+        $exclude = array_merge(self::EXCLUDED_ARGUMENTS, $extraExclude);
+
+        return ReflectionUtils::extractBoundArgsFromBacktrace(2, $exclude);
+    }
+
+    public function run(string $query, ?string $lang = null, ?int $limit = null, bool $debug = false, array $extra = []): void
+    {
+        $params = ReflectionUtils::extractArgs(
             __METHOD__,
             get_defined_vars(),
             self::EXCLUDED_ARGUMENTS
         );
 
+        echo "run() - Params:\n";
+        print_r($params);
+
+        $boundParams = ReflectionUtils::extractBoundArgs(
+            __METHOD__,
+            get_defined_vars(),
+            self::EXCLUDED_ARGUMENTS
+        );
+
+        echo "run() - Bound params:\n";
+        print_r($boundParams);
+    }
+
+    public function runWithArgsHelper(string $query, ?string $lang = null, ?int $limit = null, bool $debug = false, array $extra = []): void
+    {
+        $params = $this->argsHelper();
+
         print_r($params);
     }
 
-    public function runWithHelper(string $query, ?string $lang = null, bool $debug = false, array $extra = []): void
+    public function runWithBoundArgsHelper(string $query, ?string $lang = null, ?int $limit = null, bool $debug = false, array $extra = []): void
     {
-        $params = $this->extractParamsHelper();
+        $params = $this->boundArgsHelper();
 
         print_r($params);
     }
 }
 
+// Run examples
 $backtraceDemo = new BacktraceDemo();
-$backtraceDemo->run('pizza', 'en', true, ['extra' => 'test']);
-// Output: [['query' => 'pizza', 'lang' => 'en']]
-$backtraceDemo->runWithHelper('pizza', 'en', true, ['extra' => 'test']);
-// Output: [['query' => 'pizza', 'lang' => 'en']]
+
+echo "run()\n";
+$backtraceDemo->run('pizza', null, null, true, ['extra' => 'test']);
+
+echo "\nrunWithArgsHelper()\n";
+$backtraceDemo->runWithArgsHelper('pizza', null, null, true, ['extra' => 'test']);
+
+echo "\nrunWithBoundArgsHelper()\n";
+$backtraceDemo->runWithBoundArgsHelper('pizza', null, null, true, ['extra' => 'test']);
+
+echo "\nrun()\n";
+$backtraceDemo->run('burger', null, 10, false, []);
+
+echo "\nrunWithArgsHelper()\n";
+$backtraceDemo->runWithArgsHelper('burger', null, 10, false, []);
+
+echo "\nrunWithBoundArgsHelper()\n";
+$backtraceDemo->runWithBoundArgsHelper('burger', null, 10, false, []);
+
+/*
+Expected Output:
+
+run()
+run() - Params:
+Array
+(
+    [query] => pizza
+    [lang] =>
+    [limit] =>
+)
+run() - Bound params:
+Array
+(
+    [query] => pizza
+)
+Explanation: 'query' is the only non-null, non-excluded parameter. 'lang' and 'limit' are null and filtered from bound params.
+
+runWithArgsHelper()
+Array
+(
+    [query] => pizza
+    [lang] =>
+    [limit] =>
+)
+Explanation: extractArgsFromBacktrace includes all parameters (even null/default values), excluding only 'debug' and 'extra'.
+
+runWithBoundArgsHelper()
+Array
+(
+    [query] => pizza
+)
+Explanation: Only non-null and non-excluded values are included.
+
+run()
+run() - Params:
+Array
+(
+    [query] => burger
+    [lang] =>
+    [limit] => 10
+)
+run() - Bound params:
+Array
+(
+    [query] => burger
+    [limit] => 10
+)
+Explanation: 'lang' is still null, so it's skipped in bound params. 'limit' is now set and included.
+
+runWithArgsHelper()
+Array
+(
+    [query] => burger
+    [lang] =>
+    [limit] => 10
+)
+Explanation: All declared parameters are shown, including nulls. 'lang' is included even though it is null.
+
+runWithBoundArgsHelper()
+Array
+(
+    [query] => burger
+    [limit] => 10
+)
+Explanation: Only 'query' and 'limit' are non-null and not filtered. 'lang' is null, so it's skipped.
+*/
 ```
 
 Key features:
@@ -116,3 +266,77 @@ Key features:
 - Throws exceptions for invalid depths or inaccessible frames
 - Preserves parameter names and types
 - Useful for debugging and logging 
+
+## Logging Example with Monolog
+
+You can use `extractArgs()` and `extractBoundArgs()` with [Monolog](https://github.com/Seldaek/monolog) to automatically capture structured logs from your functions and methods.
+
+Here’s a basic example that logs all parameters passed to a function or class method:
+
+```php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use FOfX\Helper\ReflectionUtils;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+
+// Logger to stdout
+$log = new Logger('reflection');
+$log->pushHandler(new StreamHandler('php://stdout', Level::Debug));
+
+// Test function
+function demoFunction(string $name, ?int $age = null, bool $active = true): void
+{
+    $args  = ReflectionUtils::extractArgs(__FUNCTION__, get_defined_vars());
+    $bound = ReflectionUtils::extractBoundArgs(__FUNCTION__, get_defined_vars());
+
+    global $log;
+    $log->info('extractArgs()', $args);
+    $log->info('extractBoundArgs()', $bound);
+}
+
+// Test class
+class Demo
+{
+    public function run(string $name, ?int $age = null, bool $active = true): void
+    {
+        $args  = ReflectionUtils::extractArgs(__METHOD__, get_defined_vars());
+        $bound = ReflectionUtils::extractBoundArgs(__METHOD__, get_defined_vars());
+
+        global $log;
+        $log->info('extractArgs() from ' . __METHOD__, $args);
+        $log->info('extractBoundArgs() from ' . __METHOD__, $bound);
+    }
+}
+
+// Run tests
+demoFunction('Alice');
+demoFunction('Bob', 30, false);
+demoFunction('Charlie', null, true);
+
+$demo = new Demo();
+$demo->run('Dana');
+$demo->run('Eve', 25, false);
+$demo->run('Frank', null, true);
+```
+
+### Sample Output
+
+```
+reflection.INFO: extractArgs(): {"name":"Alice","age":null,"active":true}
+reflection.INFO: extractBoundArgs(): {"name":"Alice","active":true}
+reflection.INFO: extractArgs() {"name":"Bob","age":30,"active":false} []
+reflection.INFO: extractBoundArgs() {"name":"Bob","age":30,"active":false} []
+reflection.INFO: extractArgs() from Demo::run: {"name":"Charlie","age":null,"active":true}
+reflection.INFO: extractBoundArgs() from Demo::run: {"name":"Charlie","active":true}
+reflection.INFO: extractArgs() from Demo::run {"name":"Dana","age":null,"active":true} []
+reflection.INFO: extractBoundArgs() from Demo::run {"name":"Dana","active":true} []
+reflection.INFO: extractArgs() from Demo::run {"name":"Eve","age":25,"active":false} []
+reflection.INFO: extractBoundArgs() from Demo::run {"name":"Eve","age":25,"active":false} []
+reflection.INFO: extractArgs() from Demo::run {"name":"Frank","age":null,"active":true} []
+reflection.INFO: extractBoundArgs() from Demo::run {"name":"Frank","active":true} []
+
+```
+
+This allows you to dynamically and consistently log the values received by any callable with zero boilerplate.

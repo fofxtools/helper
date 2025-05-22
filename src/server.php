@@ -289,7 +289,7 @@ function url_file_extension(string $url): ?string
  * @throws \RuntimeException         If unable to fetch network statistics.
  * @throws \InvalidArgumentException If an invalid process ID is provided.
  *
- * @return array An associative array with network interfaces as keys, and their stats.
+ * @return array An associative array with the first key containing stats.
  *
  * @see     get_windows_network_stats
  * @see     get_linux_network_stats
@@ -302,7 +302,7 @@ function get_network_stats(int|false $pid = false, ?callable $commandExecutor = 
     if (PHP_OS_FAMILY === 'Windows') {
         return get_windows_network_stats($commandExecutor);
     } else {
-        return get_linux_network_stats($pid, $commandExecutor);
+        return get_linux_eth0_stats($pid, $commandExecutor);
     }
 }
 
@@ -342,14 +342,18 @@ function get_windows_network_stats(?callable $commandExecutor = null): array
         }
     }
 
-    return $stats;
+    if (!isset($stats['Bytes'])) {
+        throw new \RuntimeException('Failed to retrieve network statistics for Windows.');
+    }
+
+    return $stats['Bytes'];
 }
 
 /**
  * Get network statistics for Linux using /proc/net/dev.
  *
  * @param int|false $pid             Optional process ID.
- * @param ?callable $commandExecutor A callable that executes the shell command. For testing.
+ * @param ?callable $commandExecutor Optional callable that executes the shell command. For testing.
  *
  * @throws \InvalidArgumentException If an invalid process ID is provided.
  * @throws \RuntimeException         If unable to retrieve network statistics.
@@ -361,13 +365,29 @@ function get_linux_network_stats(int|false $pid = false, ?callable $commandExecu
     // Default to 'shell_exec' if no callable is provided
     $commandExecutor = $commandExecutor ?? 'shell_exec';
 
-    // For shell_exec, validate that the process ID is a positive integer, and that the file exists
-    // If not using shell_exec, this is probably a mock callable for testing, so we'll ignore the validation
-    if ($commandExecutor === 'shell_exec' && $pid !== false && ($pid <= 0 || !is_readable("/proc/$pid/net/dev"))) {
+    // Validate that the process ID is a positive integer
+    if ($pid !== false && (!is_int($pid) || $pid <= 0)) {
         throw new \InvalidArgumentException('Invalid process ID provided.');
     }
 
-    $file   = $pid ? "/proc/$pid/net/dev" : '/proc/net/dev';
+    if ($pid !== false) {
+        // If the process ID is provided, use the file for that process
+        $file = "/proc/$pid/net/dev";
+
+        // But if the PID file is not readable, use the global file
+        if (!is_readable($file)) {
+            $file = '/proc/net/dev';
+        }
+    } else {
+        $file = '/proc/net/dev';
+    }
+
+    // For shell_exec, validate that the file is readable
+    // If not using shell_exec, this is probably a mock callable for testing, so we'll skip this check
+    if ($commandExecutor === 'shell_exec' && !is_readable($file)) {
+        throw new \RuntimeException('Network stats file is not accessible.');
+    }
+
     $output = $commandExecutor("cat $file");
 
     if ($output === false) {
@@ -392,6 +412,27 @@ function get_linux_network_stats(int|false $pid = false, ?callable $commandExecu
     }
 
     return $stats;
+}
+
+/**
+ * Get network statistics for the eth0 interface on Linux.
+ *
+ * @param int|false $pid             Optional process ID for namespace-aware stats.
+ * @param ?callable $commandExecutor Optional callable that executes the shell command. For testing.
+ *
+ * @throws \RuntimeException If eth0 stats are not available or unreadable.
+ *
+ * @return array An associative array with 'Receive' and 'Transmit' bytes for eth0.
+ */
+function get_linux_eth0_stats(int|false $pid = false, ?callable $commandExecutor = null): array
+{
+    $stats = get_linux_network_stats($pid, $commandExecutor);
+
+    if (!isset($stats['eth0'])) {
+        throw new \RuntimeException("Interface 'eth0' not found in network stats.");
+    }
+
+    return $stats['eth0'];
 }
 
 /**

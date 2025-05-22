@@ -194,9 +194,8 @@ class Tracker
         }
 
         $networkStats = get_network_stats($this->pid);
-        $firstKey     = array_key_first($networkStats);
 
-        $this->bandwidthArray[$scriptName][$action === 'end' ? 'End' : 'Start'] = $networkStats[$firstKey]['Receive'] + $networkStats[$firstKey]['Transmit'];
+        $this->bandwidthArray[$scriptName][$action === 'end' ? 'End' : 'Start'] = $networkStats['Receive'] + $networkStats['Transmit'];
 
         if ($action === 'end') {
             $this->bandwidthArray[$scriptName]['Net'] = $this->bandwidthArray[$scriptName]['End'] - $this->bandwidthArray[$scriptName]['Start'];

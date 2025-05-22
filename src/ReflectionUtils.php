@@ -10,89 +10,120 @@ namespace FOfX\Helper;
 class ReflectionUtils
 {
     /**
-     * Extract bound argument values from a function or method, skipping nulls for nullable parameters.
+     * Get the name of a callable.
      *
-     * @param callable|string|array $callable      Function name, closure, invokable object, [$object, 'method'], 'Class::method' or __METHOD__
-     * @param array                 $vars          Associative array of local variables (typically from get_defined_vars())
-     * @param array                 $excludeParams Parameter names to exclude from result
+     * @param callable|string|array $callable The callable to get the name of
      *
-     * @throws \ReflectionException      If the function or method doesn't exist
+     * @return string The name of the callable
+     */
+    public static function getCallableName(callable|string|array $callable): string
+    {
+        return is_string($callable) ? $callable :
+            (is_array($callable) ? (is_object($callable[0]) ? get_class($callable[0]) : $callable[0]) . '::' . $callable[1] :
+            (is_object($callable) ? get_class($callable) . '::__invoke' : 'unknown'));
+    }
+
+    /**
+     * Get a reflection object from a callable.
+     *
+     * @param callable|string|array $callable The callable to get the reflection of
+     *
      * @throws \InvalidArgumentException If a required parameter is missing or callable format is invalid
      *
-     * @return array Associative array of parameter name => value
+     * @return \ReflectionFunctionAbstract The reflection object
      */
-    public static function extractBoundArgs(callable|string|array $callable, array $vars, array $excludeParams = []): array
+    public static function getReflectionFromCallable(callable|string|array $callable): \ReflectionFunctionAbstract
     {
-        $reflection = match (true) {
+        $callableName = self::getCallableName($callable);
+
+        return match (true) {
             is_array($callable)                                   => new \ReflectionMethod($callable[0], $callable[1]),
-            is_string($callable) && str_contains($callable, '::') => (function () use ($callable) {
+            is_string($callable) && str_contains($callable, '::') => (function () use ($callable, $callableName) {
                 [$class, $method] = explode('::', $callable, 2);
 
                 try {
                     return new \ReflectionMethod($class, $method);
                 } catch (\ReflectionException $e) {
                     throw new \InvalidArgumentException(
-                        "Invalid callable '{$callable}': {$e->getMessage()}",
+                        "Invalid callable '{$callableName}': {$e->getMessage()}",
                         0,
                         $e
                     );
                 }
             })(),
-            is_string($callable)                                         => new \ReflectionFunction($callable),
-            $callable instanceof \Closure                                => new \ReflectionFunction($callable),
             is_object($callable) && method_exists($callable, '__invoke') => new \ReflectionMethod($callable, '__invoke'),
-            default                                                      => throw new \InvalidArgumentException('Unsupported callable type')
+            $callable instanceof \Closure                                => new \ReflectionFunction($callable),
+            is_string($callable)                                         => new \ReflectionFunction($callable),
+            default                                                      => throw new \InvalidArgumentException("Unsupported callable type: '{$callableName}'"),
         };
+    }
 
-        $callableName = is_string($callable) ? $callable :
-            (is_array($callable) ? (is_object($callable[0]) ? get_class($callable[0]) : $callable[0]) . '::' . $callable[1] :
-            (is_object($callable) ? get_class($callable) . '::__invoke' : 'unknown'));
+    /**
+     * Get named arguments from a reflection object.
+     *
+     * @param \ReflectionFunctionAbstract $reflection    The reflection object
+     * @param array                       $vars          The variables to extract from
+     * @param array                       $excludeParams The parameters to exclude from the result
+     * @param bool                        $boundOnly     If true, only include arguments present in $vars
+     * @param string                      $callableName  The name of the callable
+     *
+     * @throws \InvalidArgumentException If a required parameter is missing or callable format is invalid
+     *
+     * @return array The named arguments
+     */
+    public static function getNamedArgs(\ReflectionFunctionAbstract $reflection, array $vars, array $excludeParams = [], bool $boundOnly = false, string $callableName = 'anonymous_function'): array
+    {
+        $namedArgs = [];
+        $params    = $reflection->getParameters();
 
-        $out = [];
-
-        foreach ($reflection->getParameters() as $param) {
+        foreach ($params as $param) {
             $name = $param->getName();
 
             if (in_array($name, $excludeParams, true)) {
                 continue;
             }
 
-            if (!array_key_exists($name, $vars)) {
+            if (array_key_exists($name, $vars)) {
+                $value      = $vars[$name];
+                $type       = $param->getType();
+                $isNullable = $type instanceof \ReflectionNamedType && $type->allowsNull();
+
+                if ($boundOnly) {
+                    if ($value !== null || !$isNullable) {
+                        $namedArgs[$name] = $value;
+                    }
+                } else {
+                    $namedArgs[$name] = $value;
+                }
+            } elseif ($boundOnly) {
+                // In strict mode, throw if required parameter is missing
                 if (!$param->isOptional()) {
                     throw new \InvalidArgumentException("Missing required parameter '\${$name}' for {$callableName}()");
                 }
-
-                continue;
-            }
-
-            $value      = $vars[$name];
-            $type       = $param->getType();
-            $isNullable = $type instanceof \ReflectionNamedType && $type->allowsNull();
-
-            // Only include if not null, or if the param is not nullable
-            if ($value !== null || !$isNullable) {
-                $out[$name] = $value;
+            } else {
+                // In lenient mode, fill with default or null
+                if ($param->isDefaultValueAvailable()) {
+                    $namedArgs[$name] = $param->getDefaultValue();
+                } else {
+                    $namedArgs[$name] = null;
+                }
             }
         }
 
-        return $out;
+        return $namedArgs;
     }
 
     /**
-     * Inspect the call-stack, resolve the caller's signature, and return bound arguments.
-     * This automatically determines the calling method or function from the backtrace.
+     * Get a backtrace frame.
      *
-     * @param int   $depth         How far up the stack to look (1 = immediate caller)
-     * @param array $excludeParams Parameter names to exclude from result
+     * @param int $depth The depth of the frame to get
      *
-     * @throws \InvalidArgumentException If the trace depth is invalid or a callable cannot be built from the frame
-     * @throws \ReflectionException      If reflection fails (bubbles up)
+     * @throws \InvalidArgumentException If the frame cannot be found
      *
-     * @return array Associative array of parameter name => value
+     * @return array The backtrace frame
      */
-    public static function extractBoundArgsFromBacktrace(int $depth = 1, array $excludeParams = []): array
+    public static function getBacktraceFrame(int $depth = 1): array
     {
-        // Get backtrace with object instances to properly build callables
         $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, $depth + 1);
 
         if (!isset($trace[$depth])) {
@@ -122,6 +153,20 @@ class ReflectionUtils
 
         $frame = $trace[$depth];
 
+        return $frame;
+    }
+
+    /**
+     * Get a callable from a backtrace frame.
+     *
+     * @param array $frame The backtrace frame
+     *
+     * @throws \InvalidArgumentException If the callable cannot be determined from the frame
+     *
+     * @return callable|string|array The callable
+     */
+    public static function getCallableFromBacktraceFrame(array $frame): callable|string|array
+    {
         // Build callable from the frame information
         if (isset($frame['class'])) {
             // Method call (instance or static)
@@ -141,44 +186,114 @@ class ReflectionUtils
             );
         }
 
-        // Map positional arguments to parameter names using reflection
-        $reflection = is_array($callable)
-            ? new \ReflectionMethod($callable[0], $callable[1])
-            : (is_string($callable) && str_contains($callable, '::')
-                ? (function () use ($callable) {
-                    [$class, $method] = explode('::', $callable, 2);
+        return $callable;
+    }
 
-                    return new \ReflectionMethod($class, $method);
-                })()
-                : new \ReflectionFunction($callable));
-
-        $namedArgs = [];
-        $params    = $reflection->getParameters();
-        $args      = $frame['args'] ?? [];
-
-        foreach ($params as $idx => $param) {
-            $name = $param->getName();
-
-            // Skip if caller didn't supply this argument
-            if (!array_key_exists($idx, $args)) {
-                continue;
-            }
-
-            $value      = $args[$idx];
-            $type       = $param->getType();
-            $isNullable = $type instanceof \ReflectionNamedType && $type->allowsNull();
-
-            // Only include if not null, or if the param is not nullable
-            if ($value !== null || !$isNullable) {
-                $namedArgs[$name] = $value;
+    /**
+     * Map positional arguments to named arguments.
+     *
+     * @param \ReflectionFunctionAbstract $reflection The reflection object
+     * @param array                       $vars       The variables to extract from
+     *
+     * @return array The named arguments
+     */
+    public static function mapPositionalArgsToNamedArgs(\ReflectionFunctionAbstract $reflection, array $vars): array
+    {
+        $named = [];
+        foreach ($reflection->getParameters() as $i => $param) {
+            if (array_key_exists($i, $vars)) {
+                $named[$param->getName()] = $vars[$i];
             }
         }
 
-        // Delegate to the existing extractBoundArgs for final filtering and validation
-        return self::extractBoundArgs(
-            $callable,
-            $namedArgs,
-            $excludeParams
-        );
+        return $named;
+    }
+
+    /**
+     * Extract argument values from a function or method, optionally enforcing binding rules.
+     *
+     * @param callable|string|array $callable      Function name, closure, invokable object, [$object, 'method'], 'Class::method' or __METHOD__
+     * @param array                 $vars          Associative array of local variables (typically from get_defined_vars())
+     * @param array                 $excludeParams Parameter names to exclude from result
+     * @param bool                  $boundOnly     If true, only include arguments present in $vars; otherwise include all, using defaults or nulls
+     *
+     * @return array Associative array of parameter name => value
+     */
+    public static function extractArgs(
+        callable|string|array $callable,
+        array $vars,
+        array $excludeParams = [],
+        bool $boundOnly = false
+    ): array {
+        $callableName = self::getCallableName($callable);
+        $reflection   = self::getReflectionFromCallable($callable);
+        $args         = self::getNamedArgs($reflection, $vars, $excludeParams, $boundOnly, $callableName);
+
+        return $args;
+    }
+
+    /**
+     * Extract bound argument values from a function or method, skipping nulls for nullable parameters.
+     *
+     * @param callable|string|array $callable      Function name, closure, invokable object, [$object, 'method'], 'Class::method' or __METHOD__
+     * @param array                 $vars          Associative array of local variables (typically from get_defined_vars())
+     * @param array                 $excludeParams Parameter names to exclude from result
+     *
+     * @return array Associative array of parameter name => value
+     */
+    public static function extractBoundArgs(callable|string|array $callable, array $vars, array $excludeParams = []): array
+    {
+        $callableName = self::getCallableName($callable);
+        $reflection   = self::getReflectionFromCallable($callable);
+        $args         = self::getNamedArgs($reflection, $vars, $excludeParams, true, $callableName);
+
+        return $args;
+    }
+
+    /**
+     * Inspect the call-stack, resolve the caller's signature, and return arguments.
+     *
+     * @param int   $depth         How far up the stack to look (1 = immediate caller)
+     * @param array $excludeParams Parameter names to exclude from result
+     * @param bool  $boundOnly     If true, include only arguments actually supplied; otherwise include all (using defaults/nulls)
+     *
+     * @return array Associative array of parameter name => value
+     */
+    public static function extractArgsFromBacktrace(int $depth = 1, array $excludeParams = [], bool $boundOnly = false): array
+    {
+        // Adjust depth to account for the getBacktraceFrame call
+        $depth++;
+        $frame        = self::getBacktraceFrame($depth);
+        $callable     = self::getCallableFromBacktraceFrame($frame);
+        $callableName = self::getCallableName($callable);
+        $reflection   = self::getReflectionFromCallable($callable);
+        $frameArgs    = $frame['args'] ?? [];
+        $vars         = self::mapPositionalArgsToNamedArgs($reflection, $frameArgs);
+        $args         = self::getNamedArgs($reflection, $vars, $excludeParams, $boundOnly, $callableName);
+
+        return $args;
+    }
+
+    /**
+     * Extract bound argument values from the call-stack
+     *
+     * @param int   $depth         How far up the stack to look (1 = immediate caller)
+     * @param array $excludeParams Parameter names to exclude from result
+     *
+     * @return array Associative array of parameter name => value
+     */
+    public static function extractBoundArgsFromBacktrace(int $depth = 1, array $excludeParams = []): array
+    {
+        // Adjust depth to account for the getBacktraceFrame call
+        $depth++;
+        $frame        = self::getBacktraceFrame($depth);
+        $callable     = self::getCallableFromBacktraceFrame($frame);
+        $callableName = self::getCallableName($callable);
+        $reflection   = self::getReflectionFromCallable($callable);
+        $frameArgs    = $frame['args'] ?? [];
+        $vars         = self::mapPositionalArgsToNamedArgs($reflection, $frameArgs);
+        $args         = self::getNamedArgs($reflection, $vars, $excludeParams, true, $callableName);
+
+        return $args;
     }
 }

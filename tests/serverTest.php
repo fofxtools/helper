@@ -764,16 +764,14 @@ class ServerTest extends TestCase
             // Call get_network_stats and assert the expected result for Windows
             $result   = get_network_stats(false, $mockExecutor);
             $expected = [
-                'Bytes' => [
-                    'Receive'  => '12',
-                    'Transmit' => '34',
-                ],
+                'Receive'  => '12',
+                'Transmit' => '34',
             ];
 
             $this->assertSame($expected, $result);
         } else {
             // Simulate valid output from /proc/net/dev for Linux
-            $procNetDevOutput = "Inter-|   Receive    Transmit\nlo: 12345 0 0 0 0 0 0 0 54321\n";
+            $procNetDevOutput = "Inter-|   Receive    Transmit\neth0: 12345 0 0 0 0 0 0 0 54321\n";
 
             // Create a mock callable to simulate shell_exec on Linux
             $mockExecutor = function ($command) use ($procNetDevOutput) {
@@ -783,10 +781,8 @@ class ServerTest extends TestCase
             // Call get_network_stats and assert the expected result for Linux
             $result   = get_network_stats(false, $mockExecutor);
             $expected = [
-                'lo' => [
-                    'Receive'  => '12345',
-                    'Transmit' => '54321',
-                ],
+                'Receive'  => '12345',
+                'Transmit' => '54321',
             ];
 
             $this->assertSame($expected, $result);
@@ -813,10 +809,8 @@ class ServerTest extends TestCase
         // Call get_network_stats and assert the expected result for Windows
         $result   = get_network_stats(false, $mockExecutor);
         $expected = [
-            'Bytes' => [
-                'Receive'  => '12',
-                'Transmit' => '34',
-            ],
+            'Receive'  => '12',
+            'Transmit' => '34',
         ];
 
         $this->assertSame($expected, $result);
@@ -832,7 +826,7 @@ class ServerTest extends TestCase
         }
 
         // Simulate valid output from /proc/net/dev for Linux
-        $procNetDevOutput = "Inter-|   Receive    Transmit\nlo: 12345 0 0 0 0 0 0 0 54321\n";
+        $procNetDevOutput = "Inter-|   Receive    Transmit\neth0: 12345 0 0 0 0 0 0 0 54321\n";
 
         // Create a mock callable to simulate shell_exec on Linux
         $mockExecutor = function ($command) use ($procNetDevOutput) {
@@ -842,10 +836,8 @@ class ServerTest extends TestCase
         // Call get_network_stats and assert the expected result for Linux
         $result   = get_network_stats(false, $mockExecutor);
         $expected = [
-            'lo' => [
-                'Receive'  => '12345',
-                'Transmit' => '54321',
-            ],
+            'Receive'  => '12345',
+            'Transmit' => '54321',
         ];
 
         $this->assertSame($expected, $result);
@@ -861,9 +853,9 @@ class ServerTest extends TestCase
             return '';
         };
 
-        // Call get_network_stats and assert an empty array is returned
+        $this->expectException(\RuntimeException::class);
+
         $result = get_network_stats(false, $mockExecutor);
-        $this->assertSame([], $result);
     }
 
     /**
@@ -901,10 +893,8 @@ class ServerTest extends TestCase
             // Call get_network_stats with a PID and assert the expected result for Linux
             $result   = get_network_stats(123, $mockExecutor);
             $expected = [
-                'eth0' => [
-                    'Receive'  => '67890',
-                    'Transmit' => '98765',
-                ],
+                'Receive'  => '67890',
+                'Transmit' => '98765',
             ];
 
             $this->assertSame($expected, $result);
@@ -950,10 +940,8 @@ class ServerTest extends TestCase
         // Call get_windows_network_stats and assert the expected result
         $result   = get_windows_network_stats($mockExecutor);
         $expected = [
-            'Bytes' => [
-                'Receive'  => '12',
-                'Transmit' => '34',
-            ],
+            'Receive'  => '12',
+            'Transmit' => '34',
         ];
 
         $this->assertSame($expected, $result);
@@ -973,9 +961,9 @@ class ServerTest extends TestCase
             return '';
         };
 
-        // Call get_windows_network_stats and assert an empty array is returned
+        $this->expectException(\RuntimeException::class);
+
         $result = get_windows_network_stats($mockExecutor);
-        $this->assertSame([], $result);
     }
 
     /**

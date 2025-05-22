@@ -157,7 +157,7 @@ class ScrapingTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        url_get_contents('http://this-domain-does-not-exist.com');
+        url_get_contents('http://this-domain-does-not-exist.invalid');
     }
 
     /**
