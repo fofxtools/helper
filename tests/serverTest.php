@@ -2243,9 +2243,28 @@ class ServerTest extends TestCase
     }
 
     /**
-     * Test resolv_conf_nameserver_ip() on Linux systems
+     * Test resolv_conf_nameserver_ip() returns valid IP or null
      */
-    public function test_resolv_conf_nameserver_ip(): void
+    public function test_resolv_conf_nameserver_ip_returns_valid_ip_or_null(): void
+    {
+        // Skip if not on Linux
+        if (PHP_OS_FAMILY !== 'Linux') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        $result = resolv_conf_nameserver_ip();
+
+        // Result should be either a valid IP or null
+        $this->assertTrue(
+            $result === null || filter_var($result, FILTER_VALIDATE_IP) !== false,
+            'Expected valid IP address or null'
+        );
+    }
+
+    /**
+     * Test resolv_conf_nameserver_ip() does not return localhost
+     */
+    public function test_resolv_conf_nameserver_ip_not_localhost(): void
     {
         // Skip if not on Linux
         if (PHP_OS_FAMILY !== 'Linux') {
@@ -2255,14 +2274,135 @@ class ServerTest extends TestCase
         $result = resolv_conf_nameserver_ip();
 
         if ($result !== null) {
-            // If we got a result, it should be a valid IP
-            $this->assertTrue(
-                filter_var($result, FILTER_VALIDATE_IP) !== false,
-                'Expected valid IP address'
+            $this->assertNotEquals(
+                '127.0.0.1',
+                $result,
+                'Should filter out localhost and return Windows host IP'
             );
         } else {
-            // Null result is acceptable (e.g. if resolv.conf doesn't exist or is empty)
+            // If null, test passes (no localhost to check)
             $this->assertNull($result);
+        }
+    }
+
+    /**
+     * Test resolv_conf_nameserver_ip() returns single IP without newlines
+     */
+    public function test_resolv_conf_nameserver_ip_no_newlines(): void
+    {
+        // Skip if not on Linux
+        if (PHP_OS_FAMILY !== 'Linux') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        $result = resolv_conf_nameserver_ip();
+
+        if ($result !== null) {
+            $this->assertStringNotContainsString(
+                "\n",
+                $result,
+                'Should return a single IP address without newlines'
+            );
+        } else {
+            // If null, test passes (no newlines to check)
+            $this->assertNull($result);
+        }
+    }
+
+    /**
+     * Test wsl_default_route_ip() returns valid IP or null
+     */
+    public function test_wsl_default_route_ip_returns_valid_ip_or_null(): void
+    {
+        // Skip if not on Linux
+        if (PHP_OS_FAMILY !== 'Linux') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        $result = wsl_default_route_ip();
+
+        // Result should be either a valid IP or null
+        $this->assertTrue(
+            $result === null || filter_var($result, FILTER_VALIDATE_IP) !== false,
+            'Expected valid IP address or null from default route'
+        );
+    }
+
+    /**
+     * Test wsl_default_route_ip() does not return localhost
+     */
+    public function test_wsl_default_route_ip_not_localhost(): void
+    {
+        // Skip if not on Linux
+        if (PHP_OS_FAMILY !== 'Linux') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        $result = wsl_default_route_ip();
+
+        if ($result !== null) {
+            $this->assertNotEquals(
+                '127.0.0.1',
+                $result,
+                'Default route should not be localhost'
+            );
+        } else {
+            // If null, test passes (no localhost to check)
+            $this->assertNull($result);
+        }
+    }
+
+    /**
+     * Test wsl_default_route_ip() returns single IP without newlines
+     */
+    public function test_wsl_default_route_ip_no_newlines(): void
+    {
+        // Skip if not on Linux
+        if (PHP_OS_FAMILY !== 'Linux') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        $result = wsl_default_route_ip();
+
+        if ($result !== null) {
+            $this->assertStringNotContainsString(
+                "\n",
+                $result,
+                'Should return a single IP address without newlines'
+            );
+        } else {
+            // If null, test passes (no newlines to check)
+            $this->assertNull($result);
+        }
+    }
+
+    /**
+     * Test wsl_default_route_ip() returns private IP in WSL environment
+     */
+    public function test_wsl_default_route_ip_returns_private_ip_in_wsl(): void
+    {
+        // Skip if not on Linux
+        if (PHP_OS_FAMILY !== 'Linux') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        // Only test this in actual WSL environment
+        if (!getenv('WSL_DISTRO_NAME')) {
+            $this->markTestSkipped('This test is only applicable in WSL environment.');
+        }
+
+        $result = wsl_default_route_ip();
+
+        if ($result !== null) {
+            $this->assertTrue(
+                str_starts_with($result, '192.168.') ||
+                str_starts_with($result, '172.') ||
+                str_starts_with($result, '10.'),
+                'WSL default route should typically be a private IP address'
+            );
+        } else {
+            // If null, mark as skipped since we can't test
+            $this->markTestSkipped('Could not get default route IP to test.');
         }
     }
 

@@ -22,15 +22,23 @@ config.*.php
 
 # Storage Folders
 /storage/
+/uploads/
 
 # IDE and Editor Files
+.augment-guidelines
 .cursorrules
+.windsurfrules
+CLAUDE.local.md
+global_rules.md
+usage_tracking*.json
 
 # IDE and Editor Folders
+/.claude/
 /.cursor/
 /.fleet/
 /.idea/
 /.vscode/
+/.windsurf/
 /.zed/
 
 # Cache Files
@@ -45,14 +53,23 @@ config.*.php
 /public/hot
 
 # Build Folders
+/build/
 /coverage/
 /node_modules/
 /public/build/
 /public/storage
 
 # Temporary Files
-/temp*.php
-/out*.txt
+/temp/
+/tmp/
+/temp.php
+/temp[0-9A-Za-z].php
+/temp-[0-9A-Za-z].php
+/temp_[0-9A-Za-z].php
+/out.txt
+/out[0-9A-Za-z].txt
+/out-[0-9A-Za-z].txt
+/out_[0-9A-Za-z].txt
 
 # SQLite Files
 *.sqlite*
@@ -74,8 +91,26 @@ Homestead.json
 Homestead.yaml
 auth.json
 
+# Phive and phpDocumentor
+.phive/
+!.phive/phars.xml
+.phpdoc/
+phpdoc.xml
+/tools/phpDocumentor
+
 # Custom Output Files
-/*repopack-output.*
-/*repomix-output.*
+/*repopack-output*.*
+/*repomix-output*.*
 /phpunit.txt
 /phpstan.txt
+/junit.xml
+
+# Python virtual environments
+venv*/
+.venv*/
+
+# Python cache / Bytecode
+__pycache__/
+*.pyc
+*.py[codz]
+*$py.class

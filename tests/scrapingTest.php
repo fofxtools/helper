@@ -19,14 +19,8 @@ class ScrapingTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        // Get the appropriate host based on environment
-        if (PHP_OS_FAMILY === 'Linux' && getenv('WSL_DISTRO_NAME')) {
-            // In WSL2, /etc/resolv.conf's nameserver points to the Windows host
-            $nameserver    = trim(shell_exec("grep nameserver /etc/resolv.conf | awk '{print $2}'"));
-            self::$baseUrl = 'http://' . $nameserver;
-        } else {
-            self::$baseUrl = 'http://localhost';
-        }
+        // Use wsl_url() to convert localhost to WSL IP if needed
+        self::$baseUrl = wsl_url('http://localhost');
 
         self::check_web_server_status();
     }
@@ -46,8 +40,6 @@ class ScrapingTest extends TestCase
         if (curl_errno($ch)) {
             self::markTestSkipped('The web server is not running. Skipping tests.');
         }
-
-        curl_close($ch);
     }
 
     /**

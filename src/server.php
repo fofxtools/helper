@@ -924,26 +924,82 @@ function escapeshellarg_windows(string $arg): string
 }
 
 /**
- * Get the first nameserver IP from WSL's resolv.conf file.
+ * Get the first non-localhost nameserver IP from WSL's resolv.conf file.
  *
- * @return string|null The first nameserver IP if found, null otherwise
+ * This function parses /etc/resolv.conf to find nameserver entries,
+ * filters out localhost (127.0.0.1), and returns the first valid
+ * non-localhost IP address (typically the Windows host IP in WSL).
+ *
+ * @return string|null The first non-localhost nameserver IP if found, null otherwise
  */
 function resolv_conf_nameserver_ip(): ?string
 {
-    $result = shell_exec("grep nameserver /etc/resolv.conf | awk '{print $2}'");
+    if (!is_readable('/etc/resolv.conf')) {
+        return null;
+    }
 
-    if ($result === null || $result === false) {
+    $lines = file('/etc/resolv.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines === false) {
+        return null;
+    }
+
+    foreach ($lines as $line) {
+        $line = trim($line);
+
+        // Skip empty lines and comments
+        if ($line === '' || str_starts_with($line, '#')) {
+            continue;
+        }
+
+        // Match nameserver lines
+        if (preg_match('/^nameserver\s+(\S+)/', $line, $matches)) {
+            $ip = $matches[1];
+
+            // Skip localhost - we want the Windows host IP, not WSL stub DNS
+            if ($ip === '127.0.0.1') {
+                continue;
+            }
+
+            // Validate the IP address
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return $ip;
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Get the Windows host IP from WSL via the default route.
+ *
+ * This function uses the 'ip route' command to find the default gateway,
+ * which in WSL is the Windows host IP. This method is often more robust
+ * than parsing /etc/resolv.conf.
+ *
+ * @return string|null The Windows host IP if found and valid, null otherwise
+ */
+function wsl_default_route_ip(): ?string
+{
+    $result = shell_exec("ip route | awk '/default/ {print \$3}'");
+
+    if ($result === null) {
         return null;
     }
 
     $ip = trim($result);
 
-    return $ip !== '' ? $ip : null;
+    // Validate the IP address
+    return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : null;
 }
 
 /**
  * Convert a URL to be WSL-aware by replacing 'localhost' with the Windows host IP
  * when running under WSL (Windows Subsystem for Linux).
+ *
+ * This function tries to get the Windows host IP using these methods:
+ * - First, via the default route (wsl_default_route_ip) - more robust
+ * - Fallback to parsing /etc/resolv.conf (resolv_conf_nameserver_ip)
  *
  * @param string $url The URL that may need WSL awareness
  *
@@ -953,14 +1009,19 @@ function wsl_url(string $url): string
 {
     // Only modify URL if running in WSL
     if (PHP_OS_FAMILY === 'Linux' && getenv('WSL_DISTRO_NAME')) {
-        // Get Windows host IP from WSL's resolv.conf
-        $nameserver = resolv_conf_nameserver_ip();
+        // Try to get Windows host IP via default route first (more robust)
+        $hostIp = wsl_default_route_ip();
 
-        if ($nameserver) {
+        // Fallback to resolv.conf method if default route fails
+        if (!$hostIp) {
+            $hostIp = resolv_conf_nameserver_ip();
+        }
+
+        if ($hostIp) {
             // Replace localhost with the Windows host IP, preserving any port number
             return preg_replace(
                 '/localhost(:\d+)?/',
-                $nameserver . '$1',
+                $hostIp . '$1',
                 $url
             );
         }
