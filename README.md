@@ -54,3 +54,33 @@ Alternatively, in `config/helper.config.php` you can set `autoStartTracker` to `
 Since this can cause problems in testing environments, this will only work if `is_phpunit_environment()` returns `false`.
 
 If `autoStartTracker` is enabled, you do not need to do `$tracker = Tracker::getInstance();`. The global Singleton will be initialized automatically during autoloading.
+
+## Testing and Development
+
+To run the PHPUnit test suite through composer:
+
+```bash
+composer test
+```
+
+To use PHPStan for static analysis:
+
+```bash
+composer phpstan
+```
+
+To run PHPStan on the `tests` folder:
+
+```bash
+composer phpstan tests
+```
+
+To use PHP-CS-Fixer for code style:
+
+```bash
+composer cs-fix
+```
+
+**Note:** `get_windows_memory_info()` (in `src/memory.php`) uses `shell_exec()` to call PowerShell. This can cause font glitches in legacy CMD (conhost.exe).
+
+If you run PHPUnit through legacy CMD, it may switch fonts. Use Terminal for PHPUnit instead.

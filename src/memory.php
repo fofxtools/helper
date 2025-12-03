@@ -130,7 +130,7 @@ function get_memory_info(bool $format = false): array
 /**
  * Get memory information for Windows systems
  *
- * @throws \Exception If wmic command fails
+ * @throws \Exception If PowerShell command fails
  *
  * @return array An array containing Windows memory information
  *
@@ -139,11 +139,18 @@ function get_memory_info(bool $format = false): array
  */
 function get_windows_memory_info(): array
 {
-    // Execute wmic command and get output
-    $output = shell_exec('wmic OS get TotalVirtualMemorySize,TotalVisibleMemorySize,FreeVirtualMemory,FreePhysicalMemory,SizeStoredInPagingFiles,FreeSpaceInPagingFiles /format:list');
+    // Use PowerShell + CIM to get OS memory info and emit key=value lines
+    // Note that in legacy CMD (conhost.exe), use of PowerShell may cause console font glitches.
+    // Use Terminal instead of legacy CMD to avoid this issue
+    $command = 'powershell -NoProfile -NonInteractive -Command '
+        . '"$os = Get-CimInstance Win32_OperatingSystem; '
+        . '$props = \'TotalVirtualMemorySize\',\'TotalVisibleMemorySize\',\'FreeVirtualMemory\',\'FreePhysicalMemory\',\'SizeStoredInPagingFiles\',\'FreeSpaceInPagingFiles\'; '
+        . 'foreach ($name in $props) { $value = $os.$name; if ($value -ne $null) { Write-Output (\'\' + $name + \'=\' + $value) } }"';
+
+    $output = shell_exec($command);
 
     // Handle error
-    if ($output === false || $output === null) {
+    if ($output === false || $output === null || trim($output) === '') {
         throw new \Exception('Failed to retrieve memory information on Windows.');
     }
 
