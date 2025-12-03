@@ -15,31 +15,63 @@ class ScrapingTest extends TestCase
     private static string $baseUrl;
 
     /**
-     * Set up the base URL and check web server before running test suite
+     * Set up the base URL using check_web_server_status() before running test suite
      */
     public static function setUpBeforeClass(): void
     {
-        // Use wsl_url() to convert localhost to WSL IP if needed
-        self::$baseUrl = wsl_url('http://localhost');
-
         self::check_web_server_status();
     }
 
     /**
-     * Check if the web server is running by attempting to access it
+     * Try to connect to a URL to check if it's accessible
+     */
+    private static function tryUrl(string $url): bool
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_exec($ch);
+        $success = curl_errno($ch) === 0;
+
+        return $success;
+    }
+
+    /**
+     * Check if the web server is running by attempting to access it.
+     * Auto-detects between Laragon-like structure, PHP built-in server, or direct public/ serving.
      */
     private static function check_web_server_status()
     {
-        $ch = curl_init(self::$baseUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // Timeout after 2 seconds
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_exec($ch);
+        // Option 1: Try Laragon-like structure (http://localhost/helper/public/)
+        $laragonUrl = wsl_url('http://localhost/helper/public/request-vars.php');
+        if (self::tryUrl($laragonUrl)) {
+            self::$baseUrl = wsl_url('http://localhost/helper/public');
 
-        // If the connection fails, skip all tests
-        if (curl_errno($ch)) {
-            self::markTestSkipped('The web server is not running. Skipping tests.');
+            return;
         }
+
+        // Option 2: Try PHP built-in server (http://localhost:8000/)
+        $builtInUrl = 'http://localhost:8000/request-vars.php';
+        if (self::tryUrl($builtInUrl)) {
+            self::$baseUrl = 'http://localhost:8000';
+
+            return;
+        }
+
+        // Option 3: Try Apache/Nginx with document root at public/ (http://localhost/)
+        $directUrl = wsl_url('http://localhost/request-vars.php');
+        if (self::tryUrl($directUrl)) {
+            self::$baseUrl = wsl_url('http://localhost');
+
+            return;
+        }
+
+        // None of the options worked
+        self::markTestSkipped(
+            'Web server not detected. ' .
+            'Either run Laragon, start PHP built-in server (php -S localhost:8000 -t public/), ' .
+            'or configure Apache/Nginx to serve the public/ directory.'
+        );
     }
 
     /**
@@ -47,7 +79,7 @@ class ScrapingTest extends TestCase
      */
     private function buildUrl(string $path, array $query = []): string
     {
-        $url = self::$baseUrl . '/helper/public/' . ltrim($path, '/');
+        $url = self::$baseUrl . '/' . ltrim($path, '/');
         if (!empty($query)) {
             $url .= '?' . http_build_query($query);
         }
@@ -311,9 +343,9 @@ class ScrapingTest extends TestCase
     {
         // Set up an array of valid GET request URLs.
         $urls = [
-            'http://localhost/helper/public/request-vars.php?string=hello&num=1',
-            'http://localhost/helper/public/request-vars.php?string=testing&num=2',
-            'http://localhost/helper/public/request-vars.php?string=test123&num=3',
+            $this->buildUrl('request-vars.php', ['string' => 'hello', 'num' => '1']),
+            $this->buildUrl('request-vars.php', ['string' => 'testing', 'num' => '2']),
+            $this->buildUrl('request-vars.php', ['string' => 'test123', 'num' => '3']),
         ];
 
         // Call the curl_multi_get_contents function with the valid GET URLs.
@@ -340,14 +372,14 @@ class ScrapingTest extends TestCase
         // Set up an array of POST requests with URLs and POST data.
         $data = [
             [
-                'url'  => 'http://localhost/helper/public/request-vars.php?string=hello',
+                'url'  => $this->buildUrl('request-vars.php', ['string' => 'hello']),
                 'post' => [
                     'postvar1' => 'Demo',
                     'postvar2' => 'Roses are red, Violets are blue.',
                 ],
             ],
             [
-                'url'  => 'http://localhost/helper/public/request-vars.php?string=testing',
+                'url'  => $this->buildUrl('request-vars.php', ['string' => 'testing']),
                 'post' => [
                     'postvar1' => 'Demo',
                     'postvar2' => 'Sugar is sweet, And so are you.',
@@ -379,7 +411,7 @@ class ScrapingTest extends TestCase
         // Set up an array with an invalid URL.
         $urls = [
             'invalid-url',
-            'http://localhost/helper/public/request-vars.php?string=testing&num=2',
+            $this->buildUrl('request-vars.php', ['string' => 'testing', 'num' => '2']),
         ];
 
         // Expect an InvalidArgumentException to be thrown due to the invalid URL.
@@ -395,8 +427,8 @@ class ScrapingTest extends TestCase
     public function test_curl_multi_get_contents_with_proxy()
     {
         $urls = [
-            'http://localhost/helper/public/request-vars.php?string=hello&num=1',
-            'http://localhost/helper/public/request-vars.php?string=testing&num=2',
+            $this->buildUrl('request-vars.php', ['string' => 'hello', 'num' => '1']),
+            $this->buildUrl('request-vars.php', ['string' => 'testing', 'num' => '2']),
         ];
 
         $result = curl_multi_get_contents($urls, true);
@@ -418,8 +450,8 @@ class ScrapingTest extends TestCase
     {
         // Set up an array of valid GET request URLs.
         $urls = [
-            'http://localhost/helper/public/request-vars.php?string=hello&num=1',
-            'http://localhost/helper/public/request-vars.php?string=testing&num=2',
+            $this->buildUrl('request-vars.php', ['string' => 'hello', 'num' => '1']),
+            $this->buildUrl('request-vars.php', ['string' => 'testing', 'num' => '2']),
         ];
 
         // Set up additional cURL options.

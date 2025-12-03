@@ -42,13 +42,15 @@ class InitTest extends TestCase
         file_put_contents($this->tempConfigFile, $configContent);
     }
 
-    public function test_initialize_without_config()
+    public function test_initialize_with_missing_config_file()
     {
         $this->assertFalse(Tracker::isInitialized());
 
-        initialize_tracker();
+        // Pass a non-existent config file path
+        initialize_tracker('nonexistent_' . uniqid() . '.php');
 
-        $this->assertTrue(Tracker::isInitialized());
+        // Should not initialize when config file doesn't exist
+        $this->assertFalse(Tracker::isInitialized());
     }
 
     public function test_initialize_with_autoStartTracker_true()

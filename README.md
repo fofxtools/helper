@@ -81,6 +81,18 @@ To use PHP-CS-Fixer for code style:
 composer cs-fix
 ```
 
-**Note:** `get_windows_memory_info()` (in `src/memory.php`) uses `shell_exec()` to call PowerShell. This can cause font glitches in legacy CMD (conhost.exe).
+### PHPUnit Notes
+
+Some tests require a web server. You can either use PHP's built-in server:
+
+```bash
+php -S localhost:8000 -t public/
+```
+
+Or use Laragon (Windows), Apache, Nginx, etc.
+
+**Note:**
+
+`get_windows_memory_info()` (in `src/memory.php`) uses `shell_exec()` to call PowerShell. This can cause font glitches in legacy CMD (conhost.exe).
 
 If you run PHPUnit through legacy CMD, it may switch fonts. Use Terminal for PHPUnit instead.
