@@ -31,7 +31,8 @@ class ScrapingTest extends TestCase
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_exec($ch);
-        $success = curl_errno($ch) === 0;
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $success  = curl_errno($ch) === 0 && $httpCode === 200;
 
         return $success;
     }
@@ -66,11 +67,33 @@ class ScrapingTest extends TestCase
             return;
         }
 
-        // None of the options worked
+        // Option 4: Try custom virtual host (http://helper.test/public/)
+        $vhostUrl = 'http://helper.test/public/request-vars.php';
+        if (self::tryUrl($vhostUrl)) {
+            self::$baseUrl = 'http://helper.test/public';
+
+            return;
+        }
+
+        // Option 5: Try custom virtual host (http://helper.test/)
+        $vhostRootUrl = 'http://helper.test/request-vars.php';
+        if (self::tryUrl($vhostRootUrl)) {
+            self::$baseUrl = 'http://helper.test';
+
+            return;
+        }
+
         self::markTestSkipped(
-            'Web server not detected. ' .
-            'Either run Laragon, start PHP built-in server (php -S localhost:8000 -t public/), ' .
-            'or configure Apache/Nginx to serve the public/ directory.'
+            <<<'MSG'
+Web server not detected.
+
+Either:
+- Run Laragon
+- Start PHP built-in server:
+    php -S localhost:8000 -t public/
+- Configure Apache/Nginx to serve the public/ directory
+- Or set up a virtual host for a pretty URL (e.g., helper.test)
+MSG
         );
     }
 

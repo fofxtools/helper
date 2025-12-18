@@ -773,8 +773,12 @@ class ServerTest extends TestCase
             // Simulate valid output from /proc/net/dev for Linux
             $procNetDevOutput = "Inter-|   Receive    Transmit\neth0: 12345 0 0 0 0 0 0 0 54321\n";
 
-            // Create a mock callable to simulate shell_exec on Linux
+            // Create a mock callable to simulate shell_exec on Linux (with ip route support)
             $mockExecutor = function ($command) use ($procNetDevOutput) {
+                if (str_contains($command, 'ip route')) {
+                    return '1.1.1.1 via 192.168.1.1 dev eth0 src 192.168.1.10';
+                }
+
                 return $procNetDevOutput;
             };
 
@@ -828,8 +832,12 @@ class ServerTest extends TestCase
         // Simulate valid output from /proc/net/dev for Linux
         $procNetDevOutput = "Inter-|   Receive    Transmit\neth0: 12345 0 0 0 0 0 0 0 54321\n";
 
-        // Create a mock callable to simulate shell_exec on Linux
+        // Create a mock callable to simulate shell_exec on Linux (with ip route support)
         $mockExecutor = function ($command) use ($procNetDevOutput) {
+            if (str_contains($command, 'ip route')) {
+                return '1.1.1.1 via 192.168.1.1 dev eth0 src 192.168.1.10';
+            }
+
             return $procNetDevOutput;
         };
 
@@ -885,8 +893,12 @@ class ServerTest extends TestCase
             // Simulate valid output from /proc/123/net/dev for Linux
             $procNetDevOutput = "Inter-|   Receive    Transmit\neth0: 67890 0 0 0 0 0 0 0 98765\n";
 
-            // Create a mock callable to simulate shell_exec on Linux
+            // Create a mock callable to simulate shell_exec on Linux (with ip route support)
             $mockExecutor = function ($command) use ($procNetDevOutput) {
+                if (str_contains($command, 'ip route')) {
+                    return '1.1.1.1 via 192.168.1.1 dev eth0 src 192.168.1.10';
+                }
+
                 return $procNetDevOutput;
             };
 
@@ -1099,6 +1111,165 @@ class ServerTest extends TestCase
 
         // Call get_linux_network_stats with an invalid PID
         get_linux_network_stats(-1);
+    }
+
+    /**
+     * Test get_linux_primary_interface_stats with ip route (Strategy 1).
+     */
+    public function test_get_linux_primary_interface_stats_with_ip_route()
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        // Mock executor that simulates both ip route and /proc/net/dev
+        $mockExecutor = function ($command) {
+            if (str_contains($command, 'ip route')) {
+                return "1.1.1.1 via 192.168.1.1 dev enp7s0 src 192.168.1.10 uid 1000\n    cache";
+            }
+
+            return "Inter-|   Receive    Transmit\nenp7s0: 12345 0 0 0 0 0 0 0 54321\nlo: 100 0 0 0 0 0 0 0 200\n";
+        };
+
+        $result   = get_linux_primary_interface_stats(false, $mockExecutor);
+        $expected = [
+            'Receive'  => '12345',
+            'Transmit' => '54321',
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Test get_linux_primary_interface_stats with eth0 fallback (Strategy 2).
+     */
+    public function test_get_linux_primary_interface_stats_with_eth0_fallback()
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        // Mock executor that simulates no ip route but has eth0
+        $mockExecutor = function ($command) {
+            if (str_contains($command, 'ip route')) {
+                return false; // ip command not available
+            }
+
+            return "Inter-|   Receive    Transmit\neth0: 67890 0 0 0 0 0 0 0 98765\nlo: 100 0 0 0 0 0 0 0 200\n";
+        };
+
+        $result   = get_linux_primary_interface_stats(false, $mockExecutor);
+        $expected = [
+            'Receive'  => '67890',
+            'Transmit' => '98765',
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Test get_linux_primary_interface_stats with enp* fallback (Strategy 3).
+     */
+    public function test_get_linux_primary_interface_stats_with_enp_fallback()
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        // Mock executor with no ip route, no eth0, but has enp7s0
+        $mockExecutor = function ($command) {
+            if (str_contains($command, 'ip route')) {
+                return false;
+            }
+
+            return "Inter-|   Receive    Transmit\nenp7s0: 11111 0 0 0 0 0 0 0 22222\nlo: 100 0 0 0 0 0 0 0 200\n";
+        };
+
+        $result   = get_linux_primary_interface_stats(false, $mockExecutor);
+        $expected = [
+            'Receive'  => '11111',
+            'Transmit' => '22222',
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Test get_linux_primary_interface_stats with wlp* fallback (Strategy 4).
+     */
+    public function test_get_linux_primary_interface_stats_with_wlp_fallback()
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        // Mock executor with no ip route, no eth0, no enp*, but has wlo1
+        $mockExecutor = function ($command) {
+            if (str_contains($command, 'ip route')) {
+                return false;
+            }
+
+            return "Inter-|   Receive    Transmit\nwlo1: 33333 0 0 0 0 0 0 0 44444\nlo: 100 0 0 0 0 0 0 0 200\n";
+        };
+
+        $result   = get_linux_primary_interface_stats(false, $mockExecutor);
+        $expected = [
+            'Receive'  => '33333',
+            'Transmit' => '44444',
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Test get_linux_primary_interface_stats with first non-loopback fallback (Strategy 5).
+     */
+    public function test_get_linux_primary_interface_stats_with_first_interface_fallback()
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        // Mock executor with unusual interface name
+        $mockExecutor = function ($command) {
+            if (str_contains($command, 'ip route')) {
+                return false;
+            }
+
+            return "Inter-|   Receive    Transmit\ndocker0: 55555 0 0 0 0 0 0 0 66666\nlo: 100 0 0 0 0 0 0 0 200\n";
+        };
+
+        $result   = get_linux_primary_interface_stats(false, $mockExecutor);
+        $expected = [
+            'Receive'  => '55555',
+            'Transmit' => '66666',
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Test get_linux_primary_interface_stats throws exception when no interface found.
+     */
+    public function test_get_linux_primary_interface_stats_no_interface_found()
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('This test is only applicable to Linux.');
+        }
+
+        // Mock executor with only loopback interface
+        $mockExecutor = function ($command) {
+            if (str_contains($command, 'ip route')) {
+                return false;
+            }
+
+            return "Inter-|   Receive    Transmit\nlo: 100 0 0 0 0 0 0 0 200\n";
+        };
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No suitable network interface found');
+
+        get_linux_primary_interface_stats(false, $mockExecutor);
     }
 
     /**

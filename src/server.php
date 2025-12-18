@@ -289,10 +289,10 @@ function url_file_extension(string $url): ?string
  * @throws \RuntimeException         If unable to fetch network statistics.
  * @throws \InvalidArgumentException If an invalid process ID is provided.
  *
- * @return array An associative array with the first key containing stats.
+ * @return array An associative array with 'Receive' and 'Transmit' bytes.
  *
  * @see     get_windows_network_stats
- * @see     get_linux_network_stats
+ * @see     get_linux_primary_interface_stats
  */
 function get_network_stats(int|false $pid = false, ?callable $commandExecutor = null): array
 {
@@ -302,7 +302,7 @@ function get_network_stats(int|false $pid = false, ?callable $commandExecutor = 
     if (PHP_OS_FAMILY === 'Windows') {
         return get_windows_network_stats($commandExecutor);
     } else {
-        return get_linux_eth0_stats($pid, $commandExecutor);
+        return get_linux_primary_interface_stats($pid, $commandExecutor);
     }
 }
 
@@ -347,6 +347,78 @@ function get_windows_network_stats(?callable $commandExecutor = null): array
     }
 
     return $stats['Bytes'];
+}
+
+/**
+ * Get network statistics for the primary (default route) network interface on Linux.
+ *
+ * This function attempts to detect the primary network interface using multiple strategies:
+ * - Use 'ip route get 1.1.1.1' to find the default gateway interface (most accurate)
+ * - Fall back to eth0 if available (backwards compatibility with containers and legacy systems)
+ * - Fall back to first wired interface matching enp*, ens*, or eno* (modern predictable names)
+ * - Fall back to first wireless interface matching wlp* or wlo*
+ * - Fall back to first non-loopback interface as last resort
+ *
+ * @param int|false $pid             Optional process ID for namespace-aware stats.
+ * @param ?callable $commandExecutor Optional callable that executes the shell command. For testing.
+ *
+ * @throws \RuntimeException If no suitable network interface is found.
+ *
+ * @return array An associative array with 'Receive' and 'Transmit' bytes for the primary interface.
+ *
+ * @see get_linux_network_stats
+ */
+function get_linux_primary_interface_stats(int|false $pid = false, ?callable $commandExecutor = null): array
+{
+    $commandExecutor = $commandExecutor ?? 'shell_exec';
+    $stats           = get_linux_network_stats($pid, $commandExecutor);
+
+    // Strategy 1: Try to detect default interface using ip route
+    // Use 'ip route get 1.1.1.1' as it's more reliable than 'ip route show default'
+    // in environments with multiple routing tables
+    $routeOutput = @$commandExecutor('ip route get 1.1.1.1 2>/dev/null');
+    if ($routeOutput !== false && $routeOutput !== null && $routeOutput !== '') {
+        // Parse output: "1.1.1.1 via 192.168.1.1 dev enp7s0 src 192.168.1.100"
+        if (preg_match('/\bdev\s+(\S+)/', $routeOutput, $matches)) {
+            $defaultInterface = $matches[1];
+            if (isset($stats[$defaultInterface])) {
+                return $stats[$defaultInterface];
+            }
+        }
+    }
+
+    // Strategy 2: Try eth0 (backwards compatibility with legacy systems and containers)
+    if (isset($stats['eth0'])) {
+        return $stats['eth0'];
+    }
+
+    // Strategy 3-5: Smart fallback with deterministic ordering
+    // Sort interfaces for deterministic behavior
+    $interfaces = array_keys($stats);
+    sort($interfaces);
+
+    // Strategy 3: Prefer wired Ethernet interfaces (enp*, ens*, eno*)
+    foreach ($interfaces as $interface) {
+        if (preg_match('/^en[ops]/', $interface)) {
+            return $stats[$interface];
+        }
+    }
+
+    // Strategy 4: Try wireless interfaces (wlp*, wlo*)
+    foreach ($interfaces as $interface) {
+        if (preg_match('/^wl[op]/', $interface)) {
+            return $stats[$interface];
+        }
+    }
+
+    // Strategy 5: Use first non-loopback interface as last resort
+    foreach ($interfaces as $interface) {
+        if ($interface !== 'lo') {
+            return $stats[$interface];
+        }
+    }
+
+    throw new \RuntimeException('No suitable network interface found in network stats.');
 }
 
 /**
